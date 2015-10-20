@@ -24,3 +24,6 @@ gem 'tzinfo', '1.1.0'
 gem 'mysql2', '0.3.16'
 gem 'jquery-rails', '3.1.2'
 
+group :test do
+  gem 'factory_girl_rails', '4.4.1' # pkg:ruby-factory-girl-rails
+end
