@@ -4,6 +4,11 @@ group :development, :test do
   gem 'pry-byebug'
 end
 
+group :development do
+  gem 'guard-minitest', require: false
+  gem 'guard', require: false
+end
+
 # Lock jessie versions
 #
 
