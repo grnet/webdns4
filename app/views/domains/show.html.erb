@@ -1,0 +1,23 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th colspan="4">Records</th>
+      <th colspan="2">Controls</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @domain.records.each do |record| %>
+    <tr>
+      <td><%= record.name %></td>
+      <td>IN</td>
+      <td><%= record.type %></td>
+      <td><%= record.content %></td>
+      <td><%= link_to 'Edit', edit_domain_record_path(@domain, record) %></td>
+      <td><%= link_to 'Remove', [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to 'New Record', new_domain_record_path(@domain) %></p>

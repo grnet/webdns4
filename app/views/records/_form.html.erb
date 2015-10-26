@@ -1,0 +1,13 @@
+<%= bootstrap_form_for([@domain, @record], layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-4') do |f| %>
+
+  <%= f.text_field :name, value: @record.short, label: 'Record', append: ".#{@domain.name}" %>
+  <% if @record.persisted? %>
+    <%= f.static_control :type %>
+  <% else %>
+    <%= f.select :type, Record.record_types %>
+  <% end %>
+  <%= f.text_field :content %>
+
+  <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
+
+<% end %>

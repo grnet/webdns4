@@ -1,0 +1,22 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Domain</th>
+      <th colspan="2">Controls</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @domains.each do |domain| %>
+    <tr>
+      <td><%= link_to domain.name, domain %></td>
+      <td><%= link_to 'Edit', edit_domain_path(domain) %></td>
+      <td><%= link_to 'Destroy', domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>
+  <%= link_to 'New Domain &raquo;'.html_safe, new_domain_path, class: 'btn btn-lg btn-primary' %>
+</p>
