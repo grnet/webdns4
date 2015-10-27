@@ -2,9 +2,14 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-# Require the gems listed in Gemfile, including any gems
+# Production doesn't use bundler
 # you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups)
+if ENV['RAILS_ENV'] != 'production'
+  Bundler.require(*Rails.groups)
+else
+  # Dependencies to load before starting rails in production
+  require 'jquery-rails'
+end
 
 module Base
   class Application < Rails::Application
