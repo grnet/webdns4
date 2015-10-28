@@ -114,7 +114,8 @@ CREATE TABLE `records` (
   PRIMARY KEY (`id`),
   KEY `nametype_index` (`name`,`type`),
   KEY `domain_id` (`domain_id`),
-  KEY `recordorder` (`domain_id`,`ordername`)
+  KEY `recordorder` (`domain_id`,`ordername`),
+  CONSTRAINT `records_ibfk_1` FOREIGN KEY (`domain_id`) REFERENCES `domains` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -172,6 +173,8 @@ CREATE TABLE `tsigkeys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-27 18:39:07
+-- Dump completed on 2015-10-28 11:37:25
 INSERT INTO schema_migrations (version) VALUES ('20151028123326');
+
+INSERT INTO schema_migrations (version) VALUES ('20151028123327');
 
