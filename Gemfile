@@ -7,6 +7,7 @@ end
 group :development do
   gem 'guard-minitest', require: false
   gem 'guard', require: false
+  gem 'capistrano', '3.2.1', require: false # pkg:capistrano
 end
 
 # Lock jessie versions
