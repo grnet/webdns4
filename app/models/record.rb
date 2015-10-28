@@ -25,6 +25,10 @@ class Record < ActiveRecord::Base
     File.basename(name, ".#{domain.name}")
   end
 
+  def supports_prio?
+    false
+  end
+
   # Create record specific urls for all record types
   #
   # Overrides default rails STI

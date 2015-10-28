@@ -6,6 +6,7 @@
   <% else %>
     <%= f.select :type, Record.record_types %>
   <% end %>
+  <%= f.text_field :prio, placeholder: 10, wrapper_class: 'hidden' %>
   <%= f.text_field :content %>
 
   <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>

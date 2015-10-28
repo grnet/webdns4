@@ -47,10 +47,10 @@ class RecordsController < ApplicationController
   end
 
   def edit_record_params
-    params.require(:record).permit(:name, :content)
+    params.require(:record).permit(:name, :content, :prio)
   end
 
   def new_record_params
-    params.require(:record).permit(:name, :content, :type)
+    params.require(:record).permit(:name, :content, :type, :prio)
   end
 end

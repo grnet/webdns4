@@ -15,3 +15,16 @@
 //= require bootstrap.min
 //= require typeahead.bundle.min
 //= require_tree .
+
+$(function() {
+
+    // Show priority on MX record only
+    $('#record_type').change(function() {
+        if ($(this).val() == 'MX') {
+            $('#record_prio').parents('div.form-group').removeClass('hidden');
+        } else {
+            $('#record_prio').parents('div.form-group').addClass('hidden');
+        }
+    });
+
+});
