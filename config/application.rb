@@ -19,5 +19,11 @@ module Base
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
     config.autoload_paths << Rails.root.join('lib')
+
+    config.x = {}
+  end
+
+  def self.settings
+    Application.config.x
   end
 end
