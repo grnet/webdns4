@@ -5,4 +5,21 @@ class ApplicationController < ActionController::Base
 
   attr_writer :breadcrumb
 
+  private
+
+  def domain
+    @domain ||= domain_scope.find(params[:domain_id] || params[:id])
+  end
+
+  def record
+    @record ||= record_scope.find(params[:record_id] || params[:id])
+  end
+  def domain_scope
+    @domain_scope ||= Domain.all
+  end
+
+  def record_scope
+    @record_scope ||= domain.records
+  end
+
 end

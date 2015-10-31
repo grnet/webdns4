@@ -1,6 +1,6 @@
 class RecordsController < ApplicationController
-  before_action :set_domain
-  before_action :set_record, only: [:edit, :update, :destroy]
+  before_action :domain
+  before_action :record, only: [:edit, :update, :destroy]
 
   # GET /records/new
   def new
@@ -38,13 +38,6 @@ class RecordsController < ApplicationController
   end
 
   private
-  def set_record
-    @record = @domain.records.find(params[:id])
-  end
-
-  def set_domain
-    @domain = Domain.find(params[:domain_id])
-  end
 
   def edit_record_params
     params.require(:record).permit(:name, :content, :prio, :disabled)

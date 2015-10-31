@@ -1,9 +1,9 @@
 class DomainsController < ApplicationController
-  before_action :set_domain, only: [:show, :edit, :update, :destroy]
+  before_action :domain, only: [:show, :edit, :update, :destroy]
 
   # GET /domains
   def index
-    @domains = Domain.all
+    @domains = domain_scope.all
   end
 
   # GET /domains/1
@@ -46,9 +46,6 @@ class DomainsController < ApplicationController
   end
 
   private
-  def set_domain
-    @domain = Domain.find(params[:id])
-  end
 
   def domain_params
     params.require(:domain).permit(:name, :type)
