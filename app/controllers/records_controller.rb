@@ -47,7 +47,7 @@ class RecordsController < ApplicationController
   end
 
   def edit_record_params
-    params.require(:record).permit(:name, :content, :prio)
+    params.require(:record).permit(:name, :content, :prio, :disabled)
   end
 
   def new_record_params
