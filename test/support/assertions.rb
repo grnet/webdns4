@@ -1,11 +1,17 @@
 module Assertions
 
-  def assert_serial_update(soa, message=nil)
+  def assert_serial_update(soa)
     soa.reload
-    assert_difference 'soa.serial', 1, message do
-      yield
-      soa.reload
-    end
+
+    old = soa.serial
+    yield
+    soa.reload
+
+    assert soa.serial > old, "#{soa.serial} is not larger than #{old}!"
+  end
+
+  def freeze_time(&block)
+    travel_to(Time.now, &block)
   end
 
 end
