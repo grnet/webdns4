@@ -1,6 +1,6 @@
-<%= bootstrap_form_for([@domain, @record], layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-4') do |f| %>
+<%= bootstrap_form_for([@domain, @record], layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-8') do |f| %>
 
-  <%= f.text_field :name, value: @record.short, label: 'Record', append: ".#{@domain.name}" %>
+  <%= f.text_field :name, value: @record.short, label: 'Record', append: name_field_append(@record) %>
   <% if @record.persisted? %>
     <%= f.static_control :type %>
   <% else %>
