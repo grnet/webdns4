@@ -1,3 +1,5 @@
+require 'ipaddr'
+
 class Record < ActiveRecord::Base
   belongs_to :domain
 
@@ -14,6 +16,7 @@ class Record < ActiveRecord::Base
   validates :name, presence: true
   validates :type, inclusion: { in: record_types }
 
+  before_validation :guess_reverse_name
   before_validation :set_name
   after_save :update_zone_serial
   after_destroy :update_zone_serial
@@ -41,6 +44,16 @@ class Record < ActiveRecord::Base
   private
 
   # Hooks
+
+  def guess_reverse_name
+    return if not type == 'PTR'
+    return if not domain.reverse?
+    return if name.blank?
+
+    reverse = IPAddr.new(name).reverse
+    self.name = reverse if reverse.end_with?(domain.name)
+  rescue IPAddr::InvalidAddressError # rubycop:disable HandleExceptions
+  end
 
   # Powerdns expects full domain names
   def set_name
