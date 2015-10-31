@@ -22,6 +22,10 @@ class Domain < ActiveRecord::Base
     @serial_strategy ||= WebDNS.settings[:serial_strategy]
   end
 
+  def reverse?
+    name.end_with?('.in-addr.arpa') || name.end_with?('.ip6.arpa')
+  end
+
   private
 
   # Hooks
