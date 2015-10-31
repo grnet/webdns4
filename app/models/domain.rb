@@ -17,6 +17,11 @@ class Domain < ActiveRecord::Base
 
   after_create :generate_soa
 
+  attr_writer :serial_strategy
+  def serial_strategy
+    @serial_strategy ||= WebDNS.settings[:serial_strategy]
+  end
+
   private
 
   # Hooks

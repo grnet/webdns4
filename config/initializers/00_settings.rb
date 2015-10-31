@@ -10,3 +10,4 @@ WebDNS.settings[:soa_defaults] = {
   nx: 3600
 }
 
+WebDNS.settings[:serial_strategy] = Strategies::Date

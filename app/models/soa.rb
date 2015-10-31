@@ -27,7 +27,7 @@ class SOA < Record
   def bump_serial!
     with_lock {
       reload
-      self.serial += 1
+      generate_serial
       save!
     }
   end
@@ -44,6 +44,10 @@ class SOA < Record
   end
 
   private
+
+  def generate_serial
+    self.serial = domain.serial_strategy.generate_serial(serial)
+  end
 
   # Callbacks
 
@@ -66,7 +70,7 @@ class SOA < Record
     # Don't updade if serial is already changed
     return if self.serial_changed?
 
-    self.serial += 1
+    generate_serial
     set_content
   end
 
