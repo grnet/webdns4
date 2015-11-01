@@ -1,5 +1,5 @@
 <ol class="breadcrumb">
-  <% breadcrumbs(@breadcrumb || @record || @domain) do |crumb| %>
+  <% breadcrumbs(@breadcrumb || @record || @domain || @group) do |crumb| %>
   <li><%= crumb %></li>
   <% end %>
 </ol>

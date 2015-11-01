@@ -9,9 +9,11 @@ class Domain < ActiveRecord::Base
     ]
   end
 
+  belongs_to :group
   has_many :records
   has_one :soa, class_name: SOA
 
+  validates :group_id, presence: true
   validates :name, uniqueness: true, presence: true
   validates :type, presence: true, inclusion: { in: domain_types }
 

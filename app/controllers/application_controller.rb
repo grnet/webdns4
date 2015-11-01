@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def group
+    @group ||= domain.group
+  end
+
   def domain
     @domain ||= domain_scope.find(params[:domain_id] || params[:id])
   end
@@ -14,8 +18,13 @@ class ApplicationController < ActionController::Base
   def record
     @record ||= record_scope.find(params[:record_id] || params[:id])
   end
+
+  def group_scope
+    @group_scope ||= Group.all
+  end
+
   def domain_scope
-    @domain_scope ||= Domain.all
+    @domain_scope ||= Domain.where(group: group_scope)
   end
 
   def record_scope

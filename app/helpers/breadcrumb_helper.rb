@@ -1,8 +1,8 @@
 module BreadcrumbHelper
   # Domain
-  # Domain / example.com
-  # Domain / example.com / ns1.example.com IN A
-  # Domain / example.com / new
+  # Domain / group / example.com
+  # Domain / group / example.com / ns1.example.com IN A
+  # Domain / group / example.com / new
   def breadcrumbs(leaf)
     stack = []
     crumbs = []
@@ -25,6 +25,9 @@ module BreadcrumbHelper
         else
           crumbs.push(name: :new)
         end
+        stack.push crumb.group
+      when Group
+        crumbs.push(name: crumb.name)
       end
     end
 
@@ -33,7 +36,7 @@ module BreadcrumbHelper
     crumbs.reverse!
     crumbs.each { |c|
       # Last element should not be a link
-      if c == crumbs.last
+      if c == crumbs.last || c[:link].nil?
         yield c[:name]
       else
         yield link_to(c[:name], c[:link])
