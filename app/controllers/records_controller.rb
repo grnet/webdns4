@@ -4,7 +4,7 @@ class RecordsController < ApplicationController
 
   # GET /records/new
   def new
-    @record = @domain.records.build
+    @record = domain.records.build
   end
 
   # GET /records/1/edit
@@ -13,10 +13,10 @@ class RecordsController < ApplicationController
 
   # POST /records
   def create
-    @record = @domain.records.new(new_record_params)
+    @record = domain.records.new(new_record_params)
 
     if @record.save
-      redirect_to @domain, notice: 'Record was successfully created.'
+      redirect_to domain, notice: 'Record was successfully created.'
     else
       render :new
     end
@@ -25,7 +25,7 @@ class RecordsController < ApplicationController
   # PATCH/PUT /records/1
   def update
     if @record.update(edit_record_params)
-      redirect_to @domain, notice: 'Record was successfully updated.'
+      redirect_to domain, notice: 'Record was successfully updated.'
     else
       render :edit
     end
@@ -34,7 +34,7 @@ class RecordsController < ApplicationController
   # DELETE /records/1
   def destroy
     @record.destroy
-    redirect_to @domain, notice: 'Record was successfully destroyed.'
+    redirect_to domain, notice: 'Record was successfully destroyed.'
   end
 
   private
