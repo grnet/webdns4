@@ -4,6 +4,22 @@ module BreadcrumbHelper
   # Domain / group / example.com / ns1.example.com IN A
   # Domain / group / example.com / new
   def breadcrumbs(leaf)
+    crumbs = generate_crumbs_for(leaf)
+
+    crumbs.each { |c|
+      # Last element should not be a link
+      if c == crumbs.last || c[:link].nil?
+        yield c[:name]
+      else
+        yield link_to(c[:name], c[:link])
+      end
+    }
+  end
+
+  private
+
+  # rubocop:disable all
+  def generate_crumbs_for(leaf)
     stack = []
     crumbs = []
     stack.push leaf if leaf
@@ -33,15 +49,8 @@ module BreadcrumbHelper
 
     crumbs.push(name: 'Domains', link: '/')
 
-    crumbs.reverse!
-    crumbs.each { |c|
-      # Last element should not be a link
-      if c == crumbs.last || c[:link].nil?
-        yield c[:name]
-      else
-        yield link_to(c[:name], c[:link])
-      end
-    }
+    crumbs.reverse
   end
+  # rubocop:enable all
 
 end
