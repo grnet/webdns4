@@ -41,6 +41,10 @@ class Record < ActiveRecord::Base
     Record.model_name
   end
 
+  def to_dns
+    [name, 'IN', type, supports_prio? ? prio : nil, content].compact.join(' ')
+  end
+
   private
 
   # Hooks
