@@ -1,0 +1,31 @@
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'lib/capistrano/**/*'
+    - 'vendor/bootstrap_form/**/*'
+
+Metrics/LineLength:
+  Max: 120
+Metrics/AbcSize:
+  Max: 16
+
+Documentation:
+  Enabled: false
+Style/NegatedIf:
+  Enabled: false
+Style/Not:
+  Enabled: false
+Style/WordArray:
+  Enabled: false
+Style/TrailingComma:
+  Enabled: false
+Style/BlockDelimiters:
+  Enabled: false
+Style/TrailingBlankLines:
+  Enabled: false
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+Lint/HandleExceptions:
+  Enabled: false

@@ -5,6 +5,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'rubocop', '0.35', require: false
   gem 'guard-minitest', require: false
   gem 'guard', require: false
   gem 'capistrano', '3.2.1', require: false # pkg:capistrano
