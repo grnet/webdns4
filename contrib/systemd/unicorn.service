@@ -1,0 +1,18 @@
+[Unit]
+Description=Unicorn Server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+EnvironmentFile=-/etc/default/unicorn
+User=webdns
+Group=webdns
+ExecStart=/usr/bin/unicorn -c ${UNICORN_CONFIG} --env ${RAILS_ENV}
+Type=simple
+RuntimeDirectory=unicorn
+PIDFile=/run/unicorn/unicorn.pid
+KillMode=mixed
+KillSignal=SIGQUIT
+
+[Install]
+WantedBy=multi-user.target

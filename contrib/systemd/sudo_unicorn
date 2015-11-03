@@ -1,0 +1,1 @@
+%webdns ALL=(root)	NOPASSWD:/usr/local/bin/unicornctl

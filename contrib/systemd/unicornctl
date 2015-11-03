@@ -1,0 +1,43 @@
+#!/bin/bash
+
+usage() {
+	echo >&2 "Usage: $0 <start|stop|status|restart|enable|disable|pid|rotate|respawn>"
+	exit 1
+}
+
+cmd="$1"; shift
+
+[ -z "${cmd}" ] && usage
+
+service="unicorn"
+sig_rotate="USR1"
+sig_respawn="USR2"
+
+get_pid() {
+	echo $(systemctl show -pMainPID $service|cut -d= -f2)
+}
+
+case "$cmd" in
+status|start|stop|restart|enable|disable)
+	exec systemctl $cmd $service
+	;;
+rotate|respawn)
+	pid=$(get_pid)
+	if [ "${pid}" -eq 0 ]; then
+		exec systemctl start $service
+	else
+		signal="sig_${cmd}"
+		/sbin/start-stop-daemon --stop --pid "$pid" --signal "${!signal}" --quiet
+		# Wait for Main PID to change on respawn
+		while [ "${pid}" -eq $(get_pid) -a "${cmd}" = "respawn" ]; do
+			sleep 1
+		done
+	fi
+	;;
+pid)
+	exec systemctl show -pMainPID $service|cut -d= -f2
+	;;
+*)
+	usage
+	;;
+esac

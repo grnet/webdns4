@@ -3,6 +3,7 @@ AllCops:
   Exclude:
     - 'lib/capistrano/**/*'
     - 'vendor/**/*'
+    - 'unicorn.conf.rb'
 
 Metrics/LineLength:
   Max: 120

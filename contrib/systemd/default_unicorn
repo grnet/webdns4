@@ -1,0 +1,7 @@
+RAILS_ENV=production
+APP_ROOT=/srv/webdns/current
+UNICORN_CONFIG=/srv/webdns/current/unicorn.conf.rb
+UNICORN_LISTEN=/run/unicorn/unicorn.sock
+UNICORN_PIDFILE=/run/unicorn/unicorn.pid
+UNICORN_TIMEOUT=30
+UNICORN_WORKERS=2
