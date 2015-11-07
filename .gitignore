@@ -18,4 +18,5 @@
 /tmp
 *.swp
 config/database.yml
+config/beanstalk.yml
 .ruby-version
