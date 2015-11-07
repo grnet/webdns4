@@ -4,6 +4,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   attr_writer :breadcrumb
+  helper_method :admin?
+
+  def admin?
+    params.key?(:admin)
+  end
 
   private
 

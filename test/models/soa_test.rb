@@ -23,6 +23,15 @@ class SOATest < ActiveSupport::TestCase
     end
   end
 
+  test 'drop privileges' do
+    @record.contact = 'admin@example.com'
+    @record.drop_privileges = true
+    assert_not @record.editable?
+
+    @record.save
+    assert_not_empty @record.errors[:type]
+  end
+
   class DateSerialTests < ActiveSupport::TestCase
     setup do
       domain = create(:date_domain)

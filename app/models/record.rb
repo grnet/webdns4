@@ -1,4 +1,5 @@
 require 'ipaddr'
+require_dependency 'drop_privileges_validator'
 
 class Record < ActiveRecord::Base
   belongs_to :domain
@@ -13,8 +14,20 @@ class Record < ActiveRecord::Base
     ]
   end
 
+  def self.allowed_record_types
+    record_types - WebDNS.settings[:prohibit_records_types]
+  end
+
   validates :name, presence: true
   validates :type, inclusion: { in: record_types }
+
+  # Don't allow the following actions on drop privileges mode
+  validates_drop_privileges :type,
+                            message: 'You cannot touch that record!',
+                            unless: -> { Record.allowed_record_types.include?(type) }
+  validates_drop_privileges :name,
+                            message: 'You cannot touch top level NS records!',
+                            if: -> { type == 'NS' && domain_record? }
 
   before_validation :guess_reverse_name
   before_validation :set_name
@@ -26,6 +39,18 @@ class Record < ActiveRecord::Base
     return '' if name.blank?
 
     File.basename(name, ".#{domain.name}")
+  end
+
+  def domain_record?
+    name.blank? || name == domain.name
+  end
+
+  # Editable by a non-admin user
+  def editable?
+    return false unless Record.allowed_record_types.include?(type)
+    return false if type == 'NS' && domain_record?
+
+    true
   end
 
   def supports_prio?

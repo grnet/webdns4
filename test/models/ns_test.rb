@@ -11,4 +11,19 @@ class NSTest < ActiveSupport::TestCase
     assert_empty @record.errors
   end
 
+  test 'drop privileges on zone NS records' do
+    @record.drop_privileges = true
+    @record.save
+
+    assert_not_empty @record.errors[:name]
+  end
+
+  test 'doesnt drop privileges on non zone NS records' do
+    @record.name = 'other'
+    @record.drop_privileges = true
+
+    @record.save
+
+    assert_empty @record.errors[:name]
+  end
 end

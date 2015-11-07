@@ -14,15 +14,21 @@
       <td><%= record.type %></td>
       <td><%= record.supports_prio? ? record.prio : '' %></td>
       <td><%= record.content %></td>
-      <td>
-        <% if record.disabled? %>
-          <%= link_to 'Enable',   enable_domain_record_path(@domain, record), method: :put %>
-        <% else %>
-          <%= link_to 'Disable', disable_domain_record_path(@domain, record), method: :put %>
-        <% end %>
-      </td>
-      <td><%= link_to 'Edit', edit_domain_record_path(@domain, record) %></td>
-      <td><%= link_to 'Remove', [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% if can_edit?(record) %>
+        <td>
+          <% if record.disabled? %>
+            <%= link_to 'Enable',   enable_domain_record_path(@domain, record), method: :put %>
+          <% else %>
+            <%= link_to 'Disable', disable_domain_record_path(@domain, record), method: :put %>
+          <% end %>
+        </td>
+        <td><%= link_to 'Edit', edit_domain_record_path(@domain, record) if can_edit?(record) %></td>
+        <td><%= link_to 'Remove', [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% else %>
+        <td/>
+        <td/>
+        <td/>
+      <% end %>
     </tr>
     <% end %>
   </tbody>
