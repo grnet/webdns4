@@ -18,6 +18,8 @@ module Base
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    config.time_zone = 'Europe/Athens'
+
     # Store/Read localtime from the database
     config.active_record.default_timezone = :local
     config.active_record.schema_format = :sql
