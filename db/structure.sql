@@ -88,6 +88,8 @@ CREATE TABLE `domains` (
   `notified_serial` int(11) DEFAULT NULL,
   `account` varchar(40) DEFAULT NULL,
   `group_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_index` (`name`),
   KEY `index_domains_on_group_id` (`group_id`)
@@ -131,6 +133,8 @@ CREATE TABLE `records` (
   `disabled` tinyint(1) DEFAULT '0',
   `ordername` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `auth` tinyint(1) DEFAULT '1',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `nametype_index` (`name`,`type`),
   KEY `domain_id` (`domain_id`),
@@ -193,10 +197,12 @@ CREATE TABLE `tsigkeys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-31 20:55:16
+-- Dump completed on 2015-11-08 10:46:27
 INSERT INTO schema_migrations (version) VALUES ('20151028123326');
 
 INSERT INTO schema_migrations (version) VALUES ('20151028123327');
 
 INSERT INTO schema_migrations (version) VALUES ('20151031184819');
+
+INSERT INTO schema_migrations (version) VALUES ('20151107182656');
 
