@@ -32,6 +32,13 @@ gem 'mysql2', '0.3.16'
 gem 'jquery-rails', '3.1.2'
 gem 'beaneater', '1.0.0'
 
+# Devise & dependencies
+gem 'devise', '3.5.2'
+gem 'warden', '1.2.3'
+gem 'bcrypt', '3.1.7'
+gem 'orm_adapter', '0.5.0'
+gem 'responders'# , '2.0.2'
+
 group :test do
   gem 'factory_girl_rails', '4.4.1' # pkg:ruby-factory-girl-rails
 end

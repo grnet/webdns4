@@ -8,6 +8,7 @@ if ENV['RAILS_ENV'] != 'production'
   Bundler.require(*Rails.groups)
 else
   # Dependencies to load before starting rails in production
+  require 'devise'
   require 'jquery-rails'
   require 'beaneater'
 end

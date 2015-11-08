@@ -1,4 +1,6 @@
 class DomainsController < ApplicationController
+  before_action :authenticate_user!
+
   before_action :group_scope
 
   before_action :domain, only: [:show, :edit, :update, :destroy]

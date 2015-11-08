@@ -1,4 +1,6 @@
 class RecordsController < ApplicationController
+  before_action :authenticate_user!
+
   before_action :domain
   before_action :record, only: [:edit, :update, :destroy]
 
