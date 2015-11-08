@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get '/', to: redirect('/domains')
+  root to: redirect('/domains')
 
   resources :domains do
     resources :records, except: [:index, :show] do
