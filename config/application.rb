@@ -9,6 +9,7 @@ if ENV['RAILS_ENV'] != 'production'
 else
   # Dependencies to load before starting rails in production
   require 'jquery-rails'
+  require 'beaneater'
 end
 
 module Base
