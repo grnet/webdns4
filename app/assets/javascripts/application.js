@@ -13,4 +13,5 @@
 //= require jquery.min
 //= require jquery_ujs
 //= require bootstrap.min
+//= require typeahead.bundle.min
 //= require_tree .
