@@ -43,7 +43,7 @@ module BreadcrumbHelper
         end
         stack.push crumb.group
       when Group
-        crumbs.push(name: crumb.name)
+        crumbs.push(name: crumb.name, link: group_path(crumb))
       end
     end
 

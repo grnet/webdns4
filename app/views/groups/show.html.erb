@@ -1,0 +1,24 @@
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Members</th>
+      <th>Controls</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @group.memberships.includes(:user).each do |membership| %>
+      <tr>
+        <td><%= membership.user.email %><%= " (you)" if current_user == membership.user %></td>
+        <td>
+          <%= link_to 'x', destroy_member_group_path(@group, membership.user_id), method: :delete %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= bootstrap_form_tag(url: create_member_group_path(@group), layout: :inline) do |f| %>
+  <%= f.text_field :email, prepend: 'Member', hide_label: true, id: 'js-search-member', data: { group: @group.id } %>
+  <%= f.submit 'Add', class: 'btn btn-primary' %>
+<% end %>

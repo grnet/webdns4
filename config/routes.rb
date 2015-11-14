@@ -7,6 +7,15 @@ Rails.application.routes.draw do
 
   root to: redirect('/domains')
 
+  resources :groups, only: [:show] do
+    get :search_member,
+        to: 'groups#search_member', on: :member
+    post :members,
+         to: 'groups#create_member', as: :create_member, on: :member
+    delete 'member/:user_id',
+           to: 'groups#destroy_member', as: :destroy_member, on: :member
+  end
+
   resources :domains do
     resources :records, except: [:index, :show] do
       # Reuse records#update instead of introducing new controller actions

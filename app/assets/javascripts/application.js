@@ -27,4 +27,22 @@ $(function() {
         }
     });
 
+    var searchMembersGroup = $('#js-search-member').data('group');
+    var searchMembers = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: '/groups/' + searchMembersGroup + '/search_member.json?q=%QUERY',
+            wildcard: '%QUERY'
+        }
+    });
+
+    $('#js-search-member').typeahead({
+        hint: true,
+        minLength: 2
+    }, {
+        name: 'members',
+        display: 'email',
+        source: searchMembers
+    });
 });
