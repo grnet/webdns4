@@ -115,6 +115,25 @@ CREATE TABLE `groups` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `memberships`
+--
+
+DROP TABLE IF EXISTS `memberships`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `memberships` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_memberships_on_group_id` (`group_id`),
+  KEY `index_memberships_on_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `records`
 --
 
@@ -224,7 +243,7 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-08 11:44:39
+-- Dump completed on 2015-11-08 12:57:51
 INSERT INTO schema_migrations (version) VALUES ('20151028123326');
 
 INSERT INTO schema_migrations (version) VALUES ('20151028123327');
@@ -234,4 +253,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151031184819');
 INSERT INTO schema_migrations (version) VALUES ('20151107182656');
 
 INSERT INTO schema_migrations (version) VALUES ('20151108093333');
+
+INSERT INTO schema_migrations (version) VALUES ('20151108105701');
 
