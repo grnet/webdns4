@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   private
 
   def group
-    @group ||= domain.group
+    @group ||= group_scope.find(params[:group_id] || params[:id])
   end
 
   def domain
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   end
 
   def group_scope
-    @group_scope ||= Group.all
+    @group_scope ||= current_user.groups
   end
 
   def domain_scope

@@ -52,6 +52,10 @@ class DomainsController < ApplicationController
 
   private
 
+  def group
+    domain.group
+  end
+
   def domain_params
     params.require(:domain).tap { |d|
       # Make sure group id is permitted (belongs to group_scope)
