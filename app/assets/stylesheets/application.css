@@ -19,3 +19,8 @@
 body {
   padding-top: 70px;
 }
+
+/* Reset bootstrap's help cursor on control links */
+table a abbr[title] {
+    cursor: pointer;
+}

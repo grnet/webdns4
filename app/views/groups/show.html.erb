@@ -11,7 +11,7 @@
       <tr>
         <td><%= membership.user.email %><%= " (you)" if current_user == membership.user %></td>
         <td>
-          <%= link_to 'x', destroy_member_group_path(@group, membership.user_id), method: :delete %>
+          <%= link_to_destroy destroy_member_group_path(@group, membership.user_id), method: :delete %>
         </td>
       </tr>
     <% end %>

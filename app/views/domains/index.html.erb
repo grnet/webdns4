@@ -18,8 +18,8 @@
               <abbr title="Forward"><span class="glyphicon glyphicon-chevron-right"></span></abbr>
             <% end %>
           </td>
-          <td><%= link_to 'Edit', edit_domain_path(domain) %></td>
-          <td><%= link_to 'Destroy', domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to_edit edit_domain_path(domain) %></td>
+          <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
     <% end %>

@@ -17,13 +17,13 @@
       <% if can_edit?(record) %>
         <td>
           <% if record.disabled? %>
-            <%= link_to 'Enable',   enable_domain_record_path(@domain, record), method: :put %>
+            <%= link_to_enable enable_domain_record_path(@domain, record), method: :put %>
           <% else %>
-            <%= link_to 'Disable', disable_domain_record_path(@domain, record), method: :put %>
+            <%= link_to_disable disable_domain_record_path(@domain, record), method: :put %>
           <% end %>
         </td>
-        <td><%= link_to 'Edit', edit_domain_record_path(@domain, record) if can_edit?(record) %></td>
-        <td><%= link_to 'Remove', [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to_edit edit_domain_record_path(@domain, record) if can_edit?(record) %></td>
+        <td><%= link_to_destroy [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
       <% else %>
         <td/>
         <td/>
