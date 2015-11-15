@@ -1,9 +1,33 @@
 module ApplicationHelper
+  TIME_PERIODS = {
+    1.second => 'second',
+    1.minute => 'minute',
+    1.hour => 'hour',
+    1.day => 'day',
+    1.week => 'week',
+    1.month => 'month',
+    1.year => 'year',
+  }
+
   def can_edit?(object)
     return true if admin?
     return true unless object.respond_to?(:editable?)
 
     object.editable?
+  end
+
+  def seconds_to_human(seconds)
+    acc = {}
+    remaining = seconds
+    TIME_PERIODS.to_a.reverse_each do |p, human|
+      period_count, remaining = remaining.divmod(p)
+      acc[human] = period_count if not period_count.zero?
+    end
+
+    acc.map { |singular, count|
+      human = count < 2 ? singular : "#{singular}s"
+      "#{count} #{human}"
+    }.join(', ')
   end
 
   def link_to_edit(*args, &block)
