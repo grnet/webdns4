@@ -2,7 +2,7 @@ AllCops:
   DisplayCopNames: true
   Exclude:
     - 'lib/capistrano/**/*'
-    - 'vendor/bootstrap_form/**/*'
+    - 'vendor/**/*'
 
 Metrics/LineLength:
   Max: 120
