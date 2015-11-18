@@ -47,7 +47,7 @@ module BreadcrumbHelper
       end
     end
 
-    crumbs.push(name: 'Domains', link: '/')
+    crumbs.push(name: glyph(:home), link: '/')
 
     crumbs.reverse
   end
