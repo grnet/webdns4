@@ -1,7 +1,7 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th colspan="5">Records</th>
+      <th colspan="6">Records</th>
       <th colspan="3">Controls</th>
     </tr>
   </thead>
@@ -10,6 +10,7 @@
     <% @domain.records.each do |record| %>
     <tr class="<%= record.disabled? ? 'warning' : '' %>">
       <td><%= record.name %></td>
+      <td><%= record.ttl %></td>
       <td>IN</td>
       <td><%= record.type %></td>
       <td><%= record.supports_prio? ? record.prio : '' %></td>

@@ -7,6 +7,7 @@
     <%= f.select :type, Record.allowed_record_types %>
   <% end %>
   <%= f.text_field :prio, placeholder: 10, wrapper_class: @record.supports_prio? ? '' : 'hidden' %>
+  <%= f.text_field :ttl, label: 'TTL' %>
   <%= f.text_field :content %>
 
   <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>

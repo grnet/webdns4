@@ -21,6 +21,13 @@ class Record < ActiveRecord::Base
   validates :name, presence: true
   validates :type, inclusion: { in: record_types }
 
+  # http://mark.lindsey.name/2009/03/never-use-dns-ttl-of-zero-0.html
+  validates_numericality_of :ttl,
+                            allow_nil: true, # Default pdns TTL
+                            only_integer: true,
+                            greater_than: 0,
+                            less_than_or_equal_to: 2_147_483_647
+
   # Don't allow the following actions on drop privileges mode
   validates_drop_privileges :type,
                             message: 'You cannot touch that record!',
@@ -67,7 +74,7 @@ class Record < ActiveRecord::Base
   end
 
   def to_dns
-    [name, 'IN', type, supports_prio? ? prio : nil, content].compact.join(' ')
+    [name, ttl, 'IN', type, supports_prio? ? prio : nil, content].compact.join(' ')
   end
 
   private

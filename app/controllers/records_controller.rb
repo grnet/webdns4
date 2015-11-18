@@ -42,13 +42,13 @@ class RecordsController < ApplicationController
   private
 
   def edit_record_params
-    params.require(:record).permit(:name, :content, :prio, :disabled).tap { |r|
+    params.require(:record).permit(:name, :content, :ttl, :prio, :disabled).tap { |r|
       r[:drop_privileges] = true if not admin?
     }
   end
 
   def new_record_params
-    params.require(:record).permit(:name, :content, :type, :prio).tap { |r|
+    params.require(:record).permit(:name, :content, :ttl, :type, :prio).tap { |r|
       r[:drop_privileges] = true if not admin?
     }
   end
