@@ -43,7 +43,11 @@ module BreadcrumbHelper
         end
         stack.push crumb.group
       when Group
-        crumbs.push(name: crumb.name, link: group_path(crumb))
+        if crumb.persisted?
+          crumbs.push(name: crumb.name, link: group_path(crumb))
+        else
+          crumbs.push(name: :new)
+        end
       end
     end
 

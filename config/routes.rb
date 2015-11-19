@@ -31,5 +31,8 @@ Rails.application.routes.draw do
 
   # Admin
   namespace :admin do
+    root to: redirect('/admin/groups')
+
+    resources :groups, except: [:show]
   end
 end

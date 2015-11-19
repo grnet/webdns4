@@ -1,0 +1,4 @@
+<%= bootstrap_form_for([:admin, @group], layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-4') do |f| %>
+  <%= f.text_field :name %>
+  <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
+<% end %>
