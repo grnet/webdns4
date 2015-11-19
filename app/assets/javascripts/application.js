@@ -18,9 +18,9 @@
 
 $(function() {
 
-    // Show priority on MX record only
+    // Show priority on MX/SRV record only
     $('#record_type').change(function() {
-        if ($(this).val() == 'MX') {
+        if ($(this).val() == 'MX' || $(this).val() == 'SRV') {
             $('#record_prio').parents('div.form-group').removeClass('hidden');
         } else {
             $('#record_prio').parents('div.form-group').addClass('hidden');
