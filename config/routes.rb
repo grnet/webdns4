@@ -28,4 +28,8 @@ Rails.application.routes.draw do
       # rubocop:enable Style/AlignHash
     end
   end
+
+  # Admin
+  namespace :admin do
+  end
 end

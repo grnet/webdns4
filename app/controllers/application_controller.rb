@@ -7,7 +7,13 @@ class ApplicationController < ActionController::Base
   helper_method :admin?
 
   def admin?
-    params.key?(:admin)
+    not params.key?(:user)
+  end
+
+  def admin_only!
+    return if admin?
+
+    redirect_to root_path, alert: 'Admin only area!'
   end
 
   private
@@ -25,11 +31,11 @@ class ApplicationController < ActionController::Base
   end
 
   def group_scope
-    @group_scope ||= current_user.groups
+    @group_scope ||= admin? ? Group.all : current_user.groups
   end
 
   def domain_scope
-    @domain_scope ||= Domain.where(group: group_scope)
+    @domain_scope ||= admin? ? Domain.all : Domain.where(group: group_scope)
   end
 
   def record_scope
