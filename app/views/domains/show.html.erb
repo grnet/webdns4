@@ -35,4 +35,10 @@
   </tbody>
 </table>
 
-<p><%= link_to 'New Record', new_domain_record_path(@domain) %></p>
+<p>
+  <%= link_to 'Add Record', '#new_record', class: 'btn btn-primary', onclick: '$("#new_record_wrapper").toggleClass("hidden");' %>
+</p>
+
+<div class="jumbotron hidden" id="new_record_wrapper">
+  <%= render 'records/form' %>
+</div>

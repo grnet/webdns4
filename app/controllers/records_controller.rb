@@ -20,6 +20,7 @@ class RecordsController < ApplicationController
     if @record.save
       redirect_to domain, notice: 'Record was successfully created.'
     else
+      flash[:alert] = 'There were some errors creating the record!'
       render :new
     end
   end

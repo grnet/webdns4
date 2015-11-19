@@ -13,6 +13,7 @@ class DomainsController < ApplicationController
 
   # GET /domains/1
   def show
+    @record = Record.new(domain_id: @domain.id)
   end
 
   # GET /domains/new

@@ -31,8 +31,6 @@ module BreadcrumbHelper
           crumbs.push(
             name: "#{crumb.name} IN #{crumb.type}",
             link: domain_record_path(crumb.domain_id, crumb))
-        else
-          crumbs.push(name: :new)
         end
         stack.push crumb.domain
       when Domain
