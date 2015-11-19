@@ -2,4 +2,5 @@
   <% breadcrumbs(@breadcrumb || @record || @domain || @group) do |crumb| %>
   <li><%= crumb %></li>
   <% end %>
+  <%= content_for :more_breadcrumbs %>
 </ol>
