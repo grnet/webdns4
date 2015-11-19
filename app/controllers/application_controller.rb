@@ -7,7 +7,16 @@ class ApplicationController < ActionController::Base
   helper_method :admin?
 
   def admin?
-    not params.key?(:user)
+    return false if params.key?('user')
+    return false if current_user.nil?
+
+    @admin_count ||= begin
+                       current_user
+                       .groups
+                       .where(name: WebDNS.settings[:admin_group]).count
+                     end
+
+    @admin_count != 0
   end
 
   def admin_only!
