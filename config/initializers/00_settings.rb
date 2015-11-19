@@ -12,7 +12,6 @@ WebDNS.settings[:soa_defaults] = {
 
 WebDNS.settings[:serial_strategy] = Strategies::Date
 
-# Don't allow to create SOA records
-WebDNS.settings[:prohibit_records_types] = ['SOA']
+WebDNS.settings[:prohibit_records_types] = []
 
 WebDNS.settings[:mail_from] = 'webdns@example.com'

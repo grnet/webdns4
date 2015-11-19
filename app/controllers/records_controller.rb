@@ -42,7 +42,13 @@ class RecordsController < ApplicationController
   private
 
   def edit_record_params
-    params.require(:record).permit(:name, :content, :ttl, :prio, :disabled).tap { |r|
+    if @record.type == 'SOA'
+      permitted = [:contact, :serial, :refresh, :retry, :expire, :nx]
+    else
+      permitted = [:name, :content, :ttl, :prio, :disable]
+    end
+
+    params.require(:record).permit(*permitted).tap { |r|
       r[:drop_privileges] = true if not admin?
     }
   end

@@ -1,3 +1,3 @@
 <h1>Editing record</h1>
 
-<%= render 'form' %>
+<%= render @record.type == 'SOA' ? 'soa_form' : 'form' %>

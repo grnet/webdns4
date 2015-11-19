@@ -1,0 +1,12 @@
+<%= bootstrap_form_for([@domain, @record], layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-8') do |f| %>
+
+  <%= f.static_control :type %>
+  <%= f.static_control :primary_ns %>
+  <%= f.email_field :contact %>
+  <%= f.text_field :refresh %>
+  <%= f.text_field :retry %>
+  <%= f.text_field :nx %>
+
+  <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
+
+<% end %>
