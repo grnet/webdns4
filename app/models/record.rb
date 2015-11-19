@@ -6,12 +6,20 @@ class Record < ActiveRecord::Base
 
   def self.record_types
     [
-      'SOA', 'NS', 'CNAME',
-      'A', 'AAAA',
+      'A', 'AAAA', 'CNAME',
       'MX',
       'TXT', 'SPF', 'SRV', 'SSHFP',
+      'SOA', 'NS',
       'PTR',
     ]
+  end
+
+  def self.forward_records
+    record_types - ['SOA', 'PTR']
+  end
+
+  def self.reverse_records
+    ['PTR', 'CNAME', 'TXT', 'NS']
   end
 
   def self.allowed_record_types
