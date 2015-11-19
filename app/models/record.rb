@@ -105,6 +105,10 @@ class Record < ActiveRecord::Base
     self.name = "#{name}.#{domain.name}" if not name.end_with?(domain.name)
   end
 
+  def remove_terminating_dot
+    self.content = content.gsub(/\.+\Z/, '')
+  end
+
   def update_zone_serial
     # SOA records handle serial themselves
     return true if type == 'SOA'

@@ -18,6 +18,14 @@ class PTRTest < ActiveSupport::TestCase
 
       assert_equal '1.2.0.192.in-addr.arpa', @record.name
     end
+
+    test 'chop terminating dot' do
+      @record.content = 'with-dot.example.com.'
+      @record.save!
+      @record.reload
+
+      assert_equal 'with-dot.example.com', @record.content
+    end
   end
 
   class V6PTRTest < ActiveSupport::TestCase
