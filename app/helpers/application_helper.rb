@@ -50,8 +50,6 @@ module ApplicationHelper
     content_tag(:span, '', class: "glyphicon glyphicon-#{icon}")
   end
 
-  private
-
   def abbr_glyph(icon, title)
     content_tag(:abbr, glyph(icon), title: title)
   end

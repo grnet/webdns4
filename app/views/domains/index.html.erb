@@ -13,9 +13,9 @@
           <td><%= link_to domain.name, domain %></td>
           <td>
             <% if domain.reverse? %>
-              <abbr title="Reverse"><span class="glyphicon glyphicon-chevron-left"></span></abbr>
+              <%= abbr_glyph('chevron-left', 'Reverse') %>
             <% else %>
-              <abbr title="Forward"><span class="glyphicon glyphicon-chevron-right"></span></abbr>
+              <%= abbr_glyph('chevron-right', 'Forward') %>
             <% end %>
           </td>
           <td><%= link_to_edit edit_domain_path(domain) %></td>
