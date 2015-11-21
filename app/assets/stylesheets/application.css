@@ -24,3 +24,7 @@ body {
 table a abbr[title] {
     cursor: pointer;
 }
+
+.tab-pane table {
+    margin-top: 20px;
+}

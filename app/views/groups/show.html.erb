@@ -5,27 +5,70 @@
   </li>
 <% end if admin? %>
 
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Members</th>
-      <th>Controls</th>
-    </tr>
-  </thead>
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a data-toggle="tab" href="#domains">Domains</a></li>
+  <li role="presentation"><a data-toggle="tab" href="#members">Members</a></li>
+</ul>
 
-  <tbody>
-    <% @group.memberships.includes(:user).each do |membership| %>
-      <tr>
-        <td><%= membership.user.email %><%= " (you)" if current_user == membership.user %></td>
-        <td>
-          <%= link_to_destroy destroy_member_group_path(@group, membership.user_id), method: :delete %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="domains">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th colspan="2">Domain</th>
+          <th colspan="2">Controls</th>
+        </tr>
+      </thead>
 
-<%= bootstrap_form_tag(url: create_member_group_path(@group), layout: :inline) do |f| %>
-  <%= f.text_field :email, prepend: 'Member', hide_label: true, id: 'js-search-member', data: { group: @group.id } %>
-  <%= f.submit 'Add', class: 'btn btn-primary' %>
-<% end %>
+      <tbody>
+        <% @group.domains.each do |domain| %>
+          <tr>
+            <td><%= link_to domain.name, domain %></td>
+            <td>
+              <% if domain.reverse? %>
+                <%= abbr_glyph('chevron-left', 'Reverse') %>
+              <% else %>
+                <%= abbr_glyph('chevron-right', 'Forward') %>
+              <% end %>
+              <% if domain.slave? %>
+                <%= abbr_glyph('link', 'Slave') %>
+              <% end %>
+            </td>
+            <td><%= link_to_edit edit_domain_path(domain) %></td>
+            <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="members">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Controls</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @group.memberships.includes(:user).each do |membership| %>
+          <tr>
+            <td><%= membership.user.email %><%= " (you)" if current_user == membership.user %></td>
+            <td>
+              <%= link_to_destroy destroy_member_group_path(@group, membership.user_id), method: :delete %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <p>
+      <%= bootstrap_form_tag(url: create_member_group_path(@group), layout: :inline) do |f| %>
+        <%= f.text_field :email, prepend: 'Add Member', hide_label: true, id: 'js-search-member', data: { group: @group.id } %>
+        <%= f.submit 'Add', class: 'btn btn-primary' %>
+      <% end %>
+    </p>
+  </div>
+</div>
