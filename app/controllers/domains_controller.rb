@@ -61,7 +61,7 @@ class DomainsController < ApplicationController
     params.require(:domain).tap { |d|
       # Make sure group id is permitted (belongs to group_scope)
       d[:group_id] = group_scope.find_by_id(d[:group_id]).try(:id)
-    }.permit(:name, :type, :group_id)
+    }.permit(:name, :type, :master, :group_id)
   end
 
 end

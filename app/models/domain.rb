@@ -16,6 +16,7 @@ class Domain < ActiveRecord::Base
   validates :group_id, presence: true
   validates :name, uniqueness: true, presence: true
   validates :type, presence: true, inclusion: { in: domain_types }
+  validates :master, presence: true, ipv4: true, if: :slave?
 
   after_create :generate_soa
 
@@ -26,6 +27,10 @@ class Domain < ActiveRecord::Base
 
   def reverse?
     name.end_with?('.in-addr.arpa') || name.end_with?('.ip6.arpa')
+  end
+
+  def slave?
+    type == 'SLAVE'
   end
 
   # Compute subnet for reverse records

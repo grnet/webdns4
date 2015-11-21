@@ -7,6 +7,11 @@ FactoryGirl.define do
     type 'NATIVE'
   end
 
+  factory :slave, parent: :domain do
+    type 'SLAVE'
+    master '1.2.3.4'
+  end
+
   factory :date_domain, class: Domain do
     group
     name { generate(:domain) }

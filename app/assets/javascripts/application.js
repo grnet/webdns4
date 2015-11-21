@@ -27,6 +27,15 @@ $(function() {
         }
     });
 
+    // Show master only on SLAVE domains
+    $('#domain_type').change(function() {
+        if ($(this).val() == 'SLAVE') {
+            $('#domain_master').parents('div.form-group').removeClass('hidden');
+        } else {
+            $('#domain_master').parents('div.form-group').addClass('hidden');
+        }
+    });
+
     var searchMembersGroup = $('#js-search-member').data('group');
     var searchMembers = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),

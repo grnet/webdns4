@@ -44,4 +44,38 @@ class DomainTest < ActiveSupport::TestCase
       www.destroy!
     end
   end
+
+  class SlaveDomainTest < ActiveSupport::TestCase
+    def setup
+      @domain = build(:slave)
+    end
+
+    test 'saves' do
+      @domain.save
+
+      assert_empty @domain.errors
+    end
+
+    test 'automatic SOA creation' do
+      @domain.save!
+      @domain.reload
+      assert_not_nil @domain.soa
+      assert_equal 1, @domain.soa.serial
+    end
+
+    test 'validates master' do
+      @domain.master = 'not-an-ip'
+      @domain.save
+
+      assert_not_empty @domain.errors['master']
+    end
+
+    test 'no records are allowed for users' do
+      @domain.save!
+      rec = build(:a, domain_id: @domain.id)
+
+      assert_not rec.valid?
+      assert_not_empty rec.errors[:type]
+    end
+  end
 end

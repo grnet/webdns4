@@ -17,6 +17,9 @@
             <% else %>
               <%= abbr_glyph('chevron-right', 'Forward') %>
             <% end %>
+            <% if domain.slave? %>
+              <%= abbr_glyph('link', 'Slave') %>
+            <% end %>
           </td>
           <td><%= link_to_edit edit_domain_path(domain) %></td>
           <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>

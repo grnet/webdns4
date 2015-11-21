@@ -10,10 +10,10 @@ module ApplicationHelper
   }
 
   def can_edit?(object)
-    return true if admin?
     return true unless object.respond_to?(:editable?)
+    by = admin? ? :admin : :user
 
-    object.editable?
+    object.editable?(by)
   end
 
   def seconds_to_human(seconds)

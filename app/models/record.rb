@@ -3,6 +3,11 @@ require_dependency 'drop_privileges_validator'
 
 class Record < ActiveRecord::Base
   belongs_to :domain
+  # Powerdns inserts empty records on slave zones,
+  # we want to hide them
+  #
+  # http://mailman.powerdns.com/pipermail/pdns-users/2013-December/010389.html
+  default_scope { where.not(type: nil) }
 
   def self.record_types
     [
@@ -37,6 +42,8 @@ class Record < ActiveRecord::Base
                             less_than_or_equal_to: 2_147_483_647
 
   # Don't allow the following actions on drop privileges mode
+  validate :no_touching_for_slave_zones, if: -> { domain.slave? }
+
   validates_drop_privileges :type,
                             message: 'You cannot touch that record!',
                             unless: -> { Record.allowed_record_types.include?(type) }
@@ -60,10 +67,14 @@ class Record < ActiveRecord::Base
     name.blank? || name == domain.name
   end
 
-  # Editable by a non-admin user
-  def editable?
-    return false unless Record.allowed_record_types.include?(type)
-    return false if type == 'NS' && domain_record?
+  def editable?(by = :user)
+    return false if domain.slave?
+
+    case by
+    when :user
+      return false unless Record.allowed_record_types.include?(type)
+      return false if type == 'NS' && domain_record?
+    end
 
     true
   end
@@ -86,6 +97,16 @@ class Record < ActiveRecord::Base
   end
 
   private
+
+  # Validations
+
+  def no_touching_for_slave_zones
+    # Allow automatic SOA creation for slave zones
+    # powerdns needs a valid serial to compare it with master
+    return if type == 'SOA' && validation_context == :create
+
+    errors.add(:type, 'This is a slave zone!')
+  end
 
   # Hooks
 
