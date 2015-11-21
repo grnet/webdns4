@@ -1,14 +1,14 @@
 class DomainsController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :group_scope
-
   before_action :domain, only: [:show, :edit, :update, :destroy]
   before_action :group,  only: [:show, :edit, :update, :destroy]
 
+  helper_method :edit_group_scope
+
   # GET /domains
   def index
-    @domains = domain_scope.all
+    @domains = show_domain_scope.all
   end
 
   # GET /domains/1
@@ -59,8 +59,8 @@ class DomainsController < ApplicationController
 
   def domain_params
     params.require(:domain).tap { |d|
-      # Make sure group id is permitted (belongs to group_scope)
-      d[:group_id] = group_scope.find_by_id(d[:group_id]).try(:id)
+      # Make sure group id is permitted (belongs to edit_group_scope)
+      d[:group_id] = edit_group_scope.find_by_id(d[:group_id]).try(:id)
     }.permit(:name, :type, :master, :group_id)
   end
 

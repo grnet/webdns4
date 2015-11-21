@@ -1,6 +1,6 @@
 <%= bootstrap_form_for(@domain, layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-4') do |f| %>
   <%= f.text_field :name %>
-  <%= f.collection_select :group_id, @group_scope, :id, :name %>
+  <%= f.collection_select :group_id, edit_group_scope, :id, :name %>
   <%= f.select :type, Domain.domain_types %>
   <%= f.text_field :master, wrapper_class: 'hidden' %>
   <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>

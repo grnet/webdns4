@@ -28,23 +28,31 @@ class ApplicationController < ActionController::Base
   private
 
   def group
-    @group ||= group_scope.find(params[:group_id] || params[:id])
+    @group ||= edit_group_scope.find(params[:group_id] || params[:id])
   end
 
   def domain
-    @domain ||= domain_scope.find(params[:domain_id] || params[:id])
+    @domain ||= edit_domain_scope.find(params[:domain_id] || params[:id])
   end
 
   def record
     @record ||= record_scope.find(params[:record_id] || params[:id])
   end
 
-  def group_scope
-    @group_scope ||= admin? ? Group.all : current_user.groups
+  def show_group_scope
+    @show_group_scope ||= current_user.groups
   end
 
-  def domain_scope
-    @domain_scope ||= admin? ? Domain.all : Domain.where(group: group_scope)
+  def edit_group_scope
+    @edit_group_scope ||= admin? ? Group.all : show_group_scope
+  end
+
+  def show_domain_scope
+    @show_domain_scope ||= Domain.where(group: show_group_scope)
+  end
+
+  def edit_domain_scope
+    @edit_domain_scope ||= admin? ? Domain.all : Domain.where(group: show_group_scope)
   end
 
   def record_scope
