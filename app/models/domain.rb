@@ -69,7 +69,8 @@ class Domain < ActiveRecord::Base
   # Hooks
   def generate_soa
     soa_record = SOA.new(domain: self)
-    soa_record.save
+
+    soa_record.save!
   end
 
 end
