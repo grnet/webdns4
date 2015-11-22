@@ -56,6 +56,22 @@ class Record < ActiveRecord::Base
   after_save :update_zone_serial
   after_destroy :update_zone_serial
 
+
+  # Smart order a list of domains
+  def self.smart_order(records)
+    records.sort_by { |r|
+      [
+        r.domain_record? ? 0 : 1,   # Zone records
+        r.name,
+        r.type == 'SOA' ? 0 : 1,
+        r.type == 'NS' ? 0 : 1,
+        record_types.index(r.type), # Friendly type
+        r.prio,
+        r.content
+      ]
+    }
+  end
+
   def short
     return '' if name == domain.name
     return '' if name.blank?

@@ -7,7 +7,7 @@
   </thead>
 
   <tbody>
-    <% @domain.records.each do |record| %>
+    <% Record.smart_order(@domain.records).each do |record| %>
     <tr class="<%= record.disabled? ? 'warning' : '' %>">
       <td><%= record.name %></td>
       <td><%= record.ttl %></td>
