@@ -7,8 +7,8 @@ AllCops:
 
 Metrics/LineLength:
   Max: 120
-Metrics/AbcSize:
-  Max: 18
+Metrics/ParameterLists:
+  Max: 6
 
 Documentation:
   Enabled: false
@@ -29,4 +29,6 @@ Style/EmptyLinesAroundClassBody:
 Style/EmptyLinesAroundModuleBody:
   Enabled: false
 Lint/HandleExceptions:
+  Enabled: false
+Metrics/AbcSize:
   Enabled: false
