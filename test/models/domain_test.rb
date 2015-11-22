@@ -9,7 +9,6 @@ class DomainTest < ActiveSupport::TestCase
     @domain.save!
     @domain.reload
     assert_not_nil @domain.soa
-    assert_equal 1, @domain.soa.serial
   end
 
   test 'increment serial on new record' do
@@ -32,6 +31,13 @@ class DomainTest < ActiveSupport::TestCase
       www.content = '1.2.3.5'
       www.save!
     end
+  end
+
+  test 'automatic NS creation' do
+    @domain.save!
+    @domain.reload
+    assert_equal WebDNS.settings[:default_ns].sort,
+                 @domain.records.where(type: 'NS').pluck(:content).sort
   end
 
   test 'increment serial on record destroy' do

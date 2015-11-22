@@ -19,6 +19,7 @@ class Domain < ActiveRecord::Base
   validates :master, presence: true, ipv4: true, if: :slave?
 
   after_create :generate_soa
+  after_create :generate_ns
 
   attr_writer :serial_strategy
   def serial_strategy
@@ -72,10 +73,20 @@ class Domain < ActiveRecord::Base
   end
 
   # Hooks
+
   def generate_soa
     soa_record = SOA.new(domain: self)
 
     soa_record.save!
+  end
+
+  def generate_ns
+    return if slave?
+    return if WebDNS.settings[:default_ns].empty?
+
+    WebDNS.settings[:default_ns].each { |ns|
+      Record.find_or_create_by!(domain: self, type: 'NS', name: '', content: ns)
+    }
   end
 
 end

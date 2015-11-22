@@ -153,6 +153,7 @@ class Record < ActiveRecord::Base
   def update_zone_serial
     # SOA records handle serial themselves
     return true if type == 'SOA'
+    return true if !domain
 
     domain.soa.bump_serial!
   end
