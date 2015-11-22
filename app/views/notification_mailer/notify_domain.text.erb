@@ -1,0 +1,16 @@
+Action: <%= @context %>
+By: <%= @user.email %> <%= '(admin)' if @admin %>
+
+Domain: <%= @domain.name %>
+Type: <%= @domain.type %>
+<% if @domain.slave? %>
+Master: <%= @domain.master %>
+<% end -%>
+
+<% if @context == :update -%>
+Changes:
+<% @changes.each do |key, change| -%>
+<%= key %> from <%= change.first || "(empty)" %>
+<%= key %> to   <%= change.last %>
+<% end -%>
+<% end -%>

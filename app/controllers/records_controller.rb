@@ -18,6 +18,7 @@ class RecordsController < ApplicationController
     @record = domain.records.new(new_record_params)
 
     if @record.save
+      notify_record(@record, :create)
       redirect_to domain, notice: 'Record was successfully created.'
     else
       flash[:alert] = 'There were some errors creating the record!'
@@ -28,6 +29,7 @@ class RecordsController < ApplicationController
   # PATCH/PUT /records/1
   def update
     if @record.update(edit_record_params)
+      notify_record(@record, :update)
       redirect_to domain, notice: 'Record was successfully updated.'
     else
       render :edit
@@ -37,6 +39,7 @@ class RecordsController < ApplicationController
   # DELETE /records/1
   def destroy
     @record.destroy
+    notify_record(@record, :destroy)
     redirect_to domain, notice: 'Record was successfully destroyed.'
   end
 
@@ -58,5 +61,9 @@ class RecordsController < ApplicationController
     params.require(:record).permit(:name, :content, :ttl, :type, :prio).tap { |r|
       r[:drop_privileges] = true if not admin?
     }
+  end
+
+  def notify_record(*args)
+    notification.notify_record(current_user, *args)
   end
 end

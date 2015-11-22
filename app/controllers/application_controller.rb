@@ -59,4 +59,7 @@ class ApplicationController < ActionController::Base
     @record_scope ||= domain.records
   end
 
+  def notification
+    Notification.instance
+  end
 end

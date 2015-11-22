@@ -1,0 +1,15 @@
+Action: <%= @context %>
+By: <%= @user.email %> <%= '(admin)' if @admin %>
+
+Record: <%= @record.name %>
+Type: <%= @record.type %>
+Domain: <%= @record.domain.name %>
+State: <%= @record.to_dns %>
+
+<% if @context == :update -%>
+Changes:
+<% @changes.each do |key, change| -%>
+<%= key %> from <%= change.first %>
+<%= key %> to   <%= change.last %>
+<% end -%>
+<% end -%>

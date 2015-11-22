@@ -1,0 +1,1 @@
+Notification.instance.hook

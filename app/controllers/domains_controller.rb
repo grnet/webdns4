@@ -30,6 +30,7 @@ class DomainsController < ApplicationController
     @domain = Domain.new(domain_params)
 
     if @domain.save
+      notify_domain(@domain, :create)
       redirect_to @domain, notice: "#{@domain.name} was successfully created."
     else
       render :new
@@ -39,6 +40,7 @@ class DomainsController < ApplicationController
   # PATCH/PUT /domains/1
   def update
     if @domain.update(domain_params)
+      notify_domain(@domain, :update)
       redirect_to @domain, notice: "#{@domain.name} was successfully updated."
     else
       render :edit
@@ -48,6 +50,7 @@ class DomainsController < ApplicationController
   # DELETE /domains/1
   def destroy
     @domain.destroy
+    notify_domain(@domain, :destroy)
     redirect_to domains_url, notice: "#{@domain.name} was successfully destroyed."
   end
 
@@ -62,6 +65,10 @@ class DomainsController < ApplicationController
       # Make sure group id is permitted (belongs to edit_group_scope)
       d[:group_id] = edit_group_scope.find_by_id(d[:group_id]).try(:id)
     }.permit(:name, :type, :master, :group_id)
+  end
+
+  def notify_domain(*args)
+    notification.notify_domain(current_user, *args)
   end
 
 end
