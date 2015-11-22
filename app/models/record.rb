@@ -96,6 +96,10 @@ class Record < ActiveRecord::Base
     [name, ttl, 'IN', type, supports_prio? ? prio : nil, content].compact.join(' ')
   end
 
+  def to_short_dns
+    [name, 'IN', type].join(' ')
+  end
+
   private
 
   # Validations
