@@ -15,7 +15,7 @@ class Record < ActiveRecord::Base
       'MX',
       'TXT', 'SPF', 'SRV', 'SSHFP',
       'SOA', 'NS',
-      'PTR',
+      'PTR', 'NAPTR'
     ]
   end
 
@@ -24,7 +24,7 @@ class Record < ActiveRecord::Base
   end
 
   def self.reverse_records
-    ['PTR', 'CNAME', 'TXT', 'NS']
+    ['PTR', 'CNAME', 'TXT', 'NS', 'NAPTR']
   end
 
   def self.allowed_record_types
