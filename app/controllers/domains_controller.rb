@@ -18,7 +18,7 @@ class DomainsController < ApplicationController
 
   # GET /domains/new
   def new
-    @domain = Domain.new
+    @domain = Domain.new(new_domain_params)
   end
 
   # GET /domains/1/edit
@@ -58,6 +58,10 @@ class DomainsController < ApplicationController
 
   def group
     domain.group
+  end
+
+  def new_domain_params
+    params.permit(:group_id)
   end
 
   def domain_params
