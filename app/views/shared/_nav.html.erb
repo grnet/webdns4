@@ -13,7 +13,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="active"><a href="/domains">Domains</a></li>
-        <li><a href="/contact">Contact</a></li>
+        <li><%= mail_to WebDNS.settings[:contact_mail], 'Contact' %></li>
         <% if admin? %>
           <li><a href="/admin/">Admin</a></li>
         <% end %>
