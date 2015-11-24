@@ -43,7 +43,7 @@ class Notification
     end
   end
 
-  def handle_record(data) # rubocop:disable Metrics/MethodLength
+  def handle_record(data)
     record, context, user = data.values_at(:object, :context, :user)
     domain = record.domain
     changes = record.previous_changes
@@ -68,7 +68,7 @@ class Notification
     ).deliver
   end
 
-  def handle_domain(data) # rubocop:disable Metrics/MethodLength
+  def handle_domain(data)
     domain, context, user = data.values_at(:object, :context, :user)
     changes = domain.previous_changes
 
