@@ -21,3 +21,7 @@ WebDNS.settings[:prohibit_records_types] = []
 WebDNS.settings[:contact_mail] = 'webdns@example.com'
 WebDNS.settings[:mail_from] = 'webdns@example.com'
 WebDNS.settings[:admin_group] = 'admin'
+
+# Allow local overrides
+local_settings = File.expand_path('../../local_settings.rb', __FILE__)
+require_relative local_settings if File.exist?(local_settings)

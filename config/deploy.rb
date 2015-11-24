@@ -6,7 +6,7 @@ set :repo_url, 'git@bitbucket.org:xlembouras/webns.git'
 
 set :deploy_to, '/srv/webdns'
 
-set :linked_files, %w(config/database.yml config/secrets.yml)
+set :linked_files, %w(config/database.yml config/secrets.yml config/local_settings.rb)
 set :linked_dirs, %w(log tmp/pids tmp/cache tmp/sockets)
 
 set :keep_releases, 5
