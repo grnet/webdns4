@@ -1,6 +1,7 @@
 class Domain < ActiveRecord::Base
   self.inheritance_column = :nx
 
+  # List all supported domain types.
   def self.domain_types
     [
       'NATIVE',
@@ -22,14 +23,20 @@ class Domain < ActiveRecord::Base
   after_create :generate_ns
 
   attr_writer :serial_strategy
+
+  # Get the zone's serial strategy.
+  #
+  # Returns one of the supported serial strategies.
   def serial_strategy
     @serial_strategy ||= WebDNS.settings[:serial_strategy]
   end
 
+  # Returns true if this a reverse zone.
   def reverse?
     name.end_with?('.in-addr.arpa') || name.end_with?('.ip6.arpa')
   end
 
+  # Returns true if this is a slave zone.
   def slave?
     type == 'SLAVE'
   end

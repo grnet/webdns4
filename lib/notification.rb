@@ -3,7 +3,7 @@ require 'singleton'
 class Notification
   include Singleton
 
-  # Send out a notification about notable record changes
+  # Send out a notification about notable record changes.
   def notify_record(user, record, context)
     ActiveSupport::Notifications.instrument(
       'webdns.record',
@@ -12,7 +12,7 @@ class Notification
       object: record)
   end
 
-  # Send out a notification about notable domain changes
+  # Send out a notification about notable domain changes.
   def notify_domain(user, domain, context)
     ActiveSupport::Notifications.instrument(
       'webdns.domain',
@@ -21,7 +21,7 @@ class Notification
       object: domain)
   end
 
-  # Subscribe to domain/record notifications
+  # Subscribe to domain/record notifications.
   def hook
     hook_record
     hook_domain

@@ -1,5 +1,6 @@
 module FlashHelper
 
+  # Generate html flash messages based on bootstrap alerts.
   def flash_messages
     flash.each do |msg_type, message|
       concat(

@@ -6,6 +6,7 @@ module ActiveModel
         setup!(options[:class])
       end
 
+      # Add an error on the specified attribute if we are on drop privileges mode.
       def validate_each(record, attribute, _value)
         record.errors.add(attribute, options[:message]) if record.drop_privileges
       end

@@ -8,10 +8,14 @@ module Bean
 
     attr_accessor :job
 
+    # Start consuming jobs.
     def self.work
       instance.work
     end
 
+    # Start consuming jobs.
+    #
+    # Handles reconnects.
     def work
       register_signals
       watch
@@ -19,6 +23,9 @@ module Bean
       Base.beanstalk_reconnect!
     end
 
+    # Graceful stop the worker.
+    #
+    # If no job is running stops immediately.
     def stop
       if job.nil?
         exit

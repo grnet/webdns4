@@ -9,6 +9,7 @@ class Record < ActiveRecord::Base
   # http://mailman.powerdns.com/pipermail/pdns-users/2013-December/010389.html
   default_scope { where.not(type: nil) }
 
+  # List all supported DNS RR types.
   def self.record_types
     [
       'A', 'AAAA', 'CNAME',
@@ -19,14 +20,17 @@ class Record < ActiveRecord::Base
     ]
   end
 
+  # List types usually used in forward zones.
   def self.forward_records
     record_types - ['SOA', 'PTR']
   end
 
+  # List types usually used in reverse zones.
   def self.reverse_records
     ['PTR', 'CNAME', 'TXT', 'NS', 'NAPTR']
   end
 
+  # List types that can be touched by a simple user.
   def self.allowed_record_types
     record_types - WebDNS.settings[:prohibit_records_types]
   end
@@ -56,8 +60,20 @@ class Record < ActiveRecord::Base
   after_save :update_zone_serial
   after_destroy :update_zone_serial
 
-
-  # Smart order a list of domains
+  # Smart sort a list of records.
+  #
+  # Order by:
+  # * Top level records
+  # * Record name
+  # * SOA
+  # * NS
+  # * Friendly type
+  # * Priority
+  # * Content
+  #
+  # records - The list of records to order.
+  #
+  # Returns the list sorted.
   def self.smart_order(records)
     records.sort_by { |r|
       [
@@ -72,6 +88,9 @@ class Record < ActiveRecord::Base
     }
   end
 
+  # Get the a short name for the record (without the zone suffix).
+  #
+  # Returns a string.
   def short
     return '' if name == domain.name
     return '' if name.blank?
@@ -79,10 +98,16 @@ class Record < ActiveRecord::Base
     File.basename(name, ".#{domain.name}")
   end
 
+  # Returns true if this is a zone record.
   def domain_record?
     name.blank? || name == domain.name
   end
 
+  # Find out if the record is edittable.
+  #
+  # by - Editable by :user or :admin.
+  #
+  # Returns true if the record is editable.
   def editable?(by = :user)
     return false if domain.slave?
 
@@ -95,23 +120,35 @@ class Record < ActiveRecord::Base
     true
   end
 
+  # Find out this record type supports priorities.
+  #
+  # We set this to false by default, record types that support priorities.
+  # shoule override this.
+  #
+  # Returns true this record type support priorities.
   def supports_prio?
     false
   end
 
-  # Create record specific urls for all record types
+  # Make sure rails generates record specific urls for all record types.
   #
-  # Overrides default rails STI
+  # Overrides default rails STI behavior.
   def self.model_name
     return super if self == Record
 
     Record.model_name
   end
 
+  # Generate the usual admin friendly DNS record line.
+  #
+  # Returns a string.
   def to_dns
     [name, ttl, 'IN', type, supports_prio? ? prio : nil, content].compact.join(' ')
   end
 
+  # Generate a shorter version of the DNS record line.
+  #
+  # Returns a string.
   def to_short_dns
     [name, 'IN', type].join(' ')
   end

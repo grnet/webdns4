@@ -16,6 +16,7 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+/doc
 *.swp
 config/database.yml
 config/beanstalk.yml

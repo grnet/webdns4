@@ -1,5 +1,6 @@
-# Prio should be between [0, 65535]
+# Validates DNS priorities [0, 65535]
 class PrioValidator < ActiveModel::EachValidator
+  # Adds an attribute error if value is not a valid DNS priority.
   def validate_each(record, attribute, value)
     # Rails autocasts integer fields to 0 if a non-numerical value is passed
     # we override that by using th *_before_type_cast helper method
