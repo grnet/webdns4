@@ -27,11 +27,11 @@ module Bean
       end
     end
 
+    private
+
     def stop? # rubocop:disable Style/TrivialAccessors
       @stop
     end
-
-    private
 
     def register_signals
       trap('INT') { stop }
