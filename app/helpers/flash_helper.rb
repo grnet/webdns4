@@ -1,14 +1,5 @@
 module FlashHelper
 
-  def bootstrap_class_for(flash_type)
-    {
-      success: 'alert-success',
-      error:   'alert-danger',
-      alert:   'alert-warning',
-      notice:  'alert-info'
-    }.fetch(flash_type.to_sym, flash_type.to_s)
-  end
-
   def flash_messages
     flash.each do |msg_type, message|
       concat(
@@ -20,5 +11,16 @@ module FlashHelper
     end
 
     nil
+  end
+
+  private
+
+  def bootstrap_class_for(flash_type)
+    {
+      success: 'alert-success',
+      error:   'alert-danger',
+      alert:   'alert-warning',
+      notice:  'alert-info'
+    }.fetch(flash_type.to_sym, flash_type.to_s)
   end
 end
