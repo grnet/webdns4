@@ -1,3 +1,15 @@
+<% if current_user.memberships.empty? %>
+  <div class="jumbotron">
+    <h2>Wellcome to WebDNS!</h2>
+    <p>
+      In order to manage domains you have to be a member of a group.
+    </p>
+    <p>
+      You can either contact an admin to create a new group for you, or ask another user for an invite to an existing group.
+    </p>
+  </div>
+<% end %>
+
 <table class="table table-striped">
   <thead>
   </thead>
@@ -30,5 +42,9 @@
 </table>
 
 <p>
-  <%= link_to 'Add Domain', new_domain_path, class: 'btn btn-primary' %>
+  <% if current_user.memberships.any? %>
+    <%= link_to 'Add Domain', new_domain_path, class: 'btn btn-primary' %>
+  <% else %>
+    <%= link_to 'Add Domain', new_domain_path, class: 'btn btn-primary disabled' %>
+  <% end %>
 </p>
