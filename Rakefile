@@ -4,3 +4,12 @@
 require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
+
+begin
+  require 'yard2'
+
+  YARD::Rake::YardocTask.new do |t|
+    t.files = ['app/**/*.rb', 'lib/**/*.rb']
+  end
+rescue LoadError
+end

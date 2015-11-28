@@ -3,3 +3,8 @@ guard :minitest do
   watch(%r{^test/(.*)\/?test_(.*)\.rb$})
   watch(%r{^app/(.+)\.rb$}) { |m| "test/#{m[1]}_test.rb" }
 end
+
+guard 'yard' do
+  watch(%r{app/.+\.rb})
+  watch(%r{lib/.+\.rb})
+end

@@ -6,6 +6,9 @@ end
 
 group :development do
   gem 'rubocop', '0.35', require: false
+  gem 'yard'
+  gem 'yard-tomdoc'
+  gem 'guard-yard'
   gem 'guard-minitest', require: false
   gem 'guard', require: false
   gem 'capistrano', '3.2.1', require: false # pkg:capistrano

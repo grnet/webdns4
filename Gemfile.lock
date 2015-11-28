@@ -71,6 +71,9 @@ GEM
     guard-minitest (2.4.4)
       guard-compat (~> 1.2)
       minitest (>= 3.0)
+    guard-yard (2.1.4)
+      guard (>= 1.1.0)
+      yard (>= 0.7.0)
     hike (1.2.3)
     i18n (0.6.9)
     jquery-rails (3.1.2)
@@ -156,10 +159,15 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.3)
     tilt (1.4.1)
+    tomparse (0.4.2)
     tzinfo (1.1.0)
       thread_safe (~> 0.1)
     warden (1.2.3)
       rack (>= 1.0)
+    yard (0.8.7.6)
+    yard-tomdoc (0.7.1)
+      tomparse (>= 0.4.0)
+      yard
 
 PLATFORMS
   ruby
@@ -172,6 +180,7 @@ DEPENDENCIES
   factory_girl_rails (= 4.4.1)
   guard
   guard-minitest
+  guard-yard
   i18n (= 0.6.9)
   jquery-rails (= 3.1.2)
   json (= 1.8.1)
@@ -192,3 +201,5 @@ DEPENDENCIES
   thread_safe (= 0.3.3)
   tzinfo (= 1.1.0)
   warden (= 1.2.3)
+  yard
+  yard-tomdoc
