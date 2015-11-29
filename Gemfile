@@ -21,7 +21,7 @@ end
 # Lock jessie versions
 #
 
-gem 'rails', '4.1.8'
+gem 'rails', '4.1.8' # pkg:rails
 gem 'i18n', '0.6.9'
 gem 'json', '1.8.1'
 gem 'mail', '2.6.1'
@@ -35,17 +35,17 @@ gem 'sprockets-rails', '2.1.3'
 gem 'thread_safe', '0.3.3'
 gem 'tzinfo', '1.1.0'
 
-gem 'mysql2', '0.3.16'
-gem 'jquery-rails', '3.1.2'
-gem 'beaneater', '1.0.0'
+gem 'mysql2', '0.3.16' # pkg:ruby-mysql2
+gem 'jquery-rails', '3.1.2' # pkg:ruby-jquery-rails
+gem 'beaneater', '1.0.0' # pkg:ruby-beaneater
 
 # Devise & dependencies
-gem 'devise', '3.5.2'
+gem 'devise', '3.5.2' # pkg:ruby-devise
 gem 'warden', '1.2.3'
 gem 'bcrypt', '3.1.7'
 gem 'orm_adapter', '0.5.0'
-gem 'responders'# , '2.0.2'
+gem 'responders', '1.1.2'
 
 group :test do
-  gem 'factory_girl_rails', '4.4.1' # pkg:ruby-factory-girl-rails
+  gem 'factory_girl_rails', '4.4.1'
 end
