@@ -4,7 +4,7 @@
   <% if @record.persisted? %>
     <%= f.static_control :type %>
   <% else %>
-    <%= f.select :type, @domain.reverse? ? Record.reverse_records : Record.forward_records %>
+    <%= f.select :type, record_types_for_domain(@domain) %>
   <% end %>
   <%= f.text_field :prio, placeholder: 10, wrapper_class: @record.supports_prio? ? '' : 'hidden' %>
   <%= f.text_field :ttl, label: 'TTL' %>

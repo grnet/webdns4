@@ -36,6 +36,11 @@ class Domain < ActiveRecord::Base
     name.end_with?('.in-addr.arpa') || name.end_with?('.ip6.arpa')
   end
 
+  # Returns true if this a ENUM zone.
+  def enum?
+    name.end_with?('.e164.arpa')
+  end
+
   # Returns true if this is a slave zone.
   def slave?
     type == 'SLAVE'

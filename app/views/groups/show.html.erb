@@ -27,6 +27,8 @@
             <td>
               <% if domain.reverse? %>
                 <%= abbr_glyph('chevron-left', 'Reverse') %>
+              <% elsif domain.enum? %>
+                <%= abbr_glyph('phone-alt', 'Enum') %>
               <% else %>
                 <%= abbr_glyph('chevron-right', 'Forward') %>
               <% end %>

@@ -11,4 +11,12 @@ module RecordsHelper
 
     ".#{record.domain.name} (#{record.domain.subnet})"
   end
+
+  # List of record types usually used for that domain type
+  def record_types_for_domain(domain)
+    return Record.reverse_records if domain.reverse?
+    return Record.enum_records if domain.enum?
+
+    Record.forward_records
+  end
 end

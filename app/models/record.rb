@@ -30,6 +30,11 @@ class Record < ActiveRecord::Base
     ['PTR', 'CNAME', 'TXT', 'NS', 'NAPTR']
   end
 
+  # List types usually used in enum zones.
+  def self.enum_records
+    ['NAPTR', 'CNAME', 'TXT', 'NS']
+  end
+
   # List types that can be touched by a simple user.
   def self.allowed_record_types
     record_types - WebDNS.settings[:prohibit_records_types]
