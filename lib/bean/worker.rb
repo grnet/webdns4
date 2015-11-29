@@ -20,7 +20,7 @@ module Bean
       register_signals
       watch
     rescue Beaneater::NotConnected
-      Base.beanstalk_reconnect!
+      WebDNS.bean.reconnect!
     end
 
     # Graceful stop the worker.
@@ -57,7 +57,7 @@ module Bean
     end
 
     def process_job
-      self.job = Base.bean.reserve(TIMEOUT)
+      self.job = WebDNS.bean.reserve(TIMEOUT)
       log_job
 
       job.delete

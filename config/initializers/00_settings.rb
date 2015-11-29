@@ -1,5 +1,3 @@
-WebDNS = Base
-
 WebDNS.settings[:soa_defaults] = {
   primary_ns: 'ns1.example.com',
   contact: 'domainmaster@example.com',
