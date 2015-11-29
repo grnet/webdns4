@@ -14,6 +14,10 @@ group :development do
   gem 'capistrano', '3.2.1', require: false # pkg:capistrano
 end
 
+group :production do
+  gem 'unicorn' # pkg:unicorn
+end
+
 # Lock jessie versions
 #
 
