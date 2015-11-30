@@ -33,7 +33,7 @@
             <%= link_to_disable disable_domain_record_path(@domain, record), method: :put %>
           <% end %>
         </td>
-        <td><%= link_to_edit edit_domain_record_path(@domain, record) if can_edit?(record) %></td>
+        <td><%= link_to_edit edit_domain_record_path(@domain, record) %></td>
         <td><%= link_to_destroy [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
       <% else %>
         <td/>
