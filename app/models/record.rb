@@ -65,6 +65,9 @@ class Record < ActiveRecord::Base
   after_save :update_zone_serial
   after_destroy :update_zone_serial
 
+  before_create :generate_classless_delegations, unless: -> { domain.slave? }
+  before_destroy :delete_classless_delegations, unless: -> { domain.slave? }
+
   # Smart sort a list of records.
   #
   # Order by:
@@ -83,6 +86,7 @@ class Record < ActiveRecord::Base
     records.sort_by { |r|
       [
         r.domain_record? ? 0 : 1,   # Zone records
+        r.classless_delegated? ? 1 : 0,
         r.name,
         r.type == 'SOA' ? 0 : 1,
         r.type == 'NS' ? 0 : 1,
@@ -115,6 +119,7 @@ class Record < ActiveRecord::Base
   # Returns true if the record is editable.
   def editable?(by = :user)
     return false if domain.slave?
+    return false if classless_delegated?
 
     case by
     when :user
@@ -156,6 +161,26 @@ class Record < ActiveRecord::Base
   # Returns a string.
   def to_short_dns
     [name, 'IN', type].join(' ')
+  end
+
+  def classless_delegated?
+    return false if not type == 'CNAME'
+    return false if not domain.name.end_with?('.in-addr.arpa')
+
+    network, mask = parse_delegation(content)
+    return false if network.nil?
+
+    octet = name.split('.').first.to_i
+    return true if octet >= network
+    return true if octet <= network + 2 ^ (32 - mask) - 1 # max
+
+    false
+  end
+
+  def classless_delegation?
+    return true if classless_delegation
+
+    false
   end
 
   private
@@ -200,4 +225,68 @@ class Record < ActiveRecord::Base
     domain.soa.bump_serial!
   end
 
+  def classless_delegation
+    return if not type == 'NS'
+    return if not domain.name.end_with?('.in-addr.arpa')
+
+    network, mask = parse_delegation(name)
+    return if network.nil?
+
+    range = IPAddr.new("0.0.0.#{network}/#{mask}").to_range
+    return if !range.first.to_s.end_with?(".#{network}")
+
+    range.map { |ip|
+      octet = ip.to_s.split('.').last
+      "#{octet}.#{domain.name}"
+    }
+  end
+
+  def parse_delegation(value)
+    first, _rest = value.split('.', 2)
+    return if !first['/']
+
+    network, mask = first.split('/', 2).map { |i| Integer(i).abs }
+    return if [network, mask].join('/') != first
+    return if mask <= 24
+    return if mask > 31
+    return if network > 255
+
+    [network, mask]
+  rescue ArgumentError # Not an integer
+  end
+
+  def delete_classless_delegations
+    rnames = classless_delegation
+    return unless rnames
+
+    # Check if we have another NS for the same delegation
+    return if domain.records.where(type: 'NS', name: name)
+               .where.not(id: id).exists?
+
+    # Delete all CNAMEs
+    domain.records.where(name: rnames,
+                         type: 'CNAME',
+                         content: name).delete_all
+  end
+
+  def generate_classless_delegations
+    rnames = classless_delegation
+    return unless rnames
+
+    # Make sure no record exists for a delegated domain
+    if domain.records.where(name: rnames)
+        .where.not(content: name).exists?
+
+      errors.add(:name, 'Records already exist for the delegated octets!')
+      return false
+    end
+
+    rnames.each { |rname|
+      CNAME.find_or_create_by!(
+        domain: domain,
+        name: rname,
+        content: name
+      )
+    }
+  end
 end

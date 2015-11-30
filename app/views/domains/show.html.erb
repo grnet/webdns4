@@ -21,7 +21,11 @@
       <td><%= record.type %></td>
       <td><%= record.supports_prio? ? record.prio : '' %></td>
       <td><%= record.content %></td>
-      <% if can_edit?(record) %>
+      <% if record.classless_delegation? %>
+        <td/>
+        <td/>
+        <td><%= link_to_destroy [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% elsif can_edit?(record) %>
         <td>
           <% if record.disabled? %>
             <%= link_to_enable enable_domain_record_path(@domain, record), method: :put %>
