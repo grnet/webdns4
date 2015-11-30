@@ -12,7 +12,8 @@ class Domain < ActiveRecord::Base
 
   belongs_to :group
   has_many :records
-  has_one :soa, class_name: SOA
+  # BUG in bump_serial_trigger
+  has_one :soa, -> { unscope(where: :type) }, class_name: SOA
 
   validates :group_id, presence: true
   validates :name, uniqueness: true, presence: true
