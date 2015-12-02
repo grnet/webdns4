@@ -20,9 +20,14 @@ $(function() {
 
     // Show priority on MX/SRV record only
     $('#record_type').change(function() {
-        if ($(this).val() == 'MX' || $(this).val() == 'SRV') {
+        if ($(this).val() == 'MX') { // MX, default priority 10
+            $('#record_prio').parents('div.form-group').removeClass('hidden');
+            $('#record_prio').val('10');
+        } else if ($(this).val() == 'SRV') { // SRV
+            $('#record_prio').val('');
             $('#record_prio').parents('div.form-group').removeClass('hidden');
         } else {
+            $('#record_prio').val('');
             $('#record_prio').parents('div.form-group').addClass('hidden');
         }
     });
