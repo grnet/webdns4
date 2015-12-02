@@ -15,6 +15,7 @@ WebDNS.settings[:default_ns] = [
 WebDNS.settings[:serial_strategy] = Strategies::Date
 
 WebDNS.settings[:prohibit_records_types] = []
+WebDNS.settings[:prohibit_domain_types] = ['NATIVE']
 
 WebDNS.settings[:contact_mail] = 'webdns@example.com'
 WebDNS.settings[:mail_from] = 'webdns@example.com'

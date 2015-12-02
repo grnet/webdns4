@@ -10,6 +10,11 @@ class Domain < ActiveRecord::Base
     ]
   end
 
+  # List domain types that can be created.
+  def self.allowed_domain_types
+    domain_types - WebDNS.settings[:prohibit_domain_types]
+  end
+
   belongs_to :group
   has_many :records
   # BUG in bump_serial_trigger
