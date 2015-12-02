@@ -17,12 +17,15 @@
   <tbody>
     <% @domains.group_by(&:group).each do |group, domains| %>
       <tr>
-        <th colspan="2"><%= link_to group.name, group_path(group) %></th>
-        <th colspan="2">Controls</th>
+        <th colspan="1" style="width:800px">
+          <%= link_to group.name, group_path(group) %>
+          <%= link_to glyph('menu-down'), "##{group.id}", onclick: "$('tr.group-#{group.id}').toggleClass('hidden');" %>
+        </th>
+        <th colspan="3">Controls</th>
       </tr>
       <% domains.each do |domain| %>
-        <tr>
-          <td><%= link_to domain.name, domain %></td>
+        <tr class="group-<%= group.id =%>">
+          <td style="width:800px"><%= link_to domain.name, domain %></td>
           <td>
             <% if domain.reverse? %>
               <%= abbr_glyph('chevron-left', 'Reverse') %>
