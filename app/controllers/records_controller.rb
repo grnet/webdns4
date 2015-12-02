@@ -49,7 +49,7 @@ class RecordsController < ApplicationController
     if @record.type == 'SOA'
       permitted = [:contact, :serial, :refresh, :retry, :expire, :nx]
     else
-      permitted = [:name, :content, :ttl, :prio, :disable]
+      permitted = [:name, :content, :ttl, :prio, :disabled]
     end
 
     params.require(:record).permit(*permitted).tap { |r|
