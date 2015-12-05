@@ -35,4 +35,8 @@ Rails.application.routes.draw do
 
     resources :groups, except: [:show]
   end
+
+  # Private
+  put 'private/replace_ds', to: 'private#replace_ds'
 end
+
