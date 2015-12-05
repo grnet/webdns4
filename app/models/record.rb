@@ -16,7 +16,8 @@ class Record < ActiveRecord::Base
       'MX',
       'TXT', 'SPF', 'SRV', 'SSHFP',
       'SOA', 'NS',
-      'PTR', 'NAPTR'
+      'PTR', 'NAPTR',
+      'DS'
     ]
   end
 
@@ -27,12 +28,12 @@ class Record < ActiveRecord::Base
 
   # List types usually used in reverse zones.
   def self.reverse_records
-    ['PTR', 'CNAME', 'TXT', 'NS', 'NAPTR']
+    ['PTR', 'CNAME', 'TXT', 'NS', 'NAPTR', 'DS']
   end
 
   # List types usually used in enum zones.
   def self.enum_records
-    ['NAPTR', 'CNAME', 'TXT', 'NS']
+    ['NAPTR', 'CNAME', 'TXT', 'NS', 'DS']
   end
 
   # List types that can be touched by a simple user.

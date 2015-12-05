@@ -1,0 +1,2 @@
+class DS < Record
+end
