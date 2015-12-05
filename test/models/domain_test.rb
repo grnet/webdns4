@@ -84,4 +84,33 @@ class DomainTest < ActiveSupport::TestCase
       assert_not_empty rec.errors[:type]
     end
   end
+
+  class DsDomainTest < ActiveSupport::TestCase
+    def setup
+      @domain = create(:domain)
+      @ds = [
+        '31406 8 1 189968811e6eba862dd6c209f75623d8d9ed9142',
+        '31406 8 2 f78cf3344f72137235098ecbbd08947c2c9001c7f6a085a17f518b5d8f6b916d',
+      ]
+      @child = "dnssec.#{@domain.name}"
+      @extra = DS.create(domain: @domain, name: @child, content: 'other')
+    end
+
+    test 'add ds records' do
+      Domain.replace_ds(@domain.name, @child, @ds)
+      @extra.save! # Should be deleted
+
+      assert_equal @ds.size, DS.where(name: "dnssec.#{@domain.name}").count
+      @ds.each { |ds|
+        assert_equal 1, DS.where(name: "dnssec.#{@domain.name}", content: ds).count
+      }
+    end
+
+    test 'check if child is a valid subdomain' do
+      assert_raise Domain::NotAChild do
+        Domain.replace_ds(@domain.name, 'dnssec.example.net', @ds)
+      end
+    end
+
+  end
 end

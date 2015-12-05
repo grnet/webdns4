@@ -1,4 +1,5 @@
 class Domain < ActiveRecord::Base
+  class NotAChild < StandardError; end
   self.inheritance_column = :nx
 
   # List all supported domain types.
@@ -60,6 +61,19 @@ class Domain < ActiveRecord::Base
       subnet_v4
     elsif name.end_with?('.ip6.arpa')
       subnet_v6
+    end
+  end
+
+  def self.replace_ds(parent, child, records)
+    parent = find_by_name!(parent)
+    fail NotAChild if not child.end_with?(parent.name)
+
+    existing = parent.records.where(name: child, type: 'DS')
+    recs = records.map { |rec| DS.new(domain: parent, name: child, content: rec) }
+
+    ActiveRecord::Base.transaction do
+      existing.destroy_all
+      recs.map(&:save!)
     end
   end
 
