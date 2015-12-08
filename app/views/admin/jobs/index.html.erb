@@ -1,0 +1,56 @@
+<h2>Pending Jobs</h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+        <th>Id</th>
+        <th>Domain</th>
+        <th>Type</th>
+        <th>Args</th>
+        <th>Retries</th>
+        <th>Controls</th>
+      </tr>
+  </thead>
+
+  <tbody>
+    <% @pending.each do |job| %>
+      <tr>
+        <td><%= job.id %></td>
+        <td><%= job.domain.try(:name) %></td>
+        <td><%= job.job_type %></td>
+        <td><%= job.args %></td>
+        <td><%= job.retries %></td>
+        <td><%= link_to_destroy admin_job_path(job), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Completed Jobs</h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+        <th>Id</th>
+        <th>Created At</th>
+        <th>Domain</th>
+        <th>Type</th>
+        <th>Args</th>
+        <th>Retries</th>
+        <th>Controls</th>
+      </tr>
+  </thead>
+
+  <tbody>
+    <% @completed.each do |job| %>
+      <tr class="<%= job.failed? ? 'warning' : '' %>">
+        <td><%= job.id %></td>
+        <td><%= job.created_at %></td>
+        <td><%= job.domain.try(:name) %></td>
+        <td><%= job.job_type %></td>
+        <td><%= job.args %></td>
+        <td><%= job.retries %></td>
+        <td><%= link_to_destroy admin_job_path(job), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

@@ -115,6 +115,27 @@ CREATE TABLE `groups` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jobs`
+--
+
+DROP TABLE IF EXISTS `jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_type` varchar(255) NOT NULL,
+  `domain_id` int(11) DEFAULT NULL,
+  `args` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '0',
+  `retries` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_jobs_on_domain_id` (`domain_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `memberships`
 --
 
@@ -255,4 +276,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151107182656');
 INSERT INTO schema_migrations (version) VALUES ('20151108093333');
 
 INSERT INTO schema_migrations (version) VALUES ('20151108105701');
+
+INSERT INTO schema_migrations (version) VALUES ('20151207194729');
 

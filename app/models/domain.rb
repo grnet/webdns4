@@ -17,6 +17,7 @@ class Domain < ActiveRecord::Base
   end
 
   belongs_to :group
+  has_many :jobs
   has_many :records
   # BUG in bump_serial_trigger
   has_one :soa, -> { unscope(where: :type) }, class_name: SOA

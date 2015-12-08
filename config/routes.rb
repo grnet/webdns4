@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     root to: redirect('/admin/groups')
 
     resources :groups, except: [:show]
+    resources :jobs, only: [:index, :destroy]
   end
 
   # Private
