@@ -38,6 +38,7 @@ gem 'tzinfo', '1.1.0'
 gem 'mysql2', '0.3.16' # pkg:ruby-mysql2
 gem 'jquery-rails', '3.1.2' # pkg:ruby-jquery-rails
 gem 'beaneater', '1.0.0' # pkg:ruby-beaneater
+gem 'state_machine', '1.2.0' # pkg: ruby-state-machine
 
 # Devise & dependencies
 gem 'devise', '3.5.2' # pkg:ruby-devise
