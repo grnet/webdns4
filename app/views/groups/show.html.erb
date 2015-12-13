@@ -23,7 +23,6 @@
       <tbody>
         <% @group.domains.each do |domain| %>
           <tr>
-            <td><%= link_to domain.name, domain %></td>
             <td>
               <% if domain.reverse? %>
                 <%= abbr_glyph('chevron-left', 'Reverse') %>
@@ -36,6 +35,7 @@
                 <%= abbr_glyph('link', 'Slave') %>
               <% end %>
             </td>
+            <td><%= link_to domain.name, domain %></td>
             <td><%= link_to_edit edit_domain_path(domain) %></td>
             <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
