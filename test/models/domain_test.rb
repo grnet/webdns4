@@ -85,6 +85,59 @@ class DomainTest < ActiveSupport::TestCase
     end
   end
 
+  class StatesDomainTest < ActiveSupport::TestCase
+    def setup
+      @domain = build(:domain)
+    end
+
+    test 'domain lifetime' do
+      assert_equal 'initial', @domain.state
+
+      # Create
+      assert_jobs do
+        @domain.save! # user triggered
+        assert_equal 'pending_install', @domain.state
+      end
+      @domain.installed # job triggered
+      assert_equal 'operational', @domain.state
+
+      # Convert to dnssec (sign)
+      assert_jobs do
+        assert @domain.dnssec_sign # user triggered
+        assert_equal 'pending_signing', @domain.state
+      end
+
+      assert_jobs do
+        assert @domain.signed # job triggered
+        assert_equal 'wait_for_ready', @domain.state
+      end
+
+      # Convert to dnssec (publish ds)
+      assert_jobs do
+        assert @domain.push_ds([:dss1, :dss2]) # DS script triggered
+        assert_equal 'pending_ds', @domain.state
+      end
+      assert @domain.converted # job triggered
+      assert_equal 'operational', @domain.state
+
+      # Convert to plain
+      assert_jobs do
+        assert @domain.plain_convert # user triggered
+        assert_equal 'pending_plain', @domain.state
+      end
+      assert @domain.converted # job triggered
+      assert_equal 'operational', @domain.state
+
+      # Remove
+      assert_jobs do
+        assert @domain.remove # user triggered
+        assert_equal 'pending_remove', @domain.state
+      end
+      assert @domain.cleaned_up # job triggered
+      assert_equal 'destroy', @domain.state
+    end
+  end
+
   class DsDomainTest < ActiveSupport::TestCase
     def setup
       @domain = create(:domain)
