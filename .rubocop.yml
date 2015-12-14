@@ -28,6 +28,8 @@ Style/EmptyLinesAroundClassBody:
   Enabled: false
 Style/EmptyLinesAroundModuleBody:
   Enabled: false
+Style/FormatString:
+  Enabled: false
 Lint/HandleExceptions:
   Enabled: false
 Metrics/AbcSize:
