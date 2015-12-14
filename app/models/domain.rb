@@ -30,7 +30,60 @@ class Domain < ActiveRecord::Base
   after_create :generate_soa
   after_create :generate_ns
 
+  after_create :install
+  before_save :fire_convert
+
   attr_writer :serial_strategy
+
+  state_machine initial: :initial do
+    after_transition(any => :pending_install) { |domain, _t| Job.add_domain(domain) }
+    after_transition(any => :pending_remove) { |domain, _t| Job.remove_domain(domain) }
+    after_transition(any => :pending_signing) { |domain, _t| Job.dnssec_sign(domain) }
+    after_transition(any => :wait_for_ready) { |domain, _t| Job.wait_for_ready(domain) }
+    after_transition(any => :pending_ds) { |domain, t| Job.dnssec_push_ds(domain, *t.args) }
+    after_transition(any => :pending_plain) { |domain, _t| Job.convert_to_plain(domain) }
+    after_transition(any => :destroy) { |domain, _t| domain.destroy }
+
+    # User events
+    event :install do
+      transition initial: :pending_install
+    end
+
+    event :dnssec_sign do
+      transition operational: :pending_signing
+    end
+
+    event :signed do
+      transition pending_signing: :wait_for_ready
+    end
+
+    event :push_ds do
+      # TODO: push_ds is triggered on multiple occasions
+      # operational: :operational
+      transition wait_for_ready: :pending_ds
+    end
+
+    event :plain_convert do
+      transition operational: :pending_plain
+    end
+
+    event :remove do
+      transition operational: :pending_remove
+    end
+
+    # Machine events
+    event :installed do
+      transition pending_install: :operational
+    end
+
+    event :converted do
+      transition [:pending_ds, :pending_plain] => :operational
+    end
+
+    event :cleaned_up do
+      transition pending_remove: :destroy
+    end
+  end
 
   # Get the zone's serial strategy.
   #
@@ -122,4 +175,13 @@ class Domain < ActiveRecord::Base
     }
   end
 
+  def fire_convert
+    return if !dnssec_changed?
+
+    event = dnssec ? :dnssec_convert : :plain_convert
+    return true if fire_state_event(event)
+
+    errors.add(:dnssec, 'You cannot modify dnssec settings in this state!')
+    false
+  end
 end

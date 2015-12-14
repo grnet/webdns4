@@ -16,6 +16,7 @@
       <thead>
         <tr>
           <th colspan="2">Domain</th>
+          <th>State</th>
           <th colspan="2">Controls</th>
         </tr>
       </thead>
@@ -36,6 +37,7 @@
               <% end %>
             </td>
             <td><%= link_to domain.name, domain %></td>
+            <td><%= human_state(domain.state) %></td>
             <td><%= link_to_edit edit_domain_path(domain) %></td>
             <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>

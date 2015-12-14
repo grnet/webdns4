@@ -90,6 +90,7 @@ CREATE TABLE `domains` (
   `group_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
+  `state` varchar(255) NOT NULL DEFAULT 'initial',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_index` (`name`),
   KEY `index_domains_on_group_id` (`group_id`)
@@ -279,3 +280,4 @@ INSERT INTO schema_migrations (version) VALUES ('20151108105701');
 
 INSERT INTO schema_migrations (version) VALUES ('20151207194729');
 
+INSERT INTO schema_migrations (version) VALUES ('20151213102322');

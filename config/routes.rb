@@ -39,5 +39,6 @@ Rails.application.routes.draw do
 
   # Private
   put 'private/replace_ds', to: 'private#replace_ds'
+  put 'private/trigger_event', to: 'private#trigger_event'
 end
 

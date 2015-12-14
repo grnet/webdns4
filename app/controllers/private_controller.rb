@@ -10,7 +10,21 @@ class PrivateController < ApplicationController
     render json: { ok: true }
   end
 
+  # PUT /trigger_event
+  def trigger_event
+    result = Domain
+             .find_by_name(action_params[:domain])
+             .fire_state_event(action_params[:event], params[:args])
+    render json: { ok: result }
+  end
+
   private
+
+  def action_params
+    params.require(:domain)
+    params.require(:event)
+    params.permit(:domain, :event, args: [])
+  end
 
   def replace_ds_params
     params.require(:parent)

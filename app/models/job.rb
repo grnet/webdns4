@@ -25,14 +25,25 @@ class Job < ActiveRecord::Base
       end
     end
 
-    def convert_to_dnssec(domain)
+    def dnssec_sign(domain)
       ActiveRecord::Base.transaction do
         jobs_for_domain(domain,
                         :opendnssec_add,
-                        :bind_convert_to_dnssec,
-                        :wait_for_ready_to_push_ds,
-                        :publish_ds,
-                        :wait_for_active)
+                        :bind_convert_to_dnssec)
+
+        trigger_event(domain, :signed)
+      end
+    end
+
+    def wait_for_ready(domain)
+      jobs_for_domain(domain,
+                      :wait_for_ready_to_push_ds)
+    end
+
+    def dnssec_push_ds(domain, dss)
+      ActiveRecord::Base.transaction do
+        job_for_domain(domain, :publish_ds, dss: dss)
+        job_for_domain(domain, :wait_for_active)
 
         trigger_event(domain, :converted)
       end
