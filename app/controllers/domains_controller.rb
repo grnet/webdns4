@@ -57,9 +57,12 @@ class DomainsController < ApplicationController
 
   # DELETE /domains/1
   def destroy
-    @domain.destroy
-    notify_domain(@domain, :destroy)
-    redirect_to domains_url, notice: "#{@domain.name} was successfully destroyed."
+    if @domain.remove
+      notify_domain(@domain, :destroy)
+      redirect_to domains_url, notice: "#{@domain.name} is scheduled for removal."
+    else
+      redirect_to domains_url, alert: "#{@domain.name} cannot be deleted! (state '#{@domain.state}')"
+    end
   end
 
   private

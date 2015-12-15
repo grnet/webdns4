@@ -44,7 +44,7 @@
           <td style="width:800px"><%= link_to domain.name, domain %></td>
           <td><%= human_state(domain.state) %></td>
           <td><%= link_to_edit edit_domain_path(domain) %></td>
-          <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? %></td>
         </tr>
       <% end %>
     <% end %>
