@@ -194,7 +194,7 @@ class Domain < ActiveRecord::Base
   def fire_convert
     return if !dnssec_changed?
 
-    event = dnssec ? :dnssec_convert : :plain_convert
+    event = dnssec ? :dnssec_sign : :plain_convert
     return true if fire_state_event(event)
 
     errors.add(:dnssec, 'You cannot modify dnssec settings in this state!')
