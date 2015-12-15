@@ -5,7 +5,9 @@ module DomainsHelper
     case state.to_sym
     when :initial then 'Initial'
     when :pending_install then 'Becoming public'
-    when :pending_dnssec then 'Migrating to dnssec'
+    when :pending_signing then 'Signing zone'
+    when :wait_for_ready then 'Waiting for KSK to become ready'
+    when :pending_ds then 'Publishing DS records'
     when :pending_plain then 'Removing dnssec'
     when :pending_remove then 'Preparing removal'
     when :operational then 'Operational'
