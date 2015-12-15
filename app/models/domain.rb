@@ -21,6 +21,11 @@ class Domain < ActiveRecord::Base
     WebDNS.settings[:dnssec_parent_authorities]
   end
 
+  # Fire event after transaction commmit
+  # Changing state inside a hook messes things up,
+  # this trick handles that
+  attr_accessor :fire_event
+
   belongs_to :group
   has_many :jobs
   has_many :records
@@ -40,7 +45,8 @@ class Domain < ActiveRecord::Base
   after_create :generate_ns
 
   after_create :install
-  before_save :fire_convert
+  before_save :check_convert
+  after_commit :after_commit_event
 
   attr_writer :serial_strategy
 
@@ -191,13 +197,23 @@ class Domain < ActiveRecord::Base
     }
   end
 
-  def fire_convert
+  def check_convert
     return if !dnssec_changed?
 
     event = dnssec ? :dnssec_sign : :plain_convert
-    return true if fire_state_event(event)
+    if state_events.include?(event)
+      self.fire_event = event # Schedule event for after commit
+      return true
+    end
 
     errors.add(:dnssec, 'You cannot modify dnssec settings in this state!')
     false
+  end
+
+  def after_commit_event
+    return if !fire_event
+
+    fire_state_event(fire_event)
+    self.fire_event = nil
   end
 end
