@@ -17,7 +17,7 @@ class Job < ActiveRecord::Base
       end
     end
 
-    def remove_domain(domain)
+    def shutdown_domain(domain)
       ActiveRecord::Base.transaction do
         jobs_for_domain(domain, :remove_domain)
 
