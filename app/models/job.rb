@@ -41,8 +41,11 @@ class Job < ActiveRecord::Base
     end
 
     def dnssec_push_ds(domain, dss)
+      opts = Hash[:dnssec_parent, domain.dnssec_parent,
+                  :dnssec_parent_authority, domain.dnssec_parent_authority,
+                  :dss, dss]
       ActiveRecord::Base.transaction do
-        job_for_domain(domain, :publish_ds, dss: dss)
+        job_for_domain(domain, :publish_ds, opts)
         job_for_domain(domain, :wait_for_active)
 
         trigger_event(domain, :converted)
