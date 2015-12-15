@@ -19,7 +19,8 @@ class Job < ActiveRecord::Base
 
     def shutdown_domain(domain)
       ActiveRecord::Base.transaction do
-        jobs_for_domain(domain, :remove_domain)
+        job_for_domain(domain, :remove_domain)
+        job_for_domain(domain, :opendnssec_remove) if domain.dnssec?
 
         trigger_event(domain, :cleaned_up)
       end
