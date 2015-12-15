@@ -12,6 +12,9 @@ WebDNS.settings[:default_ns] = [
   'ns2.example.com'
 ]
 
+WebDNS.settings[:dnssec] = true
+WebDNS.settings[:dnssec_parent_authorities] = ['webdns', 'papaki']
+
 WebDNS.settings[:serial_strategy] = Strategies::Date
 
 WebDNS.settings[:prohibit_records_types] = []

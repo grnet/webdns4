@@ -91,6 +91,9 @@ CREATE TABLE `domains` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `state` varchar(255) NOT NULL DEFAULT 'initial',
+  `dnssec` tinyint(1) NOT NULL DEFAULT '0',
+  `dnssec_parent` varchar(255) NOT NULL DEFAULT '',
+  `dnssec_parent_authority` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_index` (`name`),
   KEY `index_domains_on_group_id` (`group_id`)
@@ -277,6 +280,8 @@ INSERT INTO schema_migrations (version) VALUES ('20151107182656');
 INSERT INTO schema_migrations (version) VALUES ('20151108093333');
 
 INSERT INTO schema_migrations (version) VALUES ('20151108105701');
+
+INSERT INTO schema_migrations (version) VALUES ('20151207054417');
 
 INSERT INTO schema_migrations (version) VALUES ('20151207194729');
 

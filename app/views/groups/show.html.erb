@@ -35,6 +35,9 @@
               <% if domain.slave? %>
                 <%= abbr_glyph('link', 'Slave') %>
               <% end %>
+              <% if domain.dnssec? %>
+                <%= abbr_glyph('flash', 'DNSSEC') %>
+              <% end %>
             </td>
             <td><%= link_to domain.name, domain %></td>
             <td><%= human_state(domain.state) %></td>

@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   end
 
   resources :domains do
+    get :edit_dnssec, to: 'domains#edit_dnssec', on: :member
+
     resources :records, except: [:index, :show] do
       # Reuse records#update instead of introducing new controller actions
       #

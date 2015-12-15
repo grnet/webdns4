@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   attr_writer :breadcrumb
   helper_method :admin?
+  helper_method :dnssec?
 
   def admin?
     return false if params.key?('user')
@@ -23,6 +24,10 @@ class ApplicationController < ActionController::Base
     return if admin?
 
     redirect_to root_path, alert: 'Admin only area!'
+  end
+
+  def dnssec?
+    WebDNS.settings[:dnssec]
   end
 
   private

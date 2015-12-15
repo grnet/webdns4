@@ -4,4 +4,7 @@
   <%= f.select :type, Domain.allowed_domain_types %>
   <%= f.text_field :master, wrapper_class: 'hidden' %>
   <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
+  <% if dnssec? && @domain.dnssec_elegible? %>
+    <%= link_to 'Setup DNSSEC', edit_dnssec_domain_path(@domain), class: 'btn btn-default' %>
+  <% end %>
 <% end %>

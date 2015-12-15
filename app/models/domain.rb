@@ -16,6 +16,11 @@ class Domain < ActiveRecord::Base
     domain_types - WebDNS.settings[:prohibit_domain_types]
   end
 
+  # List parent authorities
+  def self.dnssec_parent_authorities
+    WebDNS.settings[:dnssec_parent_authorities]
+  end
+
   belongs_to :group
   has_many :jobs
   has_many :records
@@ -26,6 +31,10 @@ class Domain < ActiveRecord::Base
   validates :name, uniqueness: true, presence: true
   validates :type, presence: true, inclusion: { in: domain_types }
   validates :master, presence: true, ipv4: true, if: :slave?
+
+  validates :dnssec, inclusion: { in: [false] }, unless: :dnssec_elegible?
+  validates :dnssec_parent_authority, inclusion: { in: dnssec_parent_authorities }, if: :dnssec?
+  validates :dnssec_parent, hostname: true, if: :dnssec?
 
   after_create :generate_soa
   after_create :generate_ns
@@ -83,6 +92,13 @@ class Domain < ActiveRecord::Base
     event :cleaned_up do
       transition pending_remove: :destroy
     end
+  end
+
+  # Returns true if this domain is elegigble for DNSSEC
+  def dnssec_elegible?
+    return false if slave?
+
+    true
   end
 
   # Get the zone's serial strategy.

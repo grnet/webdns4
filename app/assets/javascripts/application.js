@@ -41,6 +41,15 @@ $(function() {
         }
     });
 
+    // Disable DNSSEC options
+    $('#domain_dnssec').change(function() {
+        if ($(this).val()== 'true') {
+            $("#dnssec_fieldset").prop('disabled', false)
+        } else {
+            $("#dnssec_fieldset").prop('disabled', true);
+        }
+    });
+
     var searchMembersGroup = $('#js-search-member').data('group');
     var searchMembers = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),

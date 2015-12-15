@@ -1,0 +1,12 @@
+<%= bootstrap_form_for(@domain, layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-4') do |f| %>
+  <%= f.hidden_field :group_id %>
+  <%= f.static_control :name %>
+  <%= f.select :dnssec, [['Enable', true], ['Disable', false]] %>
+
+  <fieldset id="dnssec_fieldset" <%= 'disabled' if !@domain.dnssec %>>
+    <%= f.select :dnssec_parent_authority, Domain.dnssec_parent_authorities, include_blank: true,
+    label: 'Parent authority', help: 'WebDNS will manage DS records automatically, handling initial setup and key rollovers.' %>
+    <%= f.text_field :dnssec_parent, label: 'Parent zone', help: 'The parent zone to publish the DS records.' %>
+  </fieldset>
+    <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
+<% end %>

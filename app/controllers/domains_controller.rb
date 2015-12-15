@@ -1,8 +1,8 @@
 class DomainsController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :domain, only: [:show, :edit, :update, :destroy]
-  before_action :group,  only: [:show, :edit, :update, :destroy]
+  before_action :domain, only: [:show, :edit, :edit_dnssec, :update, :destroy]
+  before_action :group,  only: [:show, :edit, :edit_dnssec, :update, :destroy]
 
   helper_method :edit_group_scope
 
@@ -25,6 +25,10 @@ class DomainsController < ApplicationController
   def edit
   end
 
+  # GET /domains/1/edit_dnssec
+  def edit_dnssec
+  end
+
   # POST /domains
   def create
     @domain = Domain.new(domain_params)
@@ -43,7 +47,11 @@ class DomainsController < ApplicationController
       notify_domain(@domain, :update)
       redirect_to @domain, notice: "#{@domain.name} was successfully updated."
     else
-      render :edit
+      if domain_params[:dnssec] # DNSSEC form
+        render :edit_dnssec
+      else
+        render :edit
+      end
     end
   end
 
@@ -68,7 +76,7 @@ class DomainsController < ApplicationController
     params.require(:domain).tap { |d|
       # Make sure group id is permitted (belongs to edit_group_scope)
       d[:group_id] = edit_group_scope.find_by_id(d[:group_id]).try(:id)
-    }.permit(:name, :type, :master, :group_id)
+    }.permit(:name, :type, :master, :group_id, :dnssec, :dnssec_parent, :dnssec_parent_authority)
   end
 
   def notify_domain(*args)
