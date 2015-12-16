@@ -3,6 +3,7 @@
   <thead>
       <tr>
         <th>Id</th>
+        <th>Created at</th>
         <th>Domain</th>
         <th>Type</th>
         <th>Args</th>
@@ -15,9 +16,18 @@
     <% @pending.each do |job| %>
       <tr>
         <td><%= job.id %></td>
-        <td><%= job.domain.try(:name) %></td>
+        <td><%= job.created_at %></td>
+        <% if job.domain %>
+          <td><%= link_to job.domain.name, domain_path(job.domain)  %></td>
+        <% else %>
+          <td><%= job.arguments['zone'] %></td>
+        <% end %>
         <td><%= job.job_type %></td>
-        <td><%= job.args %></td>
+        <% if job.args.size > 70 %>
+          <td data-toggle="tooltip" data-placement="right" title="<%= job.args %>"><%= truncate(job.args, length: 70) %></td>
+        <% else %>
+          <td><%= job.args %></td>
+        <% end  %>
         <td><%= job.retries %></td>
         <td><%= link_to_destroy admin_job_path(job), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
@@ -44,7 +54,11 @@
       <tr class="<%= job.failed? ? 'warning' : '' %>">
         <td><%= job.id %></td>
         <td><%= job.created_at %></td>
-        <td><%= job.domain.try(:name) %></td>
+        <% if job.domain %>
+          <td><%= link_to job.domain.name, domain_path(job.domain)  %></td>
+        <% else %>
+          <td><%= job.arguments['zone'] %></td>
+        <% end %>
         <td><%= job.job_type %></td>
         <td><%= job.args %></td>
         <td><%= job.retries %></td>
