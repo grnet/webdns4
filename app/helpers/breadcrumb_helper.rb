@@ -35,7 +35,9 @@ module BreadcrumbHelper
         stack.push crumb.domain
       when Domain
         if crumb.persisted?
-          crumbs.push(name: crumb.name, link: domain_path(crumb))
+          name = crumb.name.dup
+          name += " (#{human_state(crumb.state)})" if crumb.state != 'operational'
+          crumbs.push(name: name, link: domain_path(crumb))
         else
           crumbs.push(name: :new)
         end
