@@ -51,7 +51,7 @@ class Notification
     # Nobody is interested in those
     changes.delete('updated_at')
     changes.delete('created_at')
-    return if changes.empty?
+    return if changes.empty? && context == :update
 
     others = domain.group.users.where.not(id: user.id).pluck(:email)
     return if others.empty?
@@ -75,7 +75,7 @@ class Notification
     # Nobody is interested in those
     changes.delete('updated_at')
     changes.delete('created_at')
-    return if changes.empty?
+    return if changes.empty? && context == :update
 
     others = domain.group.users.where.not(id: user.id).pluck(:email)
     return if others.empty?
