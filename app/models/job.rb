@@ -8,6 +8,10 @@ class Job < ActiveRecord::Base
     status == 2
   end
 
+  def arguments
+    JSON.parse(args)
+  end
+
   class << self
     def add_domain(domain)
       ActiveRecord::Base.transaction do
