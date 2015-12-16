@@ -5,8 +5,10 @@ module Admin
 
     # GET /jobs
     def index
-      @pending = Job.pending
-      @completed = Job.completed.order('id desc')
+      @job_categories = {
+        'Pending' => Job.pending,
+        'Completed' => Job.completed.order('id desc')
+      }
     end
 
     # DELETE /jobs/1
