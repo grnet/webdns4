@@ -28,3 +28,13 @@ table a abbr[title] {
 .tab-pane table {
     margin-top: 20px;
 }
+
+#inline-record-form #record_ttl {
+    width: 80px;
+}
+#inline-record-form #record_prio {
+    width: 80px;
+}
+#inline-record-form #record_content {
+    width: 300px;
+}

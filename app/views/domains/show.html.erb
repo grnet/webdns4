@@ -4,6 +4,8 @@
   </li>
 <% end if admin? %>
 
+<%= render 'records/inline_form' %>
+
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -44,11 +46,3 @@
     <% end %>
   </tbody>
 </table>
-
-<p>
-  <%= link_to 'Add Record', '#new_record', class: 'btn btn-primary', onclick: '$("#new_record_wrapper").toggleClass("hidden");' %>
-</p>
-
-<div class="jumbotron hidden" id="new_record_wrapper">
-  <%= render 'records/form' %>
-</div>

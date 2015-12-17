@@ -22,13 +22,17 @@ $(function() {
     $('#record_type').change(function() {
         if ($(this).val() == 'MX') { // MX, default priority 10
             $('#record_prio.autohide').parents('div.form-group').removeClass('hidden');
+            $('#record_prio.autodisable').prop('disabled', false);
+
             $('#record_prio').val('10');
         } else if ($(this).val() == 'SRV') { // SRV
             $('#record_prio').val('');
             $('#record_prio.autohide').parents('div.form-group').removeClass('hidden');
+            $('#record_prio.autodisable').prop('disabled', false);
         } else {
             $('#record_prio').val('');
             $('#record_prio.autohide').parents('div.form-group').addClass('hidden');
+            $('#record_prio.autodisable').prop('disabled', true);
         }
     });
 
