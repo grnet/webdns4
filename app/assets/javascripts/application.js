@@ -73,4 +73,24 @@ $(function() {
         display: 'email',
         source: searchMembers
     });
+
+    // Highlighter helper
+    //
+    // Applies 'highlight' class to the element followed by 'hl-' prefix
+    function highlighter() {
+        $('.highlight').removeClass('highlight');
+
+        if (!window.location.hash)
+            return;
+
+        if (window.location.hash.indexOf('#hl-') == 0) {
+            var id = window.location.hash.slice('hl-'.length + 1);
+
+            $('#' + id).addClass('highlight');
+        }
+    }
+    $(window).bind('hashchange', highlighter);
+
+    highlighter();
+
 });

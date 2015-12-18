@@ -20,6 +20,10 @@ body {
   padding-top: 70px;
 }
 
+.highlight {
+    background-color: #b8e0b8 !important;
+}
+
 /* Reset bootstrap's help cursor on control links */
 table a abbr[title] {
     cursor: pointer;
