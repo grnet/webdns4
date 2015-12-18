@@ -1,39 +1,49 @@
-<% @job_categories.each do |title, jobs| %>
-<h2><%= title%> Jobs</h2>
-<table class="table table-striped">
-  <thead>
-      <tr>
-        <th>Id</th>
-        <th>Created at</th>
-        <th>Domain</th>
-        <th>Type</th>
-        <th>Args</th>
-        <th>Retries</th>
-        <th>Controls</th>
-      </tr>
-  </thead>
+<ul class="nav nav-tabs">
+  <% @job_categories.each_with_index do |pair, idx| %>
+    <% title, jobs = pair %>
+    <li role="presentation" class="<%= 'active' if idx.zero? %>"><a data-toggle="tab" href="#<%= title.downcase %>"><%= title %></a></li>
+  <% end %>
+</ul>
 
-  <tbody>
-    <% jobs.each do |job| %>
-      <tr>
-        <td><%= job.id %></td>
-        <td><%= job.created_at %></td>
-        <% if job.domain %>
-          <td><%= link_to job.domain.name, domain_path(job.domain)  %></td>
-        <% else %>
-          <td><%= job.arguments['zone'] %></td>
-        <% end %>
-        <td><%= job.job_type %></td>
-        <% if job.args.size > 70 %>
-          <td data-toggle="tooltip" data-placement="right" title="<%= job.args %>"><%= truncate(job.args, length: 70) %></td>
-        <% else %>
-          <td><%= job.args %></td>
-        <% end  %>
-        <td><%= job.retries %></td>
-        <td><%= link_to_destroy admin_job_path(job), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<% end %>
+<div class="tab-content">
+  <% @job_categories.each_with_index do |pair, idx| %>
+    <% title, jobs = pair %>
+    <div role="tabpanel" class="tab-pane <%= 'active' if idx.zero? %>" id="<%= title.downcase %>">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Created at</th>
+            <th>Domain</th>
+            <th>Type</th>
+            <th>Args</th>
+            <th>Retries</th>
+            <th>Controls</th>
+          </tr>
+        </thead>
 
+        <tbody>
+          <% jobs.each do |job| %>
+            <tr>
+              <td><%= job.id %></td>
+              <td><%= job.created_at %></td>
+              <% if job.domain %>
+                <td><%= link_to job.domain.name, domain_path(job.domain)  %></td>
+              <% else %>
+                <td><%= job.arguments['zone'] %></td>
+              <% end %>
+              <td><%= job.job_type %></td>
+              <% if job.args.size > 70 %>
+                <td data-toggle="tooltip" data-placement="right" title="<%= job.args %>"><%= truncate(job.args, length: 70) %></td>
+              <% else %>
+                <td><%= job.args %></td>
+              <% end  %>
+              <td><%= job.retries %></td>
+              <td><%= link_to_destroy admin_job_path(job), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
