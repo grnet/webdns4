@@ -1,0 +1,14 @@
+<div id="inline-record-form">
+<%= bootstrap_form_for([@domain, @record], layout: :inline) do |f| %>
+
+  <%= f.text_field :name, value: @record.short, label: '', append: name_field_append(@record), skip_label: true %>
+  <%= f.text_field :ttl, skip_label: true, placeholder: 'ttl' %>
+  IN
+  <%= f.select :type, record_types_for_domain(@domain), skip_label: true %>
+  <%= f.text_field :prio, placeholder: 'prio', skip_label: true, class: 'autodisable', disabled: !@record.supports_prio? %>
+  <%= f.text_field :content, skip_label: true %>
+
+  <%= f.submit 'Add', class: 'btn btn-primary' %>
+
+<% end %>
+</div>
