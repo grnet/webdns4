@@ -98,6 +98,12 @@ class Record < ActiveRecord::Base
     }
   end
 
+  def self.search(query)
+    wild_search = "%#{query}%" # !index_friendly
+
+    where('name like :q or content like :q', q: wild_search)
+  end
+
   # Get the a short name for the record (without the zone suffix).
   #
   # Returns a string.

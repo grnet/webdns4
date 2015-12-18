@@ -31,6 +31,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/records/search', to: 'records#search'
+
   # Admin
   namespace :admin do
     root to: redirect('/admin/groups')

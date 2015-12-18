@@ -1,7 +1,7 @@
 class RecordsController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :domain
+  before_action :domain, except: [:search]
   before_action :record, only: [:edit, :update, :destroy]
 
   # GET /records/new
@@ -41,6 +41,16 @@ class RecordsController < ApplicationController
     @record.destroy
     notify_record(@record, :destroy)
     redirect_to domain, notice: 'Record was successfully destroyed.'
+  end
+
+  # GET /search
+  def search
+    @records = Record
+               .where(domain: show_domain_scope)
+               .includes(:domain)
+               .search(params[:q]) # scope by domain
+
+    @records = Record.smart_order(@records)
   end
 
   private
