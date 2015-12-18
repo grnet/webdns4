@@ -8,7 +8,7 @@ class DomainsController < ApplicationController
 
   # GET /domains
   def index
-    @domains = show_domain_scope.all
+    @domains = show_domain_scope.includes(:group, :soa).all
   end
 
   # GET /domains/1

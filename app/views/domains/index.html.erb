@@ -10,46 +10,40 @@
   </div>
 <% end %>
 
-<table class="table table-striped">
-  <thead>
-  </thead>
-
-  <tbody>
-    <% @domains.group_by(&:group).each do |group, domains| %>
+<div class="datatable-wrapper">
+  <table id="domains" class="table table-striped">
+    <thead>
       <tr>
-        <th colspan="2" style="width:800px">
-          <%= link_to group.name, group_path(group) %>
-          <%= link_to glyph('menu-down'), "##{group.id}", onclick: "$('tr.group-#{group.id}').toggleClass('hidden');" %>
-        </th>
+        <th>Domain</th>
+        <th>Serial</th>
+        <th>Group</th>
         <th>State</th>
-        <th colspan="2">Controls</th>
+        <th>Slave</th>
+        <th>DNSSEC</th>
+        <th class="no-order-and-search">Controls</th>
       </tr>
-      <% domains.each do |domain| %>
-        <tr class="group-<%= group.id =%>">
-          <td>
-            <% if domain.reverse? %>
-              <%= abbr_glyph('chevron-left', 'Reverse') %>
-            <% elsif domain.enum? %>
-              <%= abbr_glyph('phone-alt', 'Enum') %>
-            <% else %>
-              <%= abbr_glyph('chevron-right', 'Forward') %>
-            <% end %>
-            <% if domain.slave? %>
-              <%= abbr_glyph('link', 'Slave') %>
-            <% end %>
-            <% if domain.dnssec? %>
-              <%= abbr_glyph('flash', 'DNSSEC') %>
-            <% end %>
-          </td>
-          <td style="width:800px"><%= link_to domain.name, domain %></td>
-          <td><%= human_state(domain.state) %></td>
-          <td><%= link_to_edit edit_domain_path(domain) %></td>
-          <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? %></td>
-        </tr>
+    </thead>
+
+    <tbody>
+      <% @domains.group_by(&:group).each do |group, domains| %>
+        <% domains.each do |domain| %>
+          <tr class="group-<%= group.id =%>">
+            <td><%= link_to domain.name, domain %></td>
+            <td><%= domain.soa.serial %></td>
+            <td><%= link_to group.name, group_path(group) %></td>
+            <td><%= human_state(domain.state) %></td>
+            <td><%= domain.slave? ? domain.master : '-' %></td>
+            <td><%= domain.dnssec? ? 'secure' : '-' %></td>
+            <td>
+              <%= link_to_edit edit_domain_path(domain) %>
+              <%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
 <p>
   <% if current_user.memberships.any? %>

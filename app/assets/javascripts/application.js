@@ -95,4 +95,12 @@ $(function() {
 
     highlighter();
 
+    $('table#domains').DataTable({
+        paging: false,
+        columnDefs: [{
+            targets: 'no-order-and-search',
+            orderable: false,
+            searchable: false
+        }],
+    });
 });

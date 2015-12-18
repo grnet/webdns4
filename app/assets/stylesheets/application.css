@@ -25,6 +25,11 @@ body {
     background-color: #b8e0b8 !important;
 }
 
+/* DataTable resets bootstrap's margin-bottom */
+.datatable-wrapper {
+    margin-bottom: 20px;
+}
+
 /* Reset bootstrap's help cursor on control links */
 table a abbr[title] {
     cursor: pointer;
