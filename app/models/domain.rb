@@ -50,6 +50,17 @@ class Domain < ActiveRecord::Base
 
   attr_writer :serial_strategy
 
+  def self.dnssec_progress(current_state)
+    progress = [
+      :pending_signing, # 1/3
+      :wait_for_ready,  # 2/3
+      :pending_ds]      # 3/3
+    idx = progress.index(current_state.to_sym)
+    return if idx.nil?
+
+    [idx+1, progress.size].join('/')
+  end
+
   state_machine initial: :initial do
     after_transition(any => :pending_install) { |domain, _t| Job.add_domain(domain) }
     after_transition(any => :pending_remove) { |domain, _t| Job.shutdown_domain(domain) }
