@@ -4,4 +4,6 @@ class User < ActiveRecord::Base
 
   has_many :memberships
   has_many :groups, through: :memberships
+
+  scope :orphans, -> { includes(:memberships).where(:memberships => { user_id: nil }) }
 end

@@ -1,0 +1,10 @@
+<div>
+  <p>
+    <%= bootstrap_form_tag(url: update_groups_admin_users_path, method: 'PUT', layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-4') do |f| %>
+      <% @users.each  do |u| %>
+        <%= f.collection_select "orphan-#{u.id}", Group.all, :id, :name, label: u.email, prompt: 'Assign to group' %>
+      <% end %>
+      <%= f.submit 'Add', class: 'btn btn-primary' %>
+    <% end %>
+  </p>
+</div>
