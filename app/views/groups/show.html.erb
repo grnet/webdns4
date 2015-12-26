@@ -6,55 +6,55 @@
 <% end if admin? %>
 
 <ul class="nav nav-tabs">
-  <li role="presentation" class="active"><a data-toggle="tab" href="#domains">Domains</a></li>
-  <li role="presentation"><a data-toggle="tab" href="#members">Members</a></li>
+  <li role="presentation" class="active"><a data-toggle="tab" href="#domains_tab">Domains</a></li>
+  <li role="presentation"><a data-toggle="tab" href="#members_tab">Members</a></li>
 </ul>
 
 <div class="tab-content">
-  <div role="tabpanel" class="tab-pane active" id="domains">
-    <table class="table table-striped table-hover">
+  <div role="tabpanel" class="tab-pane active" id="domains_tab">
+    <table id="domains" class="table table-striped">
       <thead>
         <tr>
-          <th colspan="2">Domain</th>
+          <th>Domain</th>
+          <th>Serial</th>
+          <th>Group</th>
           <th>State</th>
-          <th colspan="2">Controls</th>
+          <th>Slave</th>
+          <th>DNSSEC</th>
+          <th class="no-order-and-search">Controls</th>
         </tr>
       </thead>
 
       <tbody>
-        <% @group.domains.each do |domain| %>
-          <tr>
-            <td>
-              <% if domain.reverse? %>
-                <%= abbr_glyph('chevron-left', 'Reverse') %>
-              <% elsif domain.enum? %>
-                <%= abbr_glyph('phone-alt', 'Enum') %>
-              <% else %>
-                <%= abbr_glyph('chevron-right', 'Forward') %>
-              <% end %>
-              <% if domain.slave? %>
-                <%= abbr_glyph('link', 'Slave') %>
-              <% end %>
-              <% if domain.dnssec? %>
-                <%= abbr_glyph('flash', 'DNSSEC') %>
-              <% end %>
-            </td>
-            <td><%= link_to domain.name, domain %></td>
-            <td><%= human_state(domain.state) %></td>
-            <td><%= link_to_edit edit_domain_path(domain) %></td>
-            <td><%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? %></td>
-          </tr>
+        <% @domains.group_by(&:group).each do |group, domains| %>
+          <% domains.each do |domain| %>
+            <tr class="group-<%= group.id =%>">
+              <td><%= link_to domain.name, domain %></td>
+              <td><%= domain.soa.serial %></td>
+              <td><%= link_to group.name, group_path(group) %></td>
+              <td><%= human_state(domain.state) %></td>
+              <td><%= domain.slave? ? domain.master : '-' %></td>
+              <td><%= domain.dnssec? ? 'secure' : '-' %></td>
+              <td>
+                <%= link_to_edit edit_domain_path(domain) %>
+                <%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? %>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>
 
     <p>
-      <%= link_to 'Add Domain', new_domain_path(group_id: @group.id), class: 'btn btn-primary' %>
+      <% if current_user.memberships.any? %>
+        <%= link_to 'Add Domain', new_domain_path(group_id: @group.id), class: 'btn btn-primary' %>
+      <% else %>
+        <%= link_to 'Add Domain', new_domain_path(group_id: @group.id), class: 'btn btn-primary disabled' %>
+      <% end %>
     </p>
-
   </div>
 
-  <div role="tabpanel" class="tab-pane" id="members">
+  <div role="tabpanel" class="tab-pane" id="members_tab">
     <table class="table table-striped table-hover">
       <thead>
         <tr>

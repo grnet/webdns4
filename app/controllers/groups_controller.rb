@@ -6,6 +6,7 @@ class GroupsController < ApplicationController
 
   # GET /groups/1
   def show
+    @domains = @group.domains
   end
 
   # POST /groups/1/members/
