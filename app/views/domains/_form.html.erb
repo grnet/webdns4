@@ -2,7 +2,7 @@
   <%= f.text_field :name %>
   <%= f.collection_select :group_id, edit_group_scope, :id, :name %>
   <%= f.select :type, Domain.allowed_domain_types %>
-  <%= f.text_field :master, wrapper_class: 'hidden' %>
+  <%= f.text_field :master, wrapper_class: @domain.slave? ? '' : 'hidden' %>
   <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
   <% if dnssec? && @domain.persisted? && @domain.dnssec_elegible? %>
     <%= link_to 'Setup DNSSEC', edit_dnssec_domain_path(@domain), class: 'btn btn-default' %>
