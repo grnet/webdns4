@@ -250,6 +250,7 @@ class Record < ActiveRecord::Base
 
   def parse_delegation(value)
     first, _rest = value.split('.', 2)
+    first.gsub!('-', '/')
     return if !first['/']
 
     network, mask = first.split('/', 2).map { |i| Integer(i).abs }
