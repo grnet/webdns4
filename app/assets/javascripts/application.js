@@ -16,6 +16,7 @@
 //= require typeahead.bundle.min
 //= require jquery.dataTables.min
 //= require dataTables.bootstrap.min
+//= require bootstrap-editable.min
 //= require_tree .
 
 $(function() {
