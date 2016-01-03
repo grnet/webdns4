@@ -20,6 +20,28 @@
 //= require_tree .
 
 $(function() {
+    // Setup X-Editable
+    $.fn.editable.defaults.mode = 'inline';
+    $.fn.editable.defaults.ajaxOptions = {
+        type: 'put',
+        dataType: 'json'
+    };
+
+    function editable_record_success(response, _value) {
+        // Visual hint for the changed serial
+        if(response.serial) {
+            $('tr.soa .soa-serial').text(response.serial);
+            $('tr.soa .soa-serial').fadeOut(100).fadeIn(500);
+        }
+
+        // Render the value returned by the server as
+        // there are cases where the value is normalized (e.x. name)
+        return { newValue: response.value };
+    }
+
+    $('table .editable').editable({
+        success: editable_record_success
+    });
 
     // Show priority on MX/SRV record only
     $('#record_type').change(function() {

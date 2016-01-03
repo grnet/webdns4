@@ -19,4 +19,22 @@ module RecordsHelper
 
     Record.forward_records
   end
+
+  def editable_record_attr(rec, attr)
+    return soa_content(rec) if rec.type == 'SOA' && attr == :content
+    return rec.read_attribute(attr) if rec.type == 'SOA' || !can_edit?(rec)
+
+    link_to(
+      rec.read_attribute(attr),
+      "#edit-record-#{rec.id}-#{attr}",
+      class: 'editable',
+      data: { pk: rec.id, name: attr, type: 'text', url: editable_domain_records_path(rec.domain_id) }
+    )
+  end
+
+  def soa_content(rec)
+    SOA::SOA_FIELDS.map { |attr|
+      "<span class='soa-#{attr}'>#{rec.send(attr)}</span>"
+    }.join(' ').html_safe
+  end
 end

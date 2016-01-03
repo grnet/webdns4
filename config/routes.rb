@@ -27,6 +27,8 @@ Rails.application.routes.draw do
           defaults: { record: { disabled: true } }
       put :enable,  to: 'records#update', on: :member,
           defaults: { record: { disabled: false } }
+
+      put :editable, to: 'records#editable', on: :collection
       # rubocop:enable Style/AlignHash
     end
   end

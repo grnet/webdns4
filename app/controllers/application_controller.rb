@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
   end
 
   def record
-    @record ||= record_scope.find(params[:record_id] || params[:id])
+    @record ||= record_scope.find(params[:record_id] || params[:id] || params[:pk])
   end
 
   def show_group_scope

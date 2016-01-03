@@ -2,7 +2,8 @@ class RecordsController < ApplicationController
   before_action :authenticate_user!
 
   before_action :domain, except: [:search]
-  before_action :record, only: [:edit, :update, :destroy]
+  before_action :editable_transform_params, only: [:editable]
+  before_action :record, only: [:edit, :update, :editable, :destroy]
 
   # GET /records/new
   def new
@@ -36,6 +37,21 @@ class RecordsController < ApplicationController
     end
   end
 
+  def editable
+    if @record.update(edit_record_params)
+      notify_record(@record, :update)
+      response = {
+        value: @record.read_attribute(@attr),
+        serial: @domain.soa(true).serial,
+        record: @record.as_json
+      }
+
+      render json: response
+    else
+      render text: @record.errors[@attr].join(', '), status: 400
+    end
+  end
+
   # DELETE /records/1
   def destroy
     @record.destroy
@@ -54,6 +70,12 @@ class RecordsController < ApplicationController
   end
 
   private
+
+  # Modify params to use standard Rails patterns
+  def editable_transform_params
+    @attr = params[:name]
+    params[:record] = { params[:name] => params[:value] }
+  end
 
   def edit_record_params
     if @record.type == 'SOA'
