@@ -40,6 +40,9 @@ gem 'jquery-rails', '3.1.2' # pkg:ruby-jquery-rails
 gem 'beaneater', '1.0.0' # pkg:ruby-beaneater
 gem 'state_machine', '1.2.0' # pkg: ruby-state-machine
 
+# Worker
+gem 'faraday', '0.9.0'
+
 # Devise & dependencies
 gem 'devise', '3.5.2' # pkg:ruby-devise
 gem 'warden', '1.2.3'
