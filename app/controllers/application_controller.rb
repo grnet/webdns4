@@ -65,6 +65,6 @@ class ApplicationController < ActionController::Base
   end
 
   def notification
-    Notification.instance
+    Notification.instance if WebDNS.settings[:notifications]
   end
 end

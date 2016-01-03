@@ -83,7 +83,7 @@ class DomainsController < ApplicationController
   end
 
   def notify_domain(*args)
-    notification.notify_domain(current_user, *args)
+    notification.notify_domain(current_user, *args) if WebDNS.settings[:notifications]
   end
 
 end
