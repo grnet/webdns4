@@ -30,7 +30,7 @@ class Domain < ActiveRecord::Base
   has_many :jobs
   has_many :records
   # BUG in bump_serial_trigger
-  has_one :soa, -> { unscope(where: :type) }, class_name: SOA
+  has_one :soa, -> { unscope(where: :type).where(type: 'soa') }, class_name: SOA
 
   validates :group_id, presence: true
   validates :name, uniqueness: true, presence: true
