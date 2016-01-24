@@ -10,6 +10,7 @@ else
   # Dependencies to load before starting rails in production
   require 'devise'
   require 'jquery-rails'
+  require 'coffee-rails'
   require 'state_machine'
   require 'beaneater'
 end

@@ -18,6 +18,10 @@ group :production do
   gem 'unicorn' # pkg:unicorn
 end
 
+group :assets do
+  gem 'coffee-rails', '4.0.1' # pkg: ryby-coffee-rails
+end
+
 # Lock jessie versions
 #
 
