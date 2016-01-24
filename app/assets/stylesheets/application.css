@@ -22,7 +22,7 @@ body {
   padding-top: 70px;
 }
 
-.highlight {
+.highlight , .highlight>td {
     background-color: #b8e0b8 !important;
 }
 
