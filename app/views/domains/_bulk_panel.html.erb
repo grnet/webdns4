@@ -4,9 +4,11 @@
   </div>
   <div class="panel-body">
     <p>
-      <span class="added">0</span> records added,
-      <abbr class="js-modified-hover" title="Highlight modified records"><span class="changed">0</span> records modified</abbr>,
-      <span class="deleted">0</span> records deleted.
+      <span class="added">0</span> records added<abbr title="Highlight records that failed to be added" class="failed failed-added"></abbr>,
+      <abbr class="js-modified-hover" title="Highlight modified records">
+        <span class="changed">0</span> records modified
+      </abbr><abbr title="Highlight records that failed to update." class="failed failed-changed"></abbr>,
+        <span class="deleted">0</span> records deleted<abbr title="Highlight records that failed to delete" class="failed failed-deleted"></abbr>.
     </p>
     <div>
       <a href="." class="btn btn-default">Cancel (Refresh)</a>

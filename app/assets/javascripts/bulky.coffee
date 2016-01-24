@@ -70,6 +70,23 @@ class window.Bulky
                 $('#new_records tbody').append(el)
                 $('#new_records').removeClass('hidden')
 
+        render_errors: (errors) ->
+                if errors.deletes
+                        deleted = ("#record-#{d}" for own d of errors.deletes)
+                        txt = " (#{deleted.length} failed to delete)"
+                        $('#bulk-panel .failed-deleted').text(txt).data(ids:deleted)
+                if errors.changes
+                        changed = ("#record-#{c}" for own c of errors.changes)
+                        txt = " (#{changed.length} failed to be updated)"
+                        $('#bulk-panel .failed-changed').text(txt).data(ids:changed)
+                if errors.additions
+                        added = ("#fresh-#{a}" for own a of errors.additions)
+                        txt = " (#{added.length} failed to be added)"
+                        $('#bulk-panel .failed-added').text(txt).data(ids:added)
+
+        render_clear_errors: ->
+                $('#bulk-panel .failed').text('')
+
         enable: ->
                 return if @enabled
 
@@ -90,9 +107,11 @@ class window.Bulky
         commit: ->
                 data = {
                         deletes: id for id, _ of @deletes,
-                        changes: rec for id, rec of @changes when !@deletes[id] ,
+                        # changes: rec for id, rec of @changes when !@deletes[id],
+                        changes: @changes,
                         additions: @additions
                 }
+                @render_clear_errors()
 
                 _me = this
                 $.ajax {
@@ -103,6 +122,11 @@ class window.Bulky
                         contentType:'application/json',
                         success: (data) ->
                                 console.log data
+                                if data.errors
+                                        _me.render_errors(data.errors)
+                                        return
+                                alert('Bulk operations successfully committed!')
+                                location.reload()
                         error: () ->
                                 alert('There was an error submiting bulk operations')
                         }
@@ -123,6 +147,11 @@ class window.Bulky
                 -> $('.modified').addClass('highlight')
                 ,
                 -> $('.modified').removeClass('highlight')
+
+                $('#bulk-panel .failed').hover \
+                -> $($(this).data('ids').join(', ')).addClass('highlight')
+                ,
+                -> $($(this).data('ids').join(', ')).removeClass('highlight')
                 
                 # Hook destroy button
                 $('#records, #new_records').on 'click', 'a.js-destroy', () ->

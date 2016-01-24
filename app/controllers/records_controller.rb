@@ -52,7 +52,12 @@ class RecordsController < ApplicationController
   end
 
   def bulk
-    render json: { ok: true }
+    err = @domain.bulk(params)
+    if err.empty?
+      render json: { ok: true }
+    else
+      render json: { errors: err }
+    end
   end
 
   def editable

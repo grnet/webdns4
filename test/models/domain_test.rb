@@ -166,4 +166,55 @@ class DomainTest < ActiveSupport::TestCase
     end
 
   end
+
+  class BulkTest < ActiveSupport::TestCase
+    def setup
+      @domain = create(:domain)
+      @a = create(:a, domain: @domain)
+      @aaaa = create(:aaaa, domain: @domain)
+      @new = build(:mx, domain: @domain)
+
+    end
+
+    def valid_changes
+      @valid_changes ||= begin
+                           {}.tap { |c|
+                             c[:deletes] = [@a.id]
+                             c[:changes] = { @aaaa.id => { content: '::42' }}
+                             c[:additions] = { 1 => @new.as_bulky_json }
+                           }
+                         end
+    end
+
+    def invalid_changes
+      @invalid_changes ||= begin
+                             {}.tap { |c|
+                               c[:deletes] = [Record.maximum(:id) + 1]
+                               c[:changes] = { @aaaa.id => { content: '1.2.3.4' }}
+                               c[:additions] = { 1 => @new.as_bulky_json.update(prio: -1) }
+                             }
+                           end
+    end
+
+    test 'apply changes not' do
+      err = @domain.bulk invalid_changes
+
+      assert_not_empty err
+      assert_includes err[:deletes][Record.maximum(:id) + 1], 'record not found'
+      assert_includes err[:changes][@aaaa.id], 'not a valid IPv6'
+      assert_includes err[:additions][1], 'not a valid DNS priority'
+    end
+
+    test 'apply changes' do
+      err = @domain.bulk valid_changes
+
+      @domain.reload
+      @aaaa.reload
+
+      assert_empty err
+      assert_empty @domain.records.where(id: @a.id)
+      assert_equal '::42', @aaaa.content
+      assert_equal 1, @domain.records.where(type: :mx).count
+    end
+  end
 end

@@ -164,6 +164,53 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  # Apply bulk to operations to the zones
+  #
+  # 1) Deletions
+  # 2) Changes
+  # 3) Additions
+  def bulk(opts)
+    deletes = opts[:deletes] || []
+    changes = opts[:changes] || {}
+    additions = opts[:additions] || {}
+    errors = Hash.new { |h, k| h[k] = {} }
+
+    ActiveRecord::Base.transaction do
+      # Deletes
+      to_delete = records.where(id: deletes).index_by(&:id)
+      deletes.each { |rec_id|
+        if rec = to_delete[Integer(rec_id)]
+          rec.destroy
+          next
+        end
+
+        errors[:deletes][rec_id] = 'Deleted record not found'
+      }
+
+      # Changes
+      to_change = records.where(id: changes.keys).index_by(&:id)
+      changes.each {|rec_id, changes|
+        binding
+        if rec = to_change[Integer(rec_id)]
+          errors[:changes][rec_id] = rec.errors.full_messages.join(', ') if !rec.update(changes)
+          next
+        end
+
+        errors[:changes][rec_id] = 'Changed record not found'
+      }
+
+      # Additions
+      additions.each { |inc, attrs|
+        rec = records.new(attrs)
+        errors[:additions][inc] = rec.errors.full_messages.join(', ') if !rec.save
+      }
+
+      raise ActiveRecord::Rollback if errors.any?
+    end
+
+    errors
+  end
+
   private
 
   def subnet_v4
