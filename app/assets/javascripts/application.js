@@ -17,6 +17,7 @@
 //= require jquery.dataTables.min
 //= require dataTables.bootstrap.min
 //= require bootstrap-editable.min
+//= require bulky
 //= require_tree .
 
 $(function() {
@@ -28,10 +29,15 @@ $(function() {
     };
 
     function editable_record_success(response, _value) {
-        // Visual hint for the changed serial
-        if(response.serial) {
+        // Visual hint for the changed serial (on non bulky updates)
+        if(response.saved && response.serial) {
             $('tr.soa .soa-serial').text(response.serial);
             $('tr.soa .soa-serial').fadeOut(100).fadeIn(500);
+        }
+
+        // Add bulk update to Bulky
+        if (!response.saved) {
+            bulky.update(response.record.id, response.attribute, response.value);
         }
 
         // Render the value returned by the server as
@@ -40,7 +46,17 @@ $(function() {
     }
 
     $('table .editable').editable({
-        success: editable_record_success
+        success: editable_record_success,
+        params: function (params) {
+            // Don't actually save on bulky mode
+            params.save = !bulky.enabled;
+            return params;
+        },
+        validate: function (value) {
+            rec_id = $(this).parents('tr').data('id');
+            if (bulky.enabled && bulky.marked_for_delete(rec_id))
+                return "This record is marked for deletion!";
+        }
     });
 
     // Show priority on MX/SRV record only

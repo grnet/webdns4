@@ -37,13 +37,39 @@ class RecordsController < ApplicationController
     end
   end
 
-  def editable
-    if @record.update(edit_record_params)
-      notify_record(@record, :update)
+  def valid
+    @record = domain.records.new(new_record_params)
+    if @record.valid?
       response = {
+        record: @record.as_bulky_json,
+        errors: false
+      }
+
+      render json: response
+    else
+      render json: { errors: @record.errors.full_messages.join(', ') }
+    end
+  end
+
+  def bulk
+    render json: { ok: true }
+  end
+
+  def editable
+    @record.assign_attributes(edit_record_params)
+
+    if @record.valid?
+      if @save
+        @record.save!
+        notify_record(@record, :update)
+      end
+
+      response = {
+        attribute: @attr,
         value: @record.read_attribute(@attr),
         serial: @domain.soa(true).serial,
-        record: @record.as_json
+        record: @record.as_bulky_json,
+        saved: @save
       }
 
       render json: response
@@ -74,6 +100,7 @@ class RecordsController < ApplicationController
   # Modify params to use standard Rails patterns
   def editable_transform_params
     @attr = params[:name]
+    @save = params[:save] != 'false'
     params[:record] = { params[:name] => params[:value] }
   end
 

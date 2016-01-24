@@ -29,6 +29,8 @@ Rails.application.routes.draw do
           defaults: { record: { disabled: false } }
 
       put :editable, to: 'records#editable', on: :collection
+      post :valid, to: 'records#valid', on: :collection
+      post :bulk, to: 'records#bulk', on: :collection
       # rubocop:enable Style/AlignHash
     end
   end

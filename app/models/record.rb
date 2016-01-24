@@ -190,6 +190,17 @@ class Record < ActiveRecord::Base
     false
   end
 
+  def as_bulky_json
+    Hash[
+      id: id,
+      name: name,
+      type: type,
+      ttl: ttl,
+      prio: prio,
+      content: content,
+      disabled: disabled
+    ]
+  end
   private
 
   # Validations

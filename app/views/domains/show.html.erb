@@ -1,12 +1,31 @@
+<script>
+ $(function() {
+     window.bulky = new Bulky(
+         '<%= valid_domain_records_path(@domain) %>',
+         '<%= bulk_domain_records_path(@domain) %>'
+     );
+ });
+</script>
+
 <% content_for :more_breadcrumbs do %>
-  <li>
+  <% if !@domain.slave? %>
+    <li>
     <%= link_to_edit edit_domain_path(@domain) %>
+    </li>
+  <% end %>
+  <% if !@domain.slave? %>
+  <li>
+    <%= link_to 'Bulk mode', '#bulk', id: 'js-bulky-activate' %>
   </li>
-<% end if admin? %>
+  <% end %>
 
+<% end %>
+
+<%= render 'bulk_panel' %>
 <%= render 'records/inline_form' %>
+<%= render 'bulk_new_records' %>
 
-<table class="table table-striped table-hover">
+<table id="records" class="table table-striped table-hover">
   <thead>
     <tr>
       <th colspan="6">Records</th>
@@ -16,7 +35,7 @@
 
   <tbody>
     <% Record.smart_order(@domain.records).each do |record| %>
-      <tr id="record-<%= record.id %>" class="<%= record.type.downcase %> <%= record.disabled? ? 'warning' : '' %>">
+      <tr id="record-<%= record.id %>" data-id="<%= record.id %>" class="<%= record.type.downcase %> <%= record.disabled? ? 'warning' : '' %>">
         <td><%= editable_record_attr(record, :name) %></td>
         <td><%= record.ttl %></td>
         <td>IN</td>
@@ -34,13 +53,13 @@
         <% elsif can_edit?(record) %>
           <td>
             <% if record.disabled? %>
-              <%= link_to_enable enable_domain_record_path(@domain, record), method: :put %>
+              <%= link_to_enable enable_domain_record_path(@domain, record), method: :put, class: 'js-bulk-hide' %>
             <% else %>
-              <%= link_to_disable disable_domain_record_path(@domain, record), method: :put %>
+              <%= link_to_disable disable_domain_record_path(@domain, record), method: :put, class: 'js-bulk-hide' %>
             <% end %>
           </td>
-          <td><%= link_to_edit edit_domain_record_path(@domain, record) %></td>
-          <td><%= link_to_destroy [@domain, record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to_edit edit_domain_record_path(@domain, record), class: 'js-bulk-hide' %></td>
+          <td><%= link_to_destroy [@domain, record], method: :delete, data: { confirm: 'Are you sure?', id: record.id }, class: 'js-destroy' %></td>
         <% else %>
           <td/>
           <td/>
