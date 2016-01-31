@@ -24,7 +24,7 @@
 
         <tbody>
           <% jobs.each do |job| %>
-            <tr>
+            <tr class="<%= 'danger' if job.failed? %>">
               <td><%= job.id %></td>
               <td><%= job.created_at %></td>
               <% if job.domain %>
