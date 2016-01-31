@@ -67,6 +67,7 @@ class Domain < ActiveRecord::Base
     after_transition(any => :pending_signing) { |domain, _t| Job.dnssec_sign(domain) }
     after_transition(any => :wait_for_ready) { |domain, _t| Job.wait_for_ready(domain) }
     after_transition(any => :pending_ds) { |domain, t| Job.dnssec_push_ds(domain, *t.args) }
+    after_transition(any => :pending_ds_rollover) { |domain, t| Job.dnssec_push_ds(domain, *t.args) }
     after_transition(any => :pending_plain) { |domain, _t| Job.convert_to_plain(domain) }
     after_transition(any => :destroy) { |domain, _t| domain.destroy }
 
@@ -84,9 +85,7 @@ class Domain < ActiveRecord::Base
     end
 
     event :push_ds do
-      # TODO: push_ds is triggered on multiple occasions
-      # operational: :operational
-      transition wait_for_ready: :pending_ds
+      transition wait_for_ready: :pending_ds, operational: :pending_ds_rollover
     end
 
     event :plain_convert do
@@ -106,8 +105,16 @@ class Domain < ActiveRecord::Base
       transition [:pending_ds, :pending_plain] => :operational
     end
 
+    event :complete_rollover do
+      transition pending_ds_rollover: :operational
+    end
+
     event :cleaned_up do
       transition pending_remove: :destroy
+    end
+
+    event :ksk_rollover_detected do
+      transition operational: :ksk_rollover
     end
   end
 

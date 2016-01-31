@@ -57,6 +57,18 @@ class Job < ActiveRecord::Base
       end
     end
 
+    def dnssec_rollover_ds(domain, dss)
+      opts = Hash[:dnssec_parent, domain.dnssec_parent,
+                  :dnssec_parent_authority, domain.dnssec_parent_authority,
+                  :dss, dss]
+      ActiveRecord::Base.transaction do
+        job_for_domain(domain, :publish_ds, opts)
+        job_for_domain(domain, :wait_for_active)
+
+        trigger_event(domain, :complete_rollover)
+      end
+    end
+
     def convert_to_plain(domain)
       ActiveRecord::Base.transaction do
         jobs_for_domain(domain,

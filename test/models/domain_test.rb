@@ -114,10 +114,18 @@ class DomainTest < ActiveSupport::TestCase
 
       # Convert to dnssec (publish ds)
       assert_jobs do
-        assert @domain.push_ds([:dss1, :dss2]) # DS script triggered
+        assert @domain.push_ds([:dss1, :dss2]) # triggered by schedule-ds script
         assert_equal 'pending_ds', @domain.state
       end
       assert @domain.converted # job triggered
+      assert_equal 'operational', @domain.state
+
+      # KSK rollover
+      assert_jobs do
+        assert @domain.push_ds([:dss3, :dss4]) # triggered by schedule-ds script
+        assert_equal 'pending_ds_rollover', @domain.state
+      end
+      assert @domain.complete_rollover # job triggered
       assert_equal 'operational', @domain.state
 
       # Convert to plain
