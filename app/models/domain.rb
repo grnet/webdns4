@@ -67,7 +67,7 @@ class Domain < ActiveRecord::Base
     after_transition(any => :pending_signing) { |domain, _t| Job.dnssec_sign(domain) }
     after_transition(any => :wait_for_ready) { |domain, _t| Job.wait_for_ready(domain) }
     after_transition(any => :pending_ds) { |domain, t| Job.dnssec_push_ds(domain, *t.args) }
-    after_transition(any => :pending_ds_rollover) { |domain, t| Job.dnssec_push_ds(domain, *t.args) }
+    after_transition(any => :pending_ds_rollover) { |domain, t| Job.dnssec_rollover_ds(domain, *t.args) }
     after_transition(any => :pending_plain) { |domain, _t| Job.convert_to_plain(domain) }
     after_transition(any => :destroy) { |domain, _t| domain.destroy }
 
