@@ -48,9 +48,11 @@ class Job < ActiveRecord::Base
       opts = Hash[:dnssec_parent, domain.dnssec_parent,
                   :dnssec_parent_authority, domain.dnssec_parent_authority,
                   :dss, dss]
+      keytag = dss.map { |ds| ds.split.first }.first # Both records should have the same keytag
+
       ActiveRecord::Base.transaction do
         job_for_domain(domain, :publish_ds, opts)
-        job_for_domain(domain, :wait_for_active)
+        job_for_domain(domain, :wait_for_active, keytag: keytag)
 
         trigger_event(domain, :converted)
       end
@@ -60,9 +62,11 @@ class Job < ActiveRecord::Base
       opts = Hash[:dnssec_parent, domain.dnssec_parent,
                   :dnssec_parent_authority, domain.dnssec_parent_authority,
                   :dss, dss]
+
+      keytag = dss.map { |ds| ds.split.first }.first # Both records should have the same keytag
       ActiveRecord::Base.transaction do
         job_for_domain(domain, :publish_ds, opts)
-        job_for_domain(domain, :wait_for_active)
+        job_for_domain(domain, :wait_for_active, keytag: keytag)
 
         trigger_event(domain, :complete_rollover)
       end
