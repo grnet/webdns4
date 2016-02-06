@@ -32,9 +32,8 @@ class Job < ActiveRecord::Base
 
     def dnssec_sign(domain)
       ActiveRecord::Base.transaction do
-        jobs_for_domain(domain,
-                        :opendnssec_add,
-                        :bind_convert_to_dnssec)
+        job_for_domain(domain, :opendnssec_add, policy: domain.dnssec_policy.name)
+        job_for_domain(domain, :bind_convert_to_dnssec)
 
         trigger_event(domain, :signed)
       end

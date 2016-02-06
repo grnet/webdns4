@@ -56,6 +56,24 @@ CREATE TABLE `cryptokeys` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `dnssec_policies`
+--
+
+DROP TABLE IF EXISTS `dnssec_policies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dnssec_policies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `active` tinyint(1) DEFAULT NULL,
+  `policy` text,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `domainmetadata`
 --
 
@@ -94,6 +112,7 @@ CREATE TABLE `domains` (
   `dnssec` tinyint(1) NOT NULL DEFAULT '0',
   `dnssec_parent` varchar(255) NOT NULL DEFAULT '',
   `dnssec_parent_authority` varchar(255) NOT NULL DEFAULT '',
+  `dnssec_policy_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_index` (`name`),
   KEY `index_domains_on_group_id` (`group_id`)
@@ -286,3 +305,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151207054417');
 INSERT INTO schema_migrations (version) VALUES ('20151207194729');
 
 INSERT INTO schema_migrations (version) VALUES ('20151213102322');
+
+INSERT INTO schema_migrations (version) VALUES ('20160206083933');
+

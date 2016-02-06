@@ -31,6 +31,7 @@ class Domain < ActiveRecord::Base
   has_many :records
   # BUG in bump_serial_trigger
   has_one :soa, -> { unscope(where: :type).where(type: 'soa') }, class_name: SOA
+  belongs_to :dnssec_policy
 
   validates :group_id, presence: true
   validates :name, uniqueness: true, presence: true
@@ -40,6 +41,7 @@ class Domain < ActiveRecord::Base
   validates :dnssec, inclusion: { in: [false] }, unless: :dnssec_elegible?
   validates :dnssec_parent_authority, inclusion: { in: dnssec_parent_authorities }, if: :dnssec?
   validates :dnssec_parent, hostname: true, if: :dnssec?
+  validates :dnssec_policy_id, presence: true, if: :dnssec?
 
   after_create :generate_soa
   after_create :generate_ns
