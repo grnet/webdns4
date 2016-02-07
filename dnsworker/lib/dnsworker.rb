@@ -1,0 +1,2 @@
+module DNSWorker
+end

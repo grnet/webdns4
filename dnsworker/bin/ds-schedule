@@ -1,0 +1,105 @@
+#!/usr/bin/env ruby
+
+require 'uri'
+require 'rack/utils'
+require 'net/http'
+require 'open3'
+
+class DSPusher
+  attr_reader :cfg
+
+  def initialize(cfg)
+    @cfg = cfg
+  end
+
+  def push_ds(zone=nil, dry_run=false)
+    fetch_dss(zone).each { |d, dss|
+      post_dss(d, dss, dry_run)
+    }
+  end
+
+  def fetch_dss(zone)
+    dss = Hash.new { |h, k| h[k] = [] }
+
+    cmd = cfg['get_ds']
+    cmd += " -z #{zone}" if zone
+
+    out, err = command(cmd)
+    out.each_line { |line|
+      line.strip!
+
+      next if line.nil? || line == ''
+      next if line.start_with?(';')
+      domain, _ttl, _f, rtype, rdata = line.split(/\s+/, 5)
+      next unless rtype == 'DS'
+
+      domain = domain.gsub(/\.+$/, '') # Remove trailing .
+      dss[domain] << rdata
+    }
+
+    dss
+  end
+
+  def post_dss(domain, dss, dry_run)
+    query = Rack::Utils.build_nested_query(
+      domain: domain,
+      event: 'push_ds',
+      args: dss,
+    )
+    uri = URI("#{cfg['webdns_base']}#{cfg['update_state']}" % { query: query })
+    if dry_run
+      p [:uri, uri]
+      return
+    end
+
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      resp = http.request Net::HTTP::Put.new(uri.request_uri)
+
+      fail JobFailed if resp.code != '200'
+    end
+  end
+
+  private
+
+  def command(cmd)
+    out, err, status = Open3.capture3(cmd)
+    raise "Command error err='#{err.strip}' out='#{out.strip}'" if !status.success?
+
+    [out, err]
+  end
+end
+
+require 'yaml'
+require 'optparse'
+require 'ostruct'
+
+options = OpenStruct.new
+options.dry_run = false
+options.extra = nil
+options.zone = nil
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: push-ds [options]'
+
+  opts.on('-c', '--config CONFIG', 'Config file') do |c|
+    options[:config] = c
+  end
+
+  opts.on('-e', '--extra CONFIG', 'Extra config file') do |e|
+    options[:extra] = e
+  end
+
+  opts.on('-n', '--dry-run', 'Run but not execute anything') do |n|
+    options[:dry_run] = n
+  end
+
+  opts.on('-z', '--zone ZONE', 'Zone') do |z|
+    options[:zone] = z
+  end
+end.parse!
+
+cfg = YAML.load_file(options.config)
+cfg.merge!(YAML.load_file(options.extra)) if options.extra
+
+w = DSPusher.new(cfg)
+w.push_ds(options.zone, options.dry_run)

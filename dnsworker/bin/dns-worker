@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+$:.unshift File.expand_path('../../lib', File.realpath(__FILE__))
+
+require 'yaml'
+require 'optparse'
+require 'ostruct'
+
+require 'dnsworker/worker'
+
+options = OpenStruct.new
+options.once = false
+options.dry_run = false
+options.extra = nil
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: webdns-worker [options]'
+
+  opts.on('-c', '--config CONFIG', 'Config file') do |c|
+    options[:config] = c
+  end
+
+  opts.on('-e', '--extra CONFIG', 'Extra config file') do |e|
+    options[:extra] = e
+  end
+
+  opts.on('-n', '--dry-run', 'Run but not execute or mark anything') do |n|
+    options[:dry_run] = n
+  end
+
+  opts.on('-o', '--once', 'Run once') do |o|
+    options[:once] = o
+  end
+
+  opts.on('-d', '--cmdline-dispatch TYPE:JSON') do |d|
+    options[:cmdline_type], options[:cmdline_body] = d.split(':', 2)
+    
+    options.cmdline_body = JSON.parse(options.cmdline_body, symbolize_names: true) if options.cmdline_body
+  end
+
+end.parse!
+
+cfg = YAML.load_file(options.config)
+cfg.merge!(YAML.load_file(options.extra)) if options.extra
+
+w = DNSWorker::Worker.new(cfg)
+if options.cmdline_type
+  w.cmdline(options.cmdline_type, options.cmdline_body)
+else
+  w.work(once: options.once, dry_run: options.dry_run)
+end

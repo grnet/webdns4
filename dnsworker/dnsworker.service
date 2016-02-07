@@ -1,0 +1,10 @@
+[Unit]
+Description=WebDNS Worker
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/srv/dnsworker/bin/dns-worker -c /etc/dnsworker/cfg.yml
+
+[Install]
+WantedBy=multi-user.target
