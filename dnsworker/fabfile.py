@@ -18,12 +18,14 @@ def restart():
 
 def install_cron():
     put('cron', '/etc/cron.d/dnsworker', use_sudo=True)
+    sudo('chown root:root /etc/cron.d/dnsworker')
 
 def copy():
     sudo('mkdir -p /srv/dnsworker')
     with cd('/srv/dnsworker'):
         put('lib', '.', use_sudo=True)
         put('bin', '.', use_sudo=True, mode=0755)
+    sudo('chown -R root:root /srv/dnsworker')
 
 def deploy():
     check()
