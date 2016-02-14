@@ -1,8 +1,6 @@
 from fabric.api import env, cd
 from fabric.operations import run, put, sudo
 
-env.hosts = ['dnssec-edet4.grnet.gr']
-
 def setup():
     put('dnsworker.service', '/etc/systemd/system/', use_sudo=True)
     sudo('systemctl daemon-reload')
