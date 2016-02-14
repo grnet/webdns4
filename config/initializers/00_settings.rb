@@ -24,6 +24,10 @@ WebDNS.settings[:contact_mail] = 'webdns@example.com'
 WebDNS.settings[:mail_from] = 'webdns@example.com'
 WebDNS.settings[:admin_group] = 'admin'
 
+WebDNS.settings[:saml] = false
+WebDNS.settings[:saml_required_entitlement] = 'webdns'
+WebDNS.settings[:saml_login_text] = 'Login with SAML'
+
 # Allow local overrides
 local_settings = File.expand_path('../../local_settings.rb', __FILE__)
 require_relative local_settings if File.exist?(local_settings)
