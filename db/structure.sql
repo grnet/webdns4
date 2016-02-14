@@ -272,9 +272,11 @@ CREATE TABLE `users` (
   `last_sign_in_ip` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
+  `identifier` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_users_on_email` (`email`),
-  UNIQUE KEY `index_users_on_reset_password_token` (`reset_password_token`)
+  UNIQUE KEY `index_users_on_reset_password_token` (`reset_password_token`),
+  KEY `index_users_on_identifier` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -307,4 +309,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151207194729');
 INSERT INTO schema_migrations (version) VALUES ('20151213102322');
 
 INSERT INTO schema_migrations (version) VALUES ('20160206083933');
+
+INSERT INTO schema_migrations (version) VALUES ('20160214155026');
 
