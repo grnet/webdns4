@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     delete :users, to: redirect('/')
   end
   devise_for :users
+  get '/auth/saml', to: 'auth#saml'
 
   root to: redirect('/domains')
 

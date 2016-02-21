@@ -10,6 +10,7 @@
 
   <div class="actions">
     <%= f.submit 'Log in', class: 'btn btn-primary' %>
+    <%= link_to WebDNS.settings[:saml_login_text], auth_saml_path, class: 'btn btn-default' %>
   </div>
 <% end %>
 
