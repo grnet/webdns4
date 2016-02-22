@@ -12,7 +12,6 @@ else
   require 'jquery-rails'
   require 'coffee-rails'
   require 'state_machine'
-  require 'beaneater'
 end
 
 module WebDNS
@@ -39,9 +38,4 @@ module WebDNS
     Application.config.x
   end
 
-  def self.bean
-    @bean ||= Bean::Client.new(
-      YAML.load_file(Rails.root.join('config', 'beanstalk.yml'))[Rails.env].symbolize_keys[:host]
-    )
-  end
 end
