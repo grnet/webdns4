@@ -19,7 +19,7 @@ module Devise
           return fail!('SAML is disabled')
         end
 
-        identifier = ['saml', persistent_id].join(':')
+        identifier = ['saml', remote_user].join(':')
         user = mapping.to.find_or_initialize_by(identifier: identifier)
 
         return fail!('Wrong credentials') unless user
@@ -34,8 +34,8 @@ module Devise
 
       private
 
-      def persistent_id
-        request.headers['PERSISTENT-ID']
+      def remote_user
+        request.headers['REMOTE-USER']
       end
 
       def mail
