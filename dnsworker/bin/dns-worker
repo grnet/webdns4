@@ -44,7 +44,7 @@ cfg.merge!(YAML.load_file(options.extra)) if options.extra
 
 w = DNSWorker::Worker.new(cfg)
 if options.cmdline_type
-  w.cmdline(options.cmdline_type, options.cmdline_body)
+  w.send(:cmdline, options.cmdline_type, options.cmdline_body)
 else
   w.work(once: options.once, dry_run: options.dry_run)
 end
