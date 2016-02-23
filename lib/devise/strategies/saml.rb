@@ -35,7 +35,7 @@ module Devise
       private
 
       def remote_user
-        request.headers['REMOTE-USER']
+        request.headers['HTTP_REMOTE_USER']
       end
 
       def mail
