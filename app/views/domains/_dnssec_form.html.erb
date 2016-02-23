@@ -7,7 +7,7 @@
     <%= f.collection_select :dnssec_policy_id, DnssecPolicy.all, :id, :name %>
     <%= f.select :dnssec_parent_authority, Domain.dnssec_parent_authorities, include_blank: true,
     label: 'Parent authority', help: 'WebDNS will manage DS records automatically, handling initial setup and key rollovers.' %>
-    <%= f.text_field :dnssec_parent, label: 'Parent zone', help: 'The parent zone to publish the DS records.' %>
+    <%= f.text_field :dnssec_parent, value: guess_parent_zone(@domain.name), label: 'Parent zone', help: 'The parent zone to publish the DS records.' %>
   </fieldset>
     <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
 <% end %>

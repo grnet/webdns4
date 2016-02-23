@@ -22,4 +22,9 @@ module DomainsHelper
 
     "#{human} (#{prog})"
   end
+
+  # Most of the time the parent zone will be easily computed
+  def guess_parent_zone(name)
+    name.split('.', 2).last || ''
+  end
 end
