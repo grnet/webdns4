@@ -5,7 +5,7 @@ module Devise
   module Strategies
     class SamlAuthenticatable < Authenticatable
       def valid?
-        return false unless persistent_id.present?
+        return false unless remote_user.present?
         return false unless mail.present?
 
         return true if WebDNS.settings[:saml_required_entitlement].nil?
