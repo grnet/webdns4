@@ -88,7 +88,7 @@ class DNSWorker::Worker
     query = Rack::Utils.build_query(domain: params[:zone], event: params[:event])
     uri = URI(cfg.values_at('webdns_base', 'update_state').join % { query: query })
 
-    Net::HTTP.start(uri.host, uri.port) do |http|
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
       resp = http.request Net::HTTP::Put.new(uri.request_uri)
 
       fail JobFailed if resp.code != '200'
