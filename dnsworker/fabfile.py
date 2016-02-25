@@ -26,6 +26,8 @@ def copy():
     sudo('chown -R root:root /srv/dnsworker')
 
 def deploy():
+    copy()
+    setup()
     check()
     restart()
     install_cron()
