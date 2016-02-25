@@ -8,6 +8,13 @@ module Admin
       @users = User.orphans
     end
 
+    # DELETE /users/:id
+    def destroy
+      @user = User.find(params[:id])
+      @user.destroy
+      redirect_to orphans_admin_users_path, notice: "#{@user.email} was deleted."
+    end
+
     def update_groups
       additions = 0
 

@@ -44,7 +44,7 @@ Rails.application.routes.draw do
 
     resources :groups, except: [:show]
     resources :jobs, only: [:index, :destroy]
-    resources :users, only: [] do
+    resources :users, only: [:destroy] do
       get :orphans, to: 'users#orphans', on: :collection
       put :update_groups, to: 'users#update_groups', on: :collection
     end
