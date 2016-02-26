@@ -127,6 +127,13 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  # Returns the zone serial if a SOA record exists
+  def serial
+    return if !soa
+
+    soa.serial
+  end
+
   # Get the zone's serial strategy.
   #
   # Returns one of the supported serial strategies.

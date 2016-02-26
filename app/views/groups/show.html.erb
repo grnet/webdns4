@@ -30,7 +30,7 @@
           <% domains.each do |domain| %>
             <tr class="group-<%= group.id =%>">
               <td><%= link_to domain.name, domain %></td>
-              <td><%= domain.soa.serial %></td>
+              <td><%= domain.serial %></td>
               <td><%= link_to group.name, group_path(group) %></td>
               <td><%= human_state(domain.state) %></td>
               <td><%= domain.slave? ? domain.master : '-' %></td>
