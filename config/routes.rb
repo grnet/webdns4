@@ -43,7 +43,12 @@ Rails.application.routes.draw do
     root to: redirect('/admin/groups')
 
     resources :groups, except: [:show]
-    resources :jobs, only: [:index, :destroy]
+    resources :jobs, only: [:index, :destroy] do
+      put :done, to: 'jobs#update', on: :member,
+          defaults: { job: { status: 1 } }
+      put :pending,  to: 'jobs#update', on: :member,
+          defaults: { job: { status: 0 } }
+    end
     resources :users, only: [:destroy] do
       get :orphans, to: 'users#orphans', on: :collection
       put :update_groups, to: 'users#update_groups', on: :collection

@@ -18,7 +18,7 @@
             <th>Type</th>
             <th>Args</th>
             <th>Retries</th>
-            <th>Controls</th>
+            <th colspan="2">Controls</th>
           </tr>
         </thead>
 
@@ -39,6 +39,10 @@
                 <td><%= job.args %></td>
               <% end  %>
               <td><%= job.retries %></td>
+              <td>
+                <%= link_to('done', done_admin_job_path(job), method: :put) unless job.done? %>
+                <%= link_to('pending', pending_admin_job_path(job), method: :put) if job.failed? %>
+              </td>
               <td><%= link_to_destroy admin_job_path(job), method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
           <% end %>

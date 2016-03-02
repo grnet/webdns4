@@ -8,6 +8,14 @@ class Job < ActiveRecord::Base
     status == 2
   end
 
+  def done?
+    status == 1
+  end
+
+  def pending?
+    status == 0
+  end
+
   def arguments
     JSON.parse(args)
   end
