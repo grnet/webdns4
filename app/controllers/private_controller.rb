@@ -8,6 +8,8 @@ class PrivateController < ApplicationController
     Domain.replace_ds(parent, child, ds)
 
     render json: { ok: true }
+  rescue ActiveRecord::RecordNotFound
+    render json: { ok: false, msg: 'Domain not found!' }
   end
 
   # PUT /trigger_event
