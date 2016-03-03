@@ -15,7 +15,15 @@ class DNSWorker::Pushers::Webdns < DNSWorker::Pushers::Base
     Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
       resp = http.request Net::HTTP::Put.new(uri.request_uri)
 
-      return false if resp.code != '200'
+      if resp.code != '200'
+        $stderr.puts "WebDNS returned #{resp.code}"
+        return false
+      end
+
+      body = JSON.parse(resp.body)
+      return true if body['ok']
+
+      $stderr.puts "WebDNS returned error '#{body['msg']}'"
     end
 
     true
