@@ -73,7 +73,9 @@ module DNSWorker::BaseWorker
     catch(:stop_process) do
       jobs.each { |job|
         if job[:status] == 2 # Stop on processing zone on failed jobs
-          $stderr.puts "Not processing domain=#{domain_id} because a failed job exists jobid=#{job[:id]} |#{job}|"
+          id, jtype, jargs_raw = job.values_at(:id, :job_type, :args)
+          job_info = "jobid=#{id} '#{jtype}:#{jargs_raw}'"
+          $stderr.puts "Not processing domain=#{domain_id} because a failed job exists #{job_info}"
           throw :stop_process
         end
         dispatch(job)
@@ -91,11 +93,12 @@ module DNSWorker::BaseWorker
   end
 
   def dispatch(job)
-    id, jtype, jargs = job.values_at(:id, :job_type, :args)
-    jargs = JSON.parse(jargs, symbolize_names: true)
+    id, jtype, jargs_raw = job.values_at(:id, :job_type, :args)
+    jargs = JSON.parse(jargs_raw, symbolize_names: true)
 
-    procline("working on jobid=#{id} #{jtype} #{jargs}")
-    $stderr.puts "working on jobid=#{id} #{jtype} #{jargs}"
+    job_info = "jobid=#{id} '#{jtype}:#{jargs_raw}'"
+    procline("working on #{job_info}")
+    $stderr.puts "working on #{job_info}"
     send(jtype, jargs) unless dry_run
     mark_done(id)
 
