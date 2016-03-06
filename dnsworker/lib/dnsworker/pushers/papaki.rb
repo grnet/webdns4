@@ -23,7 +23,7 @@ class DNSWorker::Pushers::Papaki < DNSWorker::Pushers::Base
     
     req['dnssectoadd'] = { ds: dss } if dss.any?
     req['dnssectoremove'] = { ds: current } if current.any?
-    request(req)
+    request(req, ['1001'])
 
     true
   end
@@ -83,7 +83,10 @@ class DNSWorker::Pushers::Papaki < DNSWorker::Pushers::Base
     request(type: 'dnssecinfo', domainname: domain)
   end
 
-  def request(data)
+  def request(data, also_allow_codes=[])
+    allowed = ['1000']
+    allowed += also_allow_codes.map { |c| c.to_s }
+
     resp = client.post cfg['papaki_endpoint'] do |r|
       r.headers['Content-Type'] = 'application/x-www-form-urlencoded'
       data_with_key = data.merge(apiKey: cfg['papaki_key'])
@@ -96,7 +99,7 @@ class DNSWorker::Pushers::Papaki < DNSWorker::Pushers::Base
     }
     puts "\n* Response #{data[:do] || data[:type]} for #{data[:domainname]}"
     resp.body['response'].tap { |r|
-      raise "#{r['code']}: #{r['message']}" if r['code'] != '1000'
+      raise "#{r['code']}: #{r['message']}" unless allowed.include?(r['code'])
       r.to_a.sort.each { |k, v|
         puts "#{k}: #{v}"
       }
