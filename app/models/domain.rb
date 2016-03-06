@@ -18,7 +18,7 @@ class Domain < ActiveRecord::Base
 
   # List parent authorities
   def self.dnssec_parent_authorities
-    WebDNS.settings[:dnssec_parent_authorities]
+    WebDNS.settings[:dnssec_parent_authorities].keys.map(&:to_s)
   end
 
   # Fire event after transaction commmit
@@ -48,6 +48,7 @@ class Domain < ActiveRecord::Base
 
   after_create :install
   before_save :check_convert
+  before_save :check_dnssec_parent_authority, if: :dnssec?
   after_commit :after_commit_event
 
   attr_writer :serial_strategy
@@ -281,6 +282,16 @@ class Domain < ActiveRecord::Base
     end
 
     errors.add(:dnssec, 'You cannot modify dnssec settings in this state!')
+    false
+  end
+
+  def check_dnssec_parent_authority
+    cfg = WebDNS.settings[:dnssec_parent_authorities][dnssec_parent_authority.to_sym]
+    return if !cfg[:valid]
+
+    return true if cfg[:valid].call(dnssec_parent)
+
+    errors.add(:dnssec_parent_authority, 'Parent zone is not accepted for the selected parent authority!')
     false
   end
 

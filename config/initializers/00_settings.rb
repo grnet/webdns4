@@ -13,7 +13,15 @@ WebDNS.settings[:default_ns] = [
 ]
 
 WebDNS.settings[:dnssec] = true
-WebDNS.settings[:dnssec_parent_authorities] = ['webdns', 'papaki']
+WebDNS.settings[:dnssec_parent_authorities] = {
+  webdns: {
+    valid: -> (parent) { Domain.find_by_name(parent) } # Check if parent is self-hosted
+  },
+  papaki: {
+    valid: -> (parent) { parent.split('.').size == 1 } # TLDs
+  }
+}
+
 
 WebDNS.settings[:serial_strategy] = Strategies::Date
 
