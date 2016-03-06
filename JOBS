@@ -1,0 +1,48 @@
+# Jobs
+
+## add_domain
+
+Add domain to bind as slave (master: webdns). It uses the `/usr/sbin/rndc
+addzone` interface.
+
+## trigger_event
+
+Trigger an event for the specified domain through the WebDNS API. The state
+machine will take care of the rest once the event is received, it usually
+changes state and pushes more jobs to the queue.
+
+## opendnssec_add
+
+Add a zone to opendnssec for signing. The zone is transfered from WebDNS
+and a signed zone file is created to `/var/lib/opendnssec/signed` (should be
+symlinked to '/var/cache/bind/webdns').
+
+## bind_convert_to_dnssed
+
+It checks that the signed zone file exists and triggers a 'rndc delzone'
+followed by 'rnd addzone' that serves the signed zone as a master (file
+"webdns/signed/%{zone}").
+
+## wait_for_ready_to_push_ds
+
+Wait for KSK to become ready so we can publish the DS records to the parent
+authority.
+
+## publish_ds
+
+Pushes the DS records to the parent depending on the parent authority.
+
+## wait_for_active
+
+Wait for the KSK to become active. The KSK is marked active by the ds-monitor
+script. ds-monitor checks if the DS records are visible using the local
+recursor.
+
+## remove_domain
+
+Remove a zone from bind using rndc delzone.
+
+## opendnssec_remove
+
+Remove a zone from ods uning 'ods-ksmutil zone delete'.
+
