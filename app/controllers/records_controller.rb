@@ -85,6 +85,11 @@ class RecordsController < ApplicationController
 
   # DELETE /records/1
   def destroy
+    if @record.type == 'SOA'
+      redirect_to domain, alert: 'SOA records cannot be deleted!'
+      return
+    end
+
     @record.destroy
     notify_record(@record, :destroy)
     redirect_to domain, notice: 'Record was successfully destroyed.'
