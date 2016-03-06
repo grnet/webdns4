@@ -2,12 +2,21 @@
   <%= f.hidden_field :group_id %>
   <%= f.static_control :name %>
   <%= f.select :dnssec, [['Enable', true], ['Disable', false]] %>
+  <% dnssec_was_or_is = @domain.dnssec_changed? ? @domain.dnssec_was : @domain.dnssec %>
 
-  <fieldset id="dnssec_fieldset" <%= 'disabled' if !@domain.dnssec %>>
-    <%= f.collection_select :dnssec_policy_id, DnssecPolicy.all, :id, :name %>
-    <%= f.select :dnssec_parent_authority, Domain.dnssec_parent_authorities, include_blank: true,
-    label: 'Parent authority', help: 'WebDNS will manage DS records automatically, handling initial setup and key rollovers.' %>
-    <%= f.text_field :dnssec_parent, value: guess_parent_zone(@domain.name), label: 'Parent zone', help: 'The parent zone to publish the DS records.' %>
-  </fieldset>
+  <% if dnssec_was_or_is %>
+    <%= f.static_control label: 'Dnssec policy' do %>
+      <%= @domain.dnssec_policy.try(:name) %>
+    <% end %>
+    <%= f.static_control :dnssec_parent_authority, label: 'Parent Authority' %>
+    <%= f.static_control :dnssec_parent, label: 'Parent zone' %>
+  <% else %>
+    <fieldset id="dnssec_fieldset" <%= 'disabled' if !@domain.dnssec? %>>
+      <%= f.collection_select :dnssec_policy_id, DnssecPolicy.all, :id, :name, help: 'You will not be able to change policy once dnssec is enabled.' %>
+      <%= f.select :dnssec_parent_authority, Domain.dnssec_parent_authorities, include_blank: true,
+      label: 'Parent authority', help: 'WebDNS will manage DS records automatically, handling initial setup and key rollovers.' %>
+      <%= f.text_field :dnssec_parent, value: guess_parent_zone(@domain.name), label: 'Parent zone', help: 'The parent zone to publish the DS records.' %>
+    </fieldset>
+  <% end %>
     <%= f.submit 'Save', class: 'btn btn-primary col-sm-offset-2' %>
 <% end %>
