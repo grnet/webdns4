@@ -88,6 +88,7 @@ class DomainTest < ActiveSupport::TestCase
   class StatesDomainTest < ActiveSupport::TestCase
     def setup
       @domain = build(:domain)
+      @policy = create(:dnssec_policy)
     end
 
     test 'domain lifetime' do
@@ -103,7 +104,16 @@ class DomainTest < ActiveSupport::TestCase
 
       # Convert to dnssec (sign)
       assert_jobs do
-        assert @domain.dnssec_sign # user triggered
+        @domain.dnssec = true
+        @domain.dnssec_policy = @policy
+        @domain.dnssec_parent = @domain.name.split('.', 2).last
+        @domain.dnssec_parent_authority = 'test_authority'
+        @domain.save!
+
+        # After commit is not triggered in tests,
+        # so we have to trigger it manually
+        @domain.send(:after_commit_event)
+
         assert_equal 'pending_signing', @domain.state
       end
 
@@ -114,7 +124,7 @@ class DomainTest < ActiveSupport::TestCase
 
       # Convert to dnssec (publish ds)
       assert_jobs do
-        assert @domain.push_ds([:dss1, :dss2]) # triggered by schedule-ds script
+        assert @domain.push_ds(['dss1', 'dss2']) # triggered by schedule-ds script
         assert_equal 'pending_ds', @domain.state
       end
       assert @domain.converted # job triggered
@@ -122,7 +132,7 @@ class DomainTest < ActiveSupport::TestCase
 
       # KSK rollover
       assert_jobs do
-        assert @domain.push_ds([:dss3, :dss4]) # triggered by schedule-ds script
+        assert @domain.push_ds(['dss3', 'dss4']) # triggered by schedule-ds script
         assert_equal 'pending_ds_rollover', @domain.state
       end
       assert @domain.complete_rollover # job triggered

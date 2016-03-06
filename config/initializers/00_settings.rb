@@ -22,6 +22,12 @@ WebDNS.settings[:dnssec_parent_authorities] = {
   }
 }
 
+# Testing helper
+WebDNS.settings[:dnssec_parent_authorities].merge!(
+  test_authority: {
+    valid: -> (parent) { true }
+  }
+) if Rails.env.test?
 
 WebDNS.settings[:serial_strategy] = Strategies::Date
 
