@@ -20,6 +20,18 @@ class Job < ActiveRecord::Base
     JSON.parse(args)
   end
 
+  def run_event!
+    args = arguments
+    raise 'Not an event!' unless args['event']
+
+    Domain
+      .find_by_name(args['zone'])
+      .fire_state_event(args['event'])
+
+    self.status = 1
+    self.save!
+  end
+
   class << self
     def add_domain(domain)
       ActiveRecord::Base.transaction do
