@@ -1,2 +1,2 @@
-* * * * * root /srv/dnsworker/bin/ds-schedule -c /etc/dnsworker/cfg.yml
-* * * * * root /srv/dnsworker/bin/ds-monitor >/dev/null
+*/10 * * * * root /srv/dnsworker/bin/ds-schedule -c /etc/dnsworker/cfg.yml
+*/10 * * * * root /srv/dnsworker/bin/ds-monitor >/dev/null
