@@ -2,6 +2,7 @@ class Job < ActiveRecord::Base
   belongs_to :domain
 
   scope :pending, -> { where(status: 0) }
+  scope :failed, -> { where(status: 2) }
   scope :completed, -> { where(status: [1, 2]) }
 
   def failed?
@@ -18,6 +19,12 @@ class Job < ActiveRecord::Base
 
   def arguments
     JSON.parse(args)
+  end
+
+  def zone
+    return domain.name if domain
+
+    arguments['zone']
   end
 
   def run_event!
