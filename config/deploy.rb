@@ -16,7 +16,7 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      execute 'sudo unicornctl respawn'
+      execute 'sudo unicornctl restart'
     end
   end
 
