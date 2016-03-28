@@ -6,7 +6,7 @@ module ApplicationHelper
     1.day => 'day',
     1.week => 'week',
     1.month => 'month',
-    1.year => 'year',
+    1.year.to_i => 'year',
   }
 
   def can_edit?(object)
