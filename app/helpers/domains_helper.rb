@@ -27,4 +27,12 @@ module DomainsHelper
   def guess_parent_zone(name)
     name.split('.', 2).last || ''
   end
+
+  def dnssec_policy_human(policy)
+    info = policy.info.map { |name, value|
+      [name, seconds_to_human(value)].join(': ')
+    }
+
+    "#{policy.name}: (#{info.join(' | ')})"
+  end
 end

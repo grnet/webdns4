@@ -12,6 +12,7 @@ else
   require 'jquery-rails'
   require 'coffee-rails'
   require 'state_machine'
+  require 'nokogiri'
 end
 
 module WebDNS
