@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'nokogiri'
+
+options = {}
+parser = OptionParser.new do |opts|
+  opts.on('-l', '--list', 'List policies') do |v|
+    options[:list] = v
+  end
+  opts.on('-s', '--set POLICY', 'Create/Update policy (stdin)') do |v|
+    options[:policy] = v
+  end
+end
+parser.parse!
+
+if options.empty?
+  $stderr.puts parser.help
+  exit 1
+end
+
+if options[:list]
+  DnssecPolicy.all.each { |policy|
+    puts "Policy: #{policy.name}"
+    puts policy.policy
+    puts
+  }
+elsif policy = options[:policy]
+  puts "Reading from stdin (Output from `ods-ksmutil policy export --policy #{policy}`)"
+  policy_xml = ARGF.read
+  begin
+    Nokogiri::XML(policy_xml) { |config| config.strict }
+  rescue Nokogiri::XML::SyntaxError
+    $stderr.puts "Error parsing XML..."
+    exit 1
+  end
+
+  policy = DnssecPolicy.find_or_initialize_by(name: policy)
+  policy.policy = policy_xml
+
+  puts
+  if policy.new_record?
+    puts "Creating new policy '#{policy.name}'"
+  else
+    puts "Updating existing policy '#{policy.name}'"
+  end
+
+  puts 'Are you sure you want to continue? (y/N)'
+  answer = gets.chomp
+  if ['y', 'Y'].include? answer
+    policy.save!
+    puts "Saved"
+  else
+    puts "Not saved"
+  end
+
+end
