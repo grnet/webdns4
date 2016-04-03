@@ -21,6 +21,7 @@ WebDNS.settings[:dnssec_parent_authorities] = {
     valid: -> (parent) { parent.split('.').size == 1 } # TLDs
   }
 }
+WebDNS.settings[:dnssec_ds_removal_sleep] = 14400 * 2
 
 # Testing helper
 WebDNS.settings[:dnssec_parent_authorities].merge!(

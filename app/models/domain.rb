@@ -67,6 +67,7 @@ class Domain < ActiveRecord::Base
   state_machine initial: :initial do
     after_transition(any => :pending_install) { |domain, _t| Job.add_domain(domain) }
     after_transition(any => :pending_remove) { |domain, _t| Job.shutdown_domain(domain) }
+    after_transition(any => :pending_ds_removal) { |domain, _t| Job.dnssec_drop_ds(domain) }
     after_transition(any => :pending_signing) { |domain, _t| Job.dnssec_sign(domain) }
     after_transition(any => :wait_for_ready) { |domain, _t| Job.wait_for_ready(domain) }
     after_transition(any => :pending_ds) { |domain, t| Job.dnssec_push_ds(domain, *t.args) }
@@ -96,7 +97,11 @@ class Domain < ActiveRecord::Base
     end
 
     event :remove do
-      transition operational: :pending_remove
+      transition [:operational, :pending_ds_removal] => :pending_remove
+    end
+
+    event :full_remove do
+      transition operational: :pending_ds_removal
     end
 
     # Machine events

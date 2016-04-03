@@ -154,6 +154,67 @@ class DomainTest < ActiveSupport::TestCase
       assert @domain.cleaned_up # job triggered
       assert_equal 'destroy', @domain.state
     end
+
+    test 'domain lifetime #full-destroy' do
+      assert_equal 'initial', @domain.state
+
+      # Create
+      assert_jobs do
+        @domain.save! # user triggered
+        assert_equal 'pending_install', @domain.state
+      end
+      @domain.installed # job triggered
+      assert_equal 'operational', @domain.state
+
+      # Convert to dnssec (sign)
+      assert_jobs do
+        @domain.dnssec = true
+        @domain.dnssec_policy = @policy
+        @domain.dnssec_parent = @domain.name.split('.', 2).last
+        @domain.dnssec_parent_authority = 'test_authority'
+        @domain.save!
+
+        # After commit is not triggered in tests,
+        # so we have to trigger it manually
+        @domain.send(:after_commit_event)
+
+        assert_equal 'pending_signing', @domain.state
+      end
+
+      assert_jobs do
+        assert @domain.signed # job triggered
+        assert_equal 'wait_for_ready', @domain.state
+      end
+
+      # Convert to dnssec (publish ds)
+      assert_jobs do
+        assert @domain.push_ds(['dss1', 'dss2']) # triggered by schedule-ds script
+        assert_equal 'pending_ds', @domain.state
+      end
+      assert @domain.converted # job triggered
+      assert_equal 'operational', @domain.state
+
+      # KSK rollover
+      assert_jobs do
+        assert @domain.push_ds(['dss3', 'dss4']) # triggered by schedule-ds script
+        assert_equal 'pending_ds_rollover', @domain.state
+      end
+      assert @domain.complete_rollover # job triggered
+      assert_equal 'operational', @domain.state
+
+      # Full Remove (Drops DS records)
+      assert_jobs do
+        assert @domain.full_remove # user triggered
+        assert_equal 'pending_ds_removal', @domain.state
+      end
+
+      assert_jobs do
+        assert @domain.remove # job triggered
+        assert_equal 'pending_remove', @domain.state
+      end
+      assert @domain.cleaned_up # job triggered
+      assert_equal 'destroy', @domain.state
+    end
   end
 
   class DsDomainTest < ActiveSupport::TestCase
@@ -175,6 +236,12 @@ class DomainTest < ActiveSupport::TestCase
       @ds.each { |ds|
         assert_equal 1, DS.where(name: "dnssec.#{@domain.name}", content: ds).count
       }
+    end
+
+    test 'remove ds records' do
+      Domain.replace_ds(@domain.name, @child, [])
+
+      assert_equal 0, DS.where(name: "dnssec.#{@domain.name}").count
     end
 
     test 'check if child is a valid subdomain' do

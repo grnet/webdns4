@@ -99,6 +99,20 @@ class Job < ActiveRecord::Base
       end
     end
 
+    def dnssec_drop_ds(domain)
+      opts = Hash[:dnssec_parent, domain.dnssec_parent,
+                  :dnssec_parent_authority, domain.dnssec_parent_authority,
+                  :dss, []]
+
+      ActiveRecord::Base.transaction do
+        job_for_domain(domain, :publish_ds, opts)
+        # Wait for the change to propagate
+        job_for_domain(domain, :wait_until, until: Time.now.to_i + WebDNS.settings[:dnssec_ds_removal_sleep])
+
+        trigger_event(domain, :remove)
+      end
+    end
+
     def convert_to_plain(domain)
       ActiveRecord::Base.transaction do
         jobs_for_domain(domain,

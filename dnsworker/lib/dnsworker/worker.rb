@@ -84,6 +84,10 @@ class DNSWorker::Worker
     fail Retry
   end
 
+  def wait_until(params)
+    fail Retry if Time.now.to_i < params[:until]
+  end
+
   def trigger_event(params)
     query = Rack::Utils.build_query(domain: params[:zone], event: params[:event])
     uri = URI(cfg.values_at('webdns_base', 'update_state').join % { query: query })

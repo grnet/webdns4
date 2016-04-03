@@ -30,13 +30,19 @@ authority.
 
 ## publish_ds
 
-Pushes the DS records to the parent depending on the parent authority.
+Pushes the DS records to the parent depending on the parent authority. Also
+drops DS when a DSSSEC domain is removed (on full-remove).
 
 ## wait_for_active
 
 Wait for the KSK to become active. The KSK is marked active by the ds-monitor
 script. ds-monitor checks if the DS records are visible using the local
 recursor.
+
+## wait_until
+
+Wait until a specific timestamp is reached, used to pause other jobs in the
+queue, like domain removal.
 
 ## remove_domain
 
