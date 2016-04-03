@@ -8,6 +8,11 @@ Rails.application.routes.draw do
 
   root to: redirect('/domains')
 
+  resources :users, only: [] do
+    get :token, to: 'users#token', on: :member
+    post :generate_token, to: 'users#generate_token', on: :member
+  end
+
   resources :groups, only: [:show] do
     get :search_member,
         to: 'groups#search_member', on: :member

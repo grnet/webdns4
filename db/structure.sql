@@ -273,9 +273,11 @@ CREATE TABLE `users` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `identifier` varchar(255) DEFAULT '',
+  `token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_users_on_email` (`email`),
   UNIQUE KEY `index_users_on_reset_password_token` (`reset_password_token`),
+  UNIQUE KEY `index_users_on_token` (`token`),
   KEY `index_users_on_identifier` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -311,4 +313,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151213102322');
 INSERT INTO schema_migrations (version) VALUES ('20160206083933');
 
 INSERT INTO schema_migrations (version) VALUES ('20160214155026');
+
+INSERT INTO schema_migrations (version) VALUES ('20160403094641');
 

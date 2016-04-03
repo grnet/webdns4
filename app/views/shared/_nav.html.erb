@@ -39,6 +39,7 @@
               <% if current_user.can_change_password? %>
                 <li><%= link_to('Change Password', edit_user_registration_path) %></li>
               <% end %>
+              <li><%= link_to('API Token', token_user_path(current_user)) %></li>
             </ul>
           </li>
         <% end %>
