@@ -31,7 +31,6 @@ class PrivateController < ApplicationController
   def replace_ds_params
     params.require(:parent)
     params.require(:child)
-    params.require(:ds)
     params.permit(ds: [])
 
     params

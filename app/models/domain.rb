@@ -174,6 +174,7 @@ class Domain < ActiveRecord::Base
   end
 
   def self.replace_ds(parent, child, records)
+    records ||= []
     parent = find_by_name!(parent)
     fail NotAChild if not child.end_with?(parent.name)
 
