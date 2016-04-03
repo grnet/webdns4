@@ -36,4 +36,8 @@ module DomainsHelper
 
     "#{policy.name}: (#{info.join(' | ')})"
   end
+
+  def link_to_full_destroy(*args, &block)
+    link_to(abbr_glyph(:trash, 'Drop DS records and remove the zone'), *args, &block)
+  end
 end

@@ -1,8 +1,8 @@
 class DomainsController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :domain, only: [:show, :edit, :edit_dnssec, :update, :destroy]
-  before_action :group,  only: [:show, :edit, :edit_dnssec, :update, :destroy]
+  before_action :domain, only: [:show, :edit, :edit_dnssec, :update, :destroy, :full_destroy]
+  before_action :group,  only: [:show, :edit, :edit_dnssec, :update, :destroy, :full_destroy]
 
   helper_method :edit_group_scope
 
@@ -60,6 +60,17 @@ class DomainsController < ApplicationController
     if @domain.remove
       notify_domain(@domain, :destroy)
       redirect_to domains_url, notice: "#{@domain.name} is scheduled for removal."
+    else
+      redirect_to domains_url, alert: "#{@domain.name} cannot be deleted! (state '#{@domain.state}')"
+    end
+  end
+
+  # DELETE /domains/1/full_destroy
+  def full_destroy
+    if @domain.full_remove
+      notify_domain(@domain, :destroy)
+      redirect_to domains_url,
+                  notice: "#{@domain.name} is scheduled for full removal. DS records will be dropped from the parent zone before proceeding"
     else
       redirect_to domains_url, alert: "#{@domain.name} cannot be deleted! (state '#{@domain.state}')"
     end

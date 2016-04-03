@@ -37,6 +37,8 @@
             <td>
               <%= link_to_edit edit_domain_path(domain) %>
               <%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? %>
+              <%= link_to_full_destroy full_destroy_domain_path(domain),
+              method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? && domain.dnssec? %>
             </td>
           </tr>
         <% end %>
