@@ -79,7 +79,7 @@ options.extra = nil
 options.zone = nil
 
 OptionParser.new do |opts|
-  opts.banner = 'Usage: push-ds [options]'
+  opts.banner = 'Usage: ds-schedule [options]'
 
   opts.on('-c', '--config CONFIG', 'Config file') do |c|
     options[:config] = c

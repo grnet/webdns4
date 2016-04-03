@@ -13,7 +13,7 @@ options.dry_run = false
 options.extra = nil
 
 OptionParser.new do |opts|
-  opts.banner = 'Usage: webdns-worker [options]'
+  opts.banner = 'Usage: dns-worker [options]'
 
   opts.on('-c', '--config CONFIG', 'Config file') do |c|
     options[:config] = c
