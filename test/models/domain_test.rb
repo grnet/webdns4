@@ -282,7 +282,7 @@ class DomainTest < ActiveSupport::TestCase
     end
 
     test 'apply changes not' do
-      err = @domain.bulk invalid_changes
+      ops, err = @domain.bulk invalid_changes
 
       assert_not_empty err
       assert_includes err[:deletes][Record.maximum(:id) + 1], 'record not found'
@@ -291,7 +291,7 @@ class DomainTest < ActiveSupport::TestCase
     end
 
     test 'apply changes' do
-      err = @domain.bulk valid_changes
+      ops, err = @domain.bulk valid_changes
 
       @domain.reload
       @aaaa.reload
@@ -300,6 +300,9 @@ class DomainTest < ActiveSupport::TestCase
       assert_empty @domain.records.where(id: @a.id)
       assert_equal '::42', @aaaa.content
       assert_equal 1, @domain.records.where(type: :mx).count
+      assert_equal 1, ops[:additions].size
+      assert_equal 1, ops[:changes].size
+      assert_equal 1, ops[:deletes].size
     end
   end
 end

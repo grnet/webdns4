@@ -52,8 +52,9 @@ class RecordsController < ApplicationController
   end
 
   def bulk
-    err = @domain.bulk(params)
+    ops, err = @domain.bulk(params)
     if err.empty?
+      notify_record_bulk(@domain, ops)
       render json: { ok: true }
     else
       render json: { errors: err }

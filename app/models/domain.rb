@@ -197,6 +197,7 @@ class Domain < ActiveRecord::Base
     changes = opts[:changes] || {}
     additions = opts[:additions] || {}
     errors = Hash.new { |h, k| h[k] = {} }
+    operations = Hash.new { |h, k| h[k] = [] }
 
     ActiveRecord::Base.transaction do
       # Deletes
@@ -204,6 +205,7 @@ class Domain < ActiveRecord::Base
       deletes.each { |rec_id|
         if rec = to_delete[Integer(rec_id)]
           rec.destroy
+          operations[:deletes] << rec
           next
         end
 
@@ -213,8 +215,8 @@ class Domain < ActiveRecord::Base
       # Changes
       to_change = records.where(id: changes.keys).index_by(&:id)
       changes.each {|rec_id, changes|
-        binding
         if rec = to_change[Integer(rec_id)]
+          operations[:changes] << rec
           errors[:changes][rec_id] = rec.errors.full_messages.join(', ') if !rec.update(changes)
           next
         end
@@ -225,13 +227,14 @@ class Domain < ActiveRecord::Base
       # Additions
       additions.each { |inc, attrs|
         rec = records.new(attrs)
+        operations[:additions] << rec
         errors[:additions][inc] = rec.errors.full_messages.join(', ') if !rec.save
       }
 
       raise ActiveRecord::Rollback if errors.any?
     end
 
-    errors
+    [operations, errors]
   end
 
   private
