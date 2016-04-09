@@ -46,11 +46,8 @@ class Notification
   def handle_record(data)
     record, context, user = data.values_at(:object, :context, :user)
     domain = record.domain
-    changes = record.previous_changes
 
-    # Nobody is interested in those
-    changes.delete('updated_at')
-    changes.delete('created_at')
+    changes = filter_changes(record)
     return if changes.empty? && context == :update
 
     others = domain.group.users.where.not(id: user.id).pluck(:email)
@@ -70,11 +67,8 @@ class Notification
 
   def handle_domain(data)
     domain, context, user = data.values_at(:object, :context, :user)
-    changes = domain.previous_changes
 
-    # Nobody is interested in those
-    changes.delete('updated_at')
-    changes.delete('created_at')
+    changes = filter_changes(domain)
     return if changes.empty? && context == :update
 
     others = domain.group.users.where.not(id: user.id).pluck(:email)
@@ -90,4 +84,17 @@ class Notification
       changes: changes
     ).deliver
   end
+
+  private
+
+  def filter_changes(record)
+    changes = record.previous_changes
+
+    # Nobody is interested in those
+    changes.delete('updated_at')
+    changes.delete('created_at')
+
+    changes
+  end
+
 end
