@@ -136,4 +136,8 @@ class RecordsController < ApplicationController
   def notify_record(*args)
     notification.notify_record(current_user, *args) if WebDNS.settings[:notifications]
   end
+
+  def notify_record_bulk(*args)
+    notification.notify_record_bulk(current_user, *args) if WebDNS.settings[:notifications]
+  end
 end

@@ -142,5 +142,34 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
       assert_includes mail.body.to_s, "By: #{@group.users.first.email}"
     end
+
+    test 'bulk operations' do
+      a = create(:a, domain: @domain)
+      aaaa = create(:aaaa, domain: @domain)
+      new = build(:mx, domain: @domain)
+
+      changes = {}.tap { |c|
+        c[:deletes] = [a.id]
+        c[:changes] = { aaaa.id => { content: '::42' }}
+        c[:additions] = { 1 => new.as_bulky_json }
+      }
+
+      ops, err = @domain.bulk(changes)
+      assert_empty err
+
+      @notification.notify_record_bulk(@group.users.first, @domain, ops)
+
+      assert_not ActionMailer::Base.deliveries.empty?
+      mail = ActionMailer::Base.deliveries.last
+
+      assert_equal [@group.users.last.email], mail.to
+      assert_includes mail.subject, 'Bulk'
+      assert_includes mail.body.to_s, "Domain: #{@domain.name}"
+      assert_includes mail.body.to_s, "By: #{@group.users.first.email}"
+      assert_includes mail.body.to_s, "Action: destroy"
+      assert_includes mail.body.to_s, "Action: update"
+      assert_includes mail.body.to_s, "Action: create"
+    end
+
   end
 end

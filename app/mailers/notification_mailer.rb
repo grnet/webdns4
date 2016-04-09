@@ -17,6 +17,15 @@ class NotificationMailer < ActionMailer::Base
     mail(to: others, subject: "[webdns] [record] #{PREFIXES[context.to_sym]} #{record.to_short_dns}")
   end
 
+  def notify_record_bulk(domain:, user:, admin:, others:, operations:)
+    @domain = domain
+    @user = user
+    @admin = admin
+    @operations = operations
+
+    mail(to: others, subject: "[webdns] [record] Bulk operations for '#{domain.name}'")
+  end
+
   def notify_domain(domain:, context:, user:, admin:, others:, changes:)
     @domain = domain
     @context = context
@@ -26,4 +35,5 @@ class NotificationMailer < ActionMailer::Base
 
     mail(to: others, subject: "[webdns] [domain] #{PREFIXES[context.to_sym]} #{domain.name}")
   end
+
 end

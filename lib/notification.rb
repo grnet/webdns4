@@ -3,6 +3,15 @@ require 'singleton'
 class Notification
   include Singleton
 
+  # Send out a notification about bulk record operations.
+  def notify_record_bulk(user, domain, ops)
+    ActiveSupport::Notifications.instrument(
+      'webdns.record.bulk',
+      user: user,
+      domain: domain,
+      ops: ops)
+  end
+
   # Send out a notification about notable record changes.
   def notify_record(user, record, context)
     ActiveSupport::Notifications.instrument(
@@ -24,6 +33,7 @@ class Notification
   # Subscribe to domain/record notifications.
   def hook
     hook_record
+    hook_record_bulk
     hook_domain
   end
 
@@ -33,6 +43,13 @@ class Notification
     ActiveSupport::Notifications
       .subscribe 'webdns.record' do |_name, _started, _finished, _unique_id, data|
       handle_record(data)
+    end
+  end
+
+  def hook_record_bulk
+    ActiveSupport::Notifications
+      .subscribe 'webdns.record.bulk' do |_name, _started, _finished, _unique_id, data|
+      handle_record_bulk(data)
     end
   end
 
@@ -62,6 +79,28 @@ class Notification
       admin: admin_action,
       others: others,
       changes: changes
+    ).deliver
+  end
+
+  def handle_record_bulk(data)
+    ops, domain, user = data.values_at(:ops, :domain, :user)
+
+    operations = []
+    operations += ops[:deletes].map   { |rec| [:destroy, rec, nil] }
+    operations += ops[:changes].map   { |rec| [:update, rec, filter_changes(rec)] }
+    operations += ops[:additions].map { |rec| [:create, rec, nil] }
+
+    others = domain.group.users.where.not(id: user.id).pluck(:email)
+    return if others.empty?
+
+    admin_action = !user.groups.exists?(domain.group_id)
+
+    NotificationMailer.notify_record_bulk(
+      user: user,
+      admin: admin_action,
+      others: others,
+      domain: domain,
+      operations: operations,
     ).deliver
   end
 
