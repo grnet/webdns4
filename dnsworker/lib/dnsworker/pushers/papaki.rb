@@ -99,7 +99,11 @@ class DNSWorker::Pushers::Papaki < DNSWorker::Pushers::Base
     }
     puts "\n* Response #{data[:do] || data[:type]} for #{data[:domainname]}"
     resp.body['response'].tap { |r|
-      raise "#{r['code']}: #{r['message']}" unless allowed.include?(r['code'])
+      unless allowed.include?(r['code'])
+        $stderr.puts "#{r['code']}: #{r['message']}"
+        raise DNSWorker::BaseWorker::CmdFailed
+      end
+
       r.to_a.sort.each { |k, v|
         puts "#{k}: #{v}"
       }
