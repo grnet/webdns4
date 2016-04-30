@@ -61,6 +61,12 @@ Rails.application.routes.draw do
     end
   end
 
+  # API
+  scope '/api' do
+    get :ping, to: 'api#ping'
+    get :whoami, to: 'api#whoami'
+  end if WebDNS.settings[:api]
+
   # Private
   put 'private/replace_ds', to: 'private#replace_ds'
   put 'private/trigger_event', to: 'private#trigger_event'
