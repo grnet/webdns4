@@ -170,6 +170,17 @@ class Record < ActiveRecord::Base
     [name, 'IN', type].join(' ')
   end
 
+  def to_api
+    Hash[
+      :name, name,
+      :content, content,
+      :type, type,
+      :ttl, ttl,
+      :prio, prio,
+      :disabled, disabled
+    ].with_indifferent_access
+  end
+
   def classless_delegated?
     return false if not type == 'CNAME'
     return false if not domain.name.end_with?('.in-addr.arpa')

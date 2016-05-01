@@ -65,6 +65,8 @@ Rails.application.routes.draw do
   scope '/api' do
     get :ping, to: 'api#ping'
     get :whoami, to: 'api#whoami'
+    get '/domain/:domain/list', to: 'api#list', constraints: { domain: /[^\/]+/}
+    post '/domain/:domain/bulk', to: 'api#bulk', constraints: { domain: /[^\/]+/}
   end if WebDNS.settings[:api]
 
   # Private
