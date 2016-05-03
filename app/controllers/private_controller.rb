@@ -20,6 +20,12 @@ class PrivateController < ApplicationController
     render json: { ok: result }
   end
 
+  def zones
+    render json: Domain.
+            order(:name).
+            includes(:group).map(&:to_export)
+  end
+
   private
 
   def action_params

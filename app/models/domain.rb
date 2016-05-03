@@ -162,6 +162,14 @@ class Domain < ActiveRecord::Base
     type == 'SLAVE'
   end
 
+  def to_export
+    Hash[
+      :id, id,
+      :name, name,
+      :group, group.name,
+    ].with_indifferent_access
+  end
+
   # Compute subnet for reverse records
   def subnet
     return if not reverse?
