@@ -47,6 +47,7 @@ gem 'nokogiri', '1.6.3'
 
 # Worker
 gem 'faraday', '0.9.0'
+gem 'faraday_middleware', '0.9.1'
 
 # Devise & dependencies
 gem 'devise', '3.5.2' # pkg:ruby-devise
