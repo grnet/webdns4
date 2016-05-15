@@ -195,6 +195,69 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  # Apply api bulk to operations to the zone
+  #
+  # 1) Deletions
+  # 2) Upserts
+  # 3) Additions
+  def api_bulk(opts)
+    api_deletes = opts[:deletes] || []
+    api_upserts = opts[:upserts] || []
+    api_additions = opts[:additions] || []
+    api_delete_errors = {}
+
+    deletes = []
+    additions = {}
+
+    api_deletes.each { |del|
+      rec = records.find_by(del)
+      # Fail-fast if record doesn't exist
+      if rec.nil?
+        return [{}, { deletes: { del: 'record not found'}}]
+      end
+
+      deletes << rec.id
+    }
+
+    # We delete records matching the same name & type
+    api_upserts.each { |ups|
+      query = ups.slice(:name, :type)
+      existing = records.where(query).to_a
+
+      # Skip upsert if we are trying to save the same record
+      next if existing.one? && ups.all? { |k, v| existing.first.to_api[k] == v }
+
+      deletes += existing.map(&:id)
+      api_additions << ups
+    }
+
+    api_additions.each { |add|
+      additions[add] = add
+    }
+
+    ops, errors = bulk(deletes: deletes, additions: additions)
+
+    # Serialize the response for API
+    api_ops = {}
+    api_errors = {}
+
+    # ops
+    ops.each { |op, recs| api_ops[op] = recs.map(&:to_api) }
+
+    # errors
+    if errors.any?
+      errors.each { |op, err|
+        api_errors[op] = err.map { |rec, err|
+          { operation: rec, error: err }
+        }
+      }
+    end
+
+    # This is a bit ugly, we return an ops hash with the original bulk
+    # responses so we can feed it to record notification.
+    [api_ops, api_errors, ops]
+  end
+
   # Apply bulk to operations to the zones
   #
   # 1) Deletions

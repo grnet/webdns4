@@ -305,4 +305,110 @@ class DomainTest < ActiveSupport::TestCase
       assert_equal 1, ops[:deletes].size
     end
   end
+
+  class ApiBulkTest < ActiveSupport::TestCase
+    def setup
+      @domain = create(:domain)
+      @a = create(:a, domain: @domain)
+      @aaaa = create(:aaaa, domain: @domain, content: '::42')
+      @new = build(:mx, domain: @domain)
+      @upsert_txt = build(:txt, domain: @domain)
+
+    end
+
+    def valid_changes
+      @valid_changes ||= begin
+                           {}.tap { |c|
+                             c[:deletes] = [@a.to_api]
+                             c[:additions] = [@new.to_api]
+                             c[:upserts] = [@upsert_txt.to_api]
+                           }
+                         end
+    end
+
+    test 'apply changes' do
+      ops, err = @domain.api_bulk valid_changes
+
+      @domain.reload
+      @aaaa.reload
+
+      assert_empty err
+      assert_empty @domain.records.where(id: @a.id)
+      assert_equal '::42', @aaaa.content
+      assert_equal 1, @domain.records.where(type: :mx).count
+      assert_equal 2, ops[:additions].size # upsert is accounted as in addition
+      assert_equal 1, ops[:deletes].size
+
+    end
+
+    test 'additions is invalid' do
+      changes = {
+        additions: [ @new.to_api.update(prio: -1) ]
+      }
+
+      ops, err = @domain.api_bulk changes
+
+      assert_not_empty err
+      assert_includes err[:additions].first[:error], 'not a valid DNS priority'
+    end
+
+
+    test 'delete not exists' do
+      changes = Hash[
+        :deletes, [{name: 'nx', type: 'TXT', content: 'not-exists'}]
+      ]
+
+      ops, err = @domain.api_bulk changes
+
+      assert_empty ops
+      assert_equal 1, err[:deletes].size
+    end
+
+    test 'upsert does not exist (single record)' do
+      a1 = create(:a, domain: @domain, name: 'rr', content: '127.0.0.1')
+
+      rr_name = "rr.#{@domain.name}"
+      changes = Hash[
+        :upserts, [{name: rr_name, type: 'A', content: '127.0.0.3'}]
+      ]
+
+      ops, err = @domain.api_bulk changes
+
+      assert_empty err
+      assert_equal 1, @domain.records.where(name: rr_name, type: 'A').count
+      assert_equal '127.0.0.3', @domain.records.find_by(name: rr_name, type: 'A').content
+    end
+
+    test 'upsert does not exist (multiple records)' do
+      a1 = create(:a, domain: @domain, name: 'rr', content: '127.0.0.1')
+      a2 = create(:a, domain: @domain, name: 'rr', content: '127.0.0.2')
+
+      rr_name = "rr.#{@domain.name}"
+      changes = Hash[
+        :upserts, [{name: rr_name, type: 'A', content: '127.0.0.3'}]
+      ]
+
+      ops, err = @domain.api_bulk changes
+
+      assert_empty err
+      assert_equal 1, @domain.records.where(name: rr_name, type: 'A').count
+      assert_equal '127.0.0.3', @domain.records.find_by(name: rr_name, type: 'A').content
+    end
+
+    test 'upsert exists' do
+      a1 = create(:a, domain: @domain, name: 'rr', content: '127.0.0.1')
+
+      rr_name = "rr.#{@domain.name}"
+      changes = Hash[
+        :upserts, [{name: rr_name, type: 'A', content: '127.0.0.1'}]
+      ]
+
+      ops, err = @domain.api_bulk changes
+
+      assert_empty err
+      assert_empty ops # upsert is a noop
+      assert_equal 1, @domain.records.where(name: rr_name, type: 'A').count
+      assert_equal '127.0.0.1', @domain.records.find_by(name: rr_name, type: 'A').content
+    end
+  end
 end

@@ -14,6 +14,13 @@ class User < ActiveRecord::Base
     !identifier?
   end
 
+  def to_api
+    Hash[
+      :id, id,
+      :email, email
+    ].with_indifferent_access
+  end
+
   def self.find_for_database_authentication(conditions)
     # Override devise method for database auth
     # We only want to auth local user via the database.
