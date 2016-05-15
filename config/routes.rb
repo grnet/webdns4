@@ -73,5 +73,7 @@ Rails.application.routes.draw do
   put 'private/replace_ds', to: 'private#replace_ds'
   put 'private/trigger_event', to: 'private#trigger_event'
   get 'private/zones', to: 'private#zones'
+
+  get 'help/api', to: 'help#api'
 end
 

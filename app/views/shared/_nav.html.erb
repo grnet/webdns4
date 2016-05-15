@@ -13,6 +13,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="active"><a href="/domains">Domains</a></li>
+        <li><%= link_to 'API Documentation', help_api_path %></li>
         <li><%= mail_to WebDNS.settings[:contact_mail], 'Contact' %></li>
         <% if admin? %>
           <li class="dropdown">
