@@ -134,6 +134,20 @@ $(function() {
 
     highlighter();
 
+    // Default tab helper
+    function defaultTab() {
+        if (!window.location.hash)
+            return;
+
+        if (window.location.hash.indexOf('#tab-') == 0) {
+            var tab = window.location.hash.slice('tab-'.length + 1);
+
+            $('#tab-link-' + tab).tab('show');
+        }
+    }
+
+    defaultTab();
+
     $('table#domains').DataTable({
         paging: false,
         columnDefs: [{
