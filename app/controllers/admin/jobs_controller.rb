@@ -11,6 +11,8 @@ module Admin
         'Pending' => Job.includes(:domain).pending,
         'Completed' => Job.includes(:domain).completed.order('id desc')
       }
+
+      @category = params[:category] || 'pending'
     end
 
     # DELETE /jobs/1

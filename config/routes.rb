@@ -54,6 +54,8 @@ Rails.application.routes.draw do
           defaults: { job: { status: 1 } }
       put :pending,  to: 'jobs#update', on: :member,
           defaults: { job: { status: 0 } }
+      get '/type/:category', to: 'jobs#index', on: :collection,
+          constraints: proc { |req| ['completed', 'pending'].include?(req.params[:category]) }
     end
     resources :users, only: [:destroy] do
       get :orphans, to: 'users#orphans', on: :collection

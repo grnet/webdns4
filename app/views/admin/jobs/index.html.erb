@@ -1,14 +1,16 @@
 <ul class="nav nav-tabs">
   <% @job_categories.each_with_index do |pair, idx| %>
     <% title, jobs = pair %>
-    <li role="presentation" class="<%= 'active' if idx.zero? %>"><a data-toggle="tab" href="#<%= title.downcase %>"><%= title %></a></li>
+    <% active = title.downcase == @category.try(:to_s) %>
+    <li role="presentation" class="<%= 'active' if active %>"><a data-toggle="tab" href="#<%= title.downcase %>"><%= title %></a></li>
   <% end %>
 </ul>
 
 <div class="tab-content">
   <% @job_categories.each_with_index do |pair, idx| %>
     <% title, jobs = pair %>
-    <div role="tabpanel" class="tab-pane <%= 'active' if idx.zero? %>" id="<%= title.downcase %>">
+    <% active = title.downcase == @category.try(:to_s) %>
+    <div role="tabpanel" class="tab-pane <%= 'active' if active %>" id="<%= title.downcase %>">
       <table class="table table-striped">
         <thead>
           <tr>
