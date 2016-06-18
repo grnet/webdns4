@@ -50,6 +50,8 @@
           <% end %>
         </tbody>
       </table>
+      <%= will_paginate jobs, params: { category: title.downcase } %>
     </div>
+
   <% end %>
 </div>

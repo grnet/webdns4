@@ -13,6 +13,7 @@ else
   require 'coffee-rails'
   require 'state_machine'
   require 'nokogiri'
+  require 'will_paginate'
 end
 
 module WebDNS

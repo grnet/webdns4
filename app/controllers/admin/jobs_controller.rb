@@ -8,8 +8,8 @@ module Admin
     # GET /jobs
     def index
       @job_categories = {
-        'Pending' => Job.includes(:domain).pending,
-        'Completed' => Job.includes(:domain).completed.order('id desc')
+        'Pending' => Job.includes(:domain).pending.page(params[:page]),
+        'Completed' => Job.includes(:domain).completed.order('id desc').page(params[:page])
       }
 
       @category = params[:category] || 'pending'

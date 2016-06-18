@@ -5,6 +5,8 @@ class Job < ActiveRecord::Base
   scope :failed, -> { where(status: 2) }
   scope :completed, -> { where(status: [1, 2]) }
 
+  self.per_page = 100
+
   def failed?
     status == 2
   end
