@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
     @user = User.find_by_email!(params[:email])
     membership = @group.memberships.find_or_create_by!(user_id: @user.id)
 
-    redirect_to @group, notice: "#{membership.user.email} is now a member of #{@group.name}"
+    redirect_to group_path(@group, anchor: 'tab-members'), notice: "#{membership.user.email} is now a member of #{@group.name}"
   end
 
   # DELETE /groups/1/member/1
