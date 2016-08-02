@@ -92,7 +92,7 @@ class Record < ActiveRecord::Base
         r.type == 'SOA' ? 0 : 1,
         r.type == 'NS' ? 0 : 1,
         record_types.index(r.type), # Friendly type
-        r.prio,
+        r.prio || 0,
         r.content
       ]
     }
