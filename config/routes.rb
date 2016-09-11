@@ -69,6 +69,7 @@ Rails.application.routes.draw do
     get :whoami, to: 'api#whoami'
     get '/domain/:domain/list', to: 'api#list', constraints: { domain: /[^\/]+/}
     post '/domain/:domain/bulk', to: 'api#bulk', constraints: { domain: /[^\/]+/}
+    get :domains, to: 'api#domains'
   end if WebDNS.settings[:api]
 
   # Private

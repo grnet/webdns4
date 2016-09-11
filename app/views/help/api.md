@@ -31,6 +31,24 @@ curl -X GET https://webdns/api/whoami
 }
 ```
 
+## Domains API
+
+### GET `/domains`
+```bash
+curl -X GET https://webdns/api/domains
+
+{           
+  "ok": true,
+  "response": [
+    {
+      "name": "example.com",
+      "slave": false,
+      "group": "group1"
+    }
+   ]
+}
+```
+
 ## Records API
 
 ### GET `/domain/<name>/list`

@@ -47,6 +47,15 @@ class ApiController < ApplicationController
     end
   end
 
+  # GET domains
+  def domains
+    domains = show_domain_scope.includes(:group).all
+    render json: {
+             ok: true,
+             response: domains.map { |d| d.to_api }
+           }
+  end
+
   private
 
   def authenticate_token

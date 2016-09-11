@@ -170,6 +170,14 @@ class Domain < ActiveRecord::Base
     ].with_indifferent_access
   end
 
+  def to_api
+    Hash[
+      :name, name,
+      :slave, slave?,
+      :group, group.name,
+    ].with_indifferent_access
+  end
+
   # Compute subnet for reverse records
   def subnet
     return if not reverse?
