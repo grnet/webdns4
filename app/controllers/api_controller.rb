@@ -53,7 +53,7 @@ class ApiController < ApplicationController
     if user = User.find_by_token(params.require(:token))
       warden.set_user(user, store: false)
     else
-      head(403)
+      render json: { ok: false, error: "invalid-token" }
     end
   end
 
