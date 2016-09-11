@@ -5,7 +5,7 @@ class ApiController < ApplicationController
   # This a private trusted API
   skip_before_action :verify_authenticity_token
 
-  before_action :authenticate_token
+  before_action :authenticate_token, except: :ping
   before_action :domain, only: [:list, :bulk]
 
   # GET /ping
