@@ -6,9 +6,9 @@ namespace :check do
     if failed.any?
       domains = failed.map { |j|
         j.domain ? "#{j.domain_id}:#{j.zone}" : "nodb:#{j.zone}"
-      }
-      domains = domains[0,3].join(', ') # Output only the first 3 domains
-      puts "1 FailedJobs - WARN - #{failed.size} failed jobs on #{domains.size} domains (#{domains}...)"
+      }.uniq
+      sample = domains[0,3].join(', ') # Output only the first 3 domains
+      puts "1 FailedJobs - WARN - #{failed.size} failed jobs on #{domains.size} domains (#{sample}, ...)"
     else
       puts "0 FailedJobs - OK - 0 failed jobs"
     end
