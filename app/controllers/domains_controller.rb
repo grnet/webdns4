@@ -90,6 +90,9 @@ class DomainsController < ApplicationController
     params.require(:domain).tap { |d|
       # Make sure group id is permitted (belongs to edit_group_scope)
       d[:group_id] = edit_group_scope.find_by_id(d[:group_id]).try(:id)
+      # Sometimes domain name might contain whitespace, make sure we remove
+      # them. Note that we use a regex to handle unicode whitespace characters as well.
+      d[:name] = d[:name].gsub(/\p{Space}/, '') if d[:name]
     }.permit(:name, :type, :master, :group_id,
              :dnssec, :dnssec_parent, :dnssec_parent_authority, :dnssec_policy_id)
   end
