@@ -11,6 +11,20 @@ class NSTest < ActiveSupport::TestCase
     assert_empty @record.errors
   end
 
+  test 'doesnt allow IPv4 address as content' do
+    @record.content = '1.2.3.4'
+    @record.save
+
+    assert_not_empty @record.errors[:content]
+  end
+
+  test 'doesnt allow IPv6 address as content' do
+    @record.content = '::1'
+    @record.save
+
+    assert_not_empty @record.errors[:content]
+  end
+
   test 'chop terminating dot' do
     @record.content = 'with-dot.example.com.'
     @record.save!
