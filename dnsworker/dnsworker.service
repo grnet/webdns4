@@ -5,6 +5,8 @@ After=network-online.target
 
 [Service]
 ExecStart=/srv/dnsworker/bin/dns-worker -c /etc/dnsworker/cfg.yml
+Restart=on-failure
+RestartSec=120s
 
 [Install]
 WantedBy=multi-user.target
