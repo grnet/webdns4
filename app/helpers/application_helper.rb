@@ -46,6 +46,14 @@ module ApplicationHelper
     link_to(abbr_glyph(:'eye-open', 'Disable'), *args, &block)
   end
 
+  def link_to_mute(*args, &block)
+    link_to(abbr_glyph(:'volume-off', 'Disable notifications'), *args, &block)
+  end
+
+  def link_to_unmute(*args, &block)
+    link_to(abbr_glyph(:'volume-up', 'Renable notifications'), *args, &block)
+  end
+
   def glyph(icon)
     content_tag(:span, '', class: "glyphicon glyphicon-#{icon}")
   end

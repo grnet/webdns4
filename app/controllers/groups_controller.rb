@@ -7,6 +7,7 @@ class GroupsController < ApplicationController
   # GET /groups/1
   def show
     @domains = @group.domains
+    @optouts = Set.new current_user.subscriptions.where(domain_id: @domains).pluck(:domain_id)
   end
 
   # POST /groups/1/members/

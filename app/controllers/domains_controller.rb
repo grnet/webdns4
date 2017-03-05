@@ -1,3 +1,5 @@
+require 'set'
+
 class DomainsController < ApplicationController
   before_action :authenticate_user!
 
@@ -9,6 +11,7 @@ class DomainsController < ApplicationController
   # GET /domains
   def index
     @domains = show_domain_scope.includes(:group, :soa).all
+    @optouts = Set.new current_user.subscriptions.pluck(:domain_id)
   end
 
   # GET /domains/1
