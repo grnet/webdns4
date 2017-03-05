@@ -19,6 +19,13 @@ class UsersController < ApplicationController
 
   def user
     @user ||= User.find(params[:id])
+
+    # Guard access to other user tokens
+    if current_user.id != @user.id && !admin?
+      redirect_to(root_path, alert: 'You need admin rights for that!')
+    end
+
+    @user
   end
 
 end
