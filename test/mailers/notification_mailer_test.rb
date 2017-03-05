@@ -11,6 +11,20 @@ class NotificationMailerTest < ActionMailer::TestCase
       @record = build(:a, name: 'a', domain: @domain)
     end
 
+    test 'skip users with opt-out notifications' do
+      @record.save!
+
+      # Opt out
+      author = @group.users.first
+      Subscription.create!(user: author, domain: @domain)
+
+      @notification.notify_domain(@group.users.first, @domain, :create)
+
+      assert_not ActionMailer::Base.deliveries.empty?
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal @group.users.pluck(:email) - [author.email], mail.to
+    end
+
     test 'domain add' do
       @record.save!
 

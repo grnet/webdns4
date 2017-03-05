@@ -26,4 +26,11 @@ FactoryGirl.define do
   factory :v6_arpa_domain, parent: :domain do
     name '8.b.d.0.1.0.0.2.ip6.arpa'
   end
+
+  factory :domain_with_subscriptions, parent: :domain do
+    association :group, factory: :group_with_users
+    after(:create) do |domain|
+      Subscription.create(domain: domain, user:domain.group.users.first)
+    end
+  end
 end

@@ -220,6 +220,26 @@ CREATE TABLE `schema_migrations` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `subscriptions`
+--
+
+DROP TABLE IF EXISTS `subscriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subscriptions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `disabled` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_subscriptions_on_domain_id` (`domain_id`),
+  KEY `index_subscriptions_on_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `supermasters`
 --
 
@@ -315,4 +335,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160206083933');
 INSERT INTO schema_migrations (version) VALUES ('20160214155026');
 
 INSERT INTO schema_migrations (version) VALUES ('20160403094641');
+
+INSERT INTO schema_migrations (version) VALUES ('20170305083712');
 

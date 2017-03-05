@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   has_many :memberships
   has_many :groups, through: :memberships
 
+  has_many :subscriptions, dependent: :delete_all
+
   scope :orphans, -> { includes(:memberships).where(:memberships => { user_id: nil }) }
 
   # Check if the user can change his password

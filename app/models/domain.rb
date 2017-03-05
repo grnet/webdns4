@@ -28,6 +28,8 @@ class Domain < ActiveRecord::Base
 
   belongs_to :group
   has_many :jobs
+  has_many :opt_outs, class_name: 'Subscription', dependent: :delete_all
+
   has_many :records
   # BUG in bump_serial_trigger
   has_one :soa, -> { unscope(where: :type).where(type: 'soa') }, class_name: SOA
