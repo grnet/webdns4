@@ -67,7 +67,7 @@ class Notification
     changes = filter_changes(record)
     return if changes.empty? && context == :update
 
-    others = domain.group.users.where.not(id: user.id).pluck(:email)
+    others = domain.group.users.pluck(:email)
     return if others.empty?
 
     admin_action = !user.groups.exists?(domain.group_id)
@@ -90,7 +90,7 @@ class Notification
     operations += ops[:changes].map   { |rec| [:update, rec, filter_changes(rec)] }
     operations += ops[:additions].map { |rec| [:create, rec, nil] }
 
-    others = domain.group.users.where.not(id: user.id).pluck(:email)
+    others = domain.group.users.pluck(:email)
     return if others.empty?
 
     admin_action = !user.groups.exists?(domain.group_id)
@@ -110,7 +110,7 @@ class Notification
     changes = filter_changes(domain)
     return if changes.empty? && context == :update
 
-    others = domain.group.users.where.not(id: user.id).pluck(:email)
+    others = domain.group.users.pluck(:email)
     return if others.empty?
 
     admin_action = !user.groups.exists?(domain.group_id)

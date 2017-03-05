@@ -19,7 +19,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to, @group.users.pluck(:email)
       assert_includes mail.subject, 'Created'
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
       assert_includes mail.body.to_s, "By: #{@group.users.first.email}"
@@ -37,7 +37,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to, @group.users.pluck(:email)
       assert_includes mail.subject, 'Modified'
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
       assert_includes mail.body.to_s, "By: #{@group.users.first.email}"
@@ -57,7 +57,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to, @group.users.pluck(:email)
       assert_includes mail.subject, 'Deleted'
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
       assert_includes mail.body.to_s, "By: #{@group.users.first.email}"
@@ -73,7 +73,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to, @group.users.pluck(:email)
       assert_includes mail.subject, 'Created'
       assert_includes mail.body.to_s, "Record: #{@record.name}"
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
@@ -93,7 +93,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to.sort, @group.users.pluck(:email)
       assert_includes mail.subject, 'Modified'
       assert_includes mail.body.to_s, "Record: #{@record.name}"
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
@@ -115,7 +115,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to, @group.users.pluck(:email)
       assert_includes mail.subject, 'Modified'
       assert_includes mail.body.to_s, "Record: #{@record.name}"
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
@@ -136,7 +136,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to, @group.users.pluck(:email)
       assert_includes mail.subject, 'Deleted'
       assert_includes mail.body.to_s, "Record: #{@record.name}"
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
@@ -162,7 +162,7 @@ class NotificationMailerTest < ActionMailer::TestCase
       assert_not ActionMailer::Base.deliveries.empty?
       mail = ActionMailer::Base.deliveries.last
 
-      assert_equal [@group.users.last.email], mail.to
+      assert_equal mail.to, @group.users.pluck(:email)
       assert_includes mail.subject, 'Bulk'
       assert_includes mail.body.to_s, "Domain: #{@domain.name}"
       assert_includes mail.body.to_s, "By: #{@group.users.first.email}"
