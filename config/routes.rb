@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :domains, only: [] do
       put :mute, to: 'users#mute'
       put :unmute, to: 'users#unmute'
+      put :mute, to: 'users#mute_all', on: :collection
     end
   end
 
