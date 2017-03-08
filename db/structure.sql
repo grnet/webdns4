@@ -294,6 +294,7 @@ CREATE TABLE `users` (
   `updated_at` datetime NOT NULL,
   `identifier` varchar(255) DEFAULT '',
   `token` varchar(255) DEFAULT NULL,
+  `notifications` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_users_on_email` (`email`),
   UNIQUE KEY `index_users_on_reset_password_token` (`reset_password_token`),
@@ -337,4 +338,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160214155026');
 INSERT INTO schema_migrations (version) VALUES ('20160403094641');
 
 INSERT INTO schema_migrations (version) VALUES ('20170305083712');
+
+INSERT INTO schema_migrations (version) VALUES ('20170308060441');
 
