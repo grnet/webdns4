@@ -15,6 +15,19 @@ class SubscriptionTest < ActiveSupport::TestCase
     assert_equal domain, user.subscriptions.first.domain
   end
 
+  test 'mute new domains on users with persistent opt-out setting' do
+    g = create(:group_with_users)
+
+    u = g.users.first
+    u.notifications = false
+    u.save!
+
+    d = create(:domain, group: g)
+
+    # Opt out subscription should be set
+    assert_equal 1, u.subscriptions.where(domain: d).count
+  end
+
   test 'mute all domains for a user' do
     d1 = create(:domain_with_subscriptions)
     d2 = create(:domain_with_subscriptions)
