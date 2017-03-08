@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       put :mute, to: 'users#mute'
       put :unmute, to: 'users#unmute'
       put :mute, to: 'users#mute_all', on: :collection
+      put :unmute, to: 'users#unmute_all', on: :collection
     end
   end
 

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :user, only: [:mute, :unmute, :mute_all, :token, :generate_token]
+  before_action :user, only: [:mute, :unmute, :mute_all, :unmute_all, :token, :generate_token]
 
   # GET /users/1/token
   def token
@@ -34,7 +34,16 @@ class UsersController < ApplicationController
 
   # PUT /users/1/domains/mute
   def mute_all
+    @user.update_column(:notifications, false)
     @user.mute_all_domains
+
+    redirect_to domains_url, notice: "Successfully unsubscribed from all domain notifications!"
+  end
+
+  # PUT /users/1/domains/mute
+  def unmute_all
+    @user.update_column(:notifications, true)
+    @user.subscriptions.delete_all
 
     redirect_to domains_url, notice: "Successfully unsubscribed from all domain notifications!"
   end
