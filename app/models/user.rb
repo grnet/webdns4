@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   has_many :memberships
   has_many :groups, through: :memberships
 
+  has_many :subscriptions, dependent: :delete_all
+
   scope :orphans, -> { includes(:memberships).where(:memberships => { user_id: nil }) }
 
   # Check if the user can change his password
@@ -26,5 +28,21 @@ class User < ActiveRecord::Base
     # We only want to auth local user via the database.
 
     find_first_by_auth_conditions(conditions, identifier: '')
+  end
+
+  def mute_all_domains
+    ActiveRecord::Base.transaction do
+      domain_ids = Domain.where(group: groups).pluck(:id)
+      domain_ids.each { |did|
+
+        sub = self.subscriptions.create(domain_id: did)
+        if !sub.valid?
+          # Allow only domain_id (uniqueness) errors
+          raise x.errors.full_messages.join(', ') if sub.errors.size > 1
+          raise x.errors.full_messages.join(', ') if !sub.errors[:domain_id]
+        end
+
+      }
+    end
   end
 end

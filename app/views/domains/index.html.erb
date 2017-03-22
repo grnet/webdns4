@@ -36,6 +36,11 @@
             <td><%= domain.dnssec? ? 'secure' : '-' %></td>
             <td>
               <%= link_to_edit edit_domain_path(domain) %>
+              <% if @optouts.include? domain.id %>
+                <%= link_to_unmute user_domain_unmute_path(current_user, domain), method: :put %>
+              <% else %>
+                <%= link_to_mute user_domain_mute_path(current_user, domain), method: :put %>
+              <% end %>
               <%= link_to_destroy domain, method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? %>
               <%= link_to_full_destroy full_destroy_domain_path(domain),
               method: :delete, data: { confirm: 'Are you sure?' } if domain.can_remove? && domain.dnssec? %>

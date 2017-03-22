@@ -28,6 +28,8 @@ class Domain < ActiveRecord::Base
 
   belongs_to :group
   has_many :jobs
+  has_many :opt_outs, class_name: 'Subscription', dependent: :delete_all
+
   has_many :records
   # BUG in bump_serial_trigger
   has_one :soa, -> { unscope(where: :type).where(type: 'soa') }, class_name: SOA
@@ -45,6 +47,7 @@ class Domain < ActiveRecord::Base
 
   after_create :generate_soa
   after_create :generate_ns
+  after_create :generate_subscriptions
 
   after_create :install
   before_save :check_convert
@@ -357,6 +360,12 @@ class Domain < ActiveRecord::Base
 
     WebDNS.settings[:default_ns].each { |ns|
       Record.find_or_create_by!(domain: self, type: 'NS', name: '', content: ns)
+    }
+  end
+
+  def generate_subscriptions
+    group.users.where(notifications: false).each { |u|
+      opt_outs.create(user: u)
     }
   end
 

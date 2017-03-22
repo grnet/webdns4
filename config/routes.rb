@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   resources :users, only: [] do
     get :token, to: 'users#token', on: :member
     post :generate_token, to: 'users#generate_token', on: :member
+    resources :domains, only: [] do
+      put :mute, to: 'users#mute'
+      put :unmute, to: 'users#unmute'
+      put :mute, to: 'users#mute_all', on: :collection
+      put :unmute, to: 'users#unmute_all', on: :collection
+    end
   end
 
   resources :groups, only: [:show] do

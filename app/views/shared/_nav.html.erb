@@ -45,6 +45,13 @@
               <% if current_user.can_change_password? %>
                 <li><%= link_to('Change Password', edit_user_registration_path) %></li>
               <% end %>
+              <% if current_user.notifications? %>
+                <li><%= link_to('Mute notifcications', mute_user_domains_path(current_user), method: :put,
+                                title: 'Mute all domain notifications') %></li>
+              <% else %>
+                <li><%= link_to('Unmute notifications', unmute_user_domains_path(current_user), method: :put,
+                                title: 'Unmute all domain notifications') %></li>
+              <% end %>
               <li><%= link_to('API Token', token_user_path(current_user)) %></li>
               <li><%= link_to('Logout', destroy_user_session_path, method: :delete) %></li>
             </ul>
