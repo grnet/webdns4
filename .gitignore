@@ -20,3 +20,6 @@
 *.swp
 config/database.yml
 .ruby-version
+
+# Ignore .pyc
+*.pyc
