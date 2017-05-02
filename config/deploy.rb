@@ -2,7 +2,7 @@
 lock '3.2.1'
 
 set :application, 'webdns'
-set :repo_url, 'git@bitbucket.org:xlembouras/webns.git'
+set :repo_url, 'https://repo.grnet.gr/diffusion/WEBDNS/webdns.git'
 
 set :deploy_to, '/srv/webdns'
 
