@@ -1,0 +1,2 @@
+class SSHFP < Record
+end
