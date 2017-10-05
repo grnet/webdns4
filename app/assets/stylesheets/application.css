@@ -53,3 +53,8 @@ table a abbr[title] {
 #domains span.glyphicon-volume-up {
     color: red;
 }
+
+.record_value {
+    word-wrap:break-word;
+    word-break:break-all;
+}
