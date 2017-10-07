@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: redirect('/admin/groups')
 
+    resources :users, except: [:show]
     resources :groups, except: [:show]
     resources :jobs, only: [:index, :destroy] do
       put :done, to: 'jobs#update', on: :member,

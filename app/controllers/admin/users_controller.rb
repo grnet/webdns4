@@ -3,6 +3,11 @@ module Admin
     before_action :authenticate_user!
     before_action :admin_only!
 
+    # GET /users
+    def index
+      @users = User.all
+    end
+
     # GET /users/orphans
     def orphans
       @users = User.orphans

@@ -1,0 +1,23 @@
+<div>
+    <%= bootstrap_form_tag(url: update_groups_admin_users_path, method: 'PUT', layout: :horizontal, label_col: 'col-sm-2', control_col: 'col-sm-4') do |f| %>
+    <table id=user-list" class="table table-striped table-bordered">
+	<thead>
+	<tr>
+		<th>Username</th>
+		<th>Groups</th>
+		<th>Controls</th>
+	</tr>
+	</thead>
+	<tbody>
+        <% @users.each  do |u| %>
+          <tr>
+            <td><%= u.email %></td>
+            <td><%= f.collection_select "orphan-#{u.id}", Group.all, :id, :name, hide_label: true, prompt: 'Group' %></td>
+            <td><%= link_to 'Delete', admin_user_path(u), method: :delete, data: { confirm: "Are sure you want to delete #{u.email}?"} %></td>
+        <% end %>
+          </tr>
+	  <tbody>
+      </table>
+      <%= f.submit 'Apply', class: 'btn btn-primary' %>
+    <% end %>
+</div>
