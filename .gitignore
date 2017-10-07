@@ -23,3 +23,7 @@ config/database.yml
 
 # Ignore .pyc
 *.pyc
+
+
+# automatic dump rails does to check migration status
+db/structure.sql
