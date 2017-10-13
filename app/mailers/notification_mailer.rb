@@ -1,6 +1,8 @@
 class NotificationMailer < ActionMailer::Base
   default from: WebDNS.settings[:mail_from]
 
+  ENVIRON_PREFIX = WebDNS.settings[:notifications_prefix] || 'webdns'
+
   PREFIXES = {
     create: 'Created',
     update: 'Modified',
@@ -14,7 +16,7 @@ class NotificationMailer < ActionMailer::Base
     @admin = admin
     @changes = changes
 
-    mail(to: others, subject: "[webdns] [record] #{PREFIXES[context.to_sym]} #{record.to_short_dns}")
+    mail(to: others, subject: "[#{ENVIRON_PREFIX}] [record] #{PREFIXES[context.to_sym]} #{record.to_short_dns}")
   end
 
   def notify_record_bulk(domain:, user:, admin:, others:, operations:)
@@ -23,7 +25,7 @@ class NotificationMailer < ActionMailer::Base
     @admin = admin
     @operations = operations
 
-    mail(to: others, subject: "[webdns] [record] Bulk operations for '#{domain.name}'")
+    mail(to: others, subject: "[#{ENVIRON_PREFIX}] [record] Bulk operations for '#{domain.name}'")
   end
 
   def notify_domain(domain:, context:, user:, admin:, others:, changes:)
@@ -33,7 +35,7 @@ class NotificationMailer < ActionMailer::Base
     @admin = admin
     @changes = changes
 
-    mail(to: others, subject: "[webdns] [domain] #{PREFIXES[context.to_sym]} #{domain.name}")
+    mail(to: others, subject: "[#{ENVIRON_PREFIX}] [domain] #{PREFIXES[context.to_sym]} #{domain.name}")
   end
 
 end
