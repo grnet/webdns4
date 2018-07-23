@@ -43,7 +43,7 @@ class ApiController < ApplicationController
                      response: {
                        operations: ops
                      }
-                   }
+                   }, status: :bad_request
     end
   end
 
@@ -62,7 +62,7 @@ class ApiController < ApplicationController
     if user = User.find_by_token(params.require(:token))
       warden.set_user(user, store: false)
     else
-      render json: { ok: false, error: "invalid-token" }
+      render json: { ok: false, error: "invalid-token" }, status: :bad_request
     end
   end
 
@@ -77,11 +77,11 @@ class ApiController < ApplicationController
   end
 
   def record_not_found
-    render json: { ok: false, error: :record_not_found }
+    render json: { ok: false, error: :record_not_found }, status: :not_found
   end
 
   def parameter_missing
-    render json: { ok: false, error: :parameter_missing }
+    render json: { ok: false, error: :parameter_missing }, status: :bad_request
   end
 
   def notify_record_bulk(*args)
