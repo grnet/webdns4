@@ -26,6 +26,18 @@ class PTRTest < ActiveSupport::TestCase
 
       assert_equal 'with-dot.example.com', @record.content
     end
+
+    test "name invalid" do
+      rec = build(:v4_ptr, name: "195.")
+      rec.valid?
+      assert_not_empty rec.errors[:name], "name '195.' should be invalid"
+    end
+
+    test "name valid" do
+      rec = build(:v4_ptr, name: "195")
+      rec.valid?
+      assert_empty rec.errors[:name], "name '195' should be valid"
+    end
   end
 
   class V6PTRTest < ActiveSupport::TestCase
