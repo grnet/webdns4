@@ -61,6 +61,11 @@ class Record < ActiveRecord::Base
                             message: 'You cannot touch top level NS records!',
                             if: -> { type == 'NS' && domain_record? }
 
+  validates_uniqueness_of :name,
+                          :scope => [:domain, :type, :content],
+                          message: "There already exists a record with the same name,
+                            type and content."
+
   before_validation :guess_reverse_name
   before_validation :set_name
   after_save :update_zone_serial

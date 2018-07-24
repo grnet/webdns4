@@ -33,6 +33,29 @@ class DomainTest < ActiveSupport::TestCase
     end
   end
 
+  test 'uniqueness of records' do
+    @domain.save!
+    rec = Record.new(type: 'A', name: 'www', domain: @domain, content: '1.2.3.4')
+    rec.save!
+    assert_empty rec.errors
+
+    rec2 = Record.new(type: 'A', name: 'www', domain: @domain, content: '1.2.3.4')
+    assert_raises(ActiveRecord::RecordInvalid) { rec2.save! }
+    assert_not_empty rec2.errors[:name]
+
+    rec3 = Record.new(type: 'A', name: 'www2', domain: @domain, content: '1.2.3.4')
+    rec3.save!
+    assert_empty rec3.errors
+
+    rec4 = Record.new(type: 'A', name: 'www', domain: @domain, content: '1.2.3.5')
+    rec4.save!
+    assert_empty rec4.errors
+
+    rec5 = Record.new(type: 'AAAA', name: 'www', domain: @domain, content: '2001:0db8:85a3:0000:0000:8a2e:0370:7334')
+    rec5.save!
+    assert_empty rec5.errors
+  end
+
   test 'automatic NS creation' do
     @domain.save!
     @domain.reload
