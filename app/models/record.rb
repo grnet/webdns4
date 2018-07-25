@@ -71,6 +71,7 @@ class Record < ActiveRecord::Base
   after_save :update_zone_serial
   after_destroy :update_zone_serial
 
+  before_create :validate_unique_cname
   before_create :generate_classless_delegations, unless: -> { domain.slave? }
   before_destroy :delete_classless_delegations, unless: -> { domain.slave? }
 
@@ -329,5 +330,12 @@ class Record < ActiveRecord::Base
     return name if name.end_with?(domain)
 
     "#{name}.#{domain}"
+  end
+
+  def validate_unique_cname
+    return if !domain.records.where(type: 'CNAME', name: name).exists?
+
+    errors.add(:name, 'There exists a CNAME record with the same name')
+    return false
   end
 end

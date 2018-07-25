@@ -74,6 +74,19 @@ class DomainTest < ActiveSupport::TestCase
     end
   end
 
+  test 'do not allow other record types when there is a cname' do
+    @domain.save!
+    name = 'mysupername'
+
+    cname = CNAME.new(name: name, domain: @domain, content: 'whocares')
+    cname.save!
+    assert_empty cname.errors
+
+    www = A.new(name: name, domain: @domain, content: '1.2.3.4')
+    assert_raises(ActiveRecord::RecordNotSaved) { www.save! }
+    assert_not_empty www.errors[:name]
+  end
+
   class SlaveDomainTest < ActiveSupport::TestCase
     def setup
       @domain = build(:slave)
