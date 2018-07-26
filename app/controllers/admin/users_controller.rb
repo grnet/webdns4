@@ -20,6 +20,14 @@ module Admin
       redirect_to orphans_admin_users_path, notice: "#{@user.email} was deleted."
     end
 
+    def edit
+      @user = User.find(params[:id])
+      @user.toggle_admin
+      @user.save
+
+      redirect_to admin_users_path, notice: "#{@user.email} admin privileges were changed."
+    end
+
     def update
       additions = 0
 

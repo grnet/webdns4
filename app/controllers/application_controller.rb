@@ -11,13 +11,7 @@ class ApplicationController < ActionController::Base
     return false if params.key?('user')
     return false if current_user.nil?
 
-    @admin_count ||= begin
-                       current_user
-                       .groups
-                       .where(name: WebDNS.settings[:admin_group]).count
-                     end
-
-    @admin_count != 0
+    current_user.admin
   end
 
   def admin_only!

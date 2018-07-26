@@ -16,6 +16,10 @@ class User < ActiveRecord::Base
     !identifier?
   end
 
+  def toggle_admin
+    self.admin = !self.admin
+  end
+
   def to_api
     Hash[
       :id, id,

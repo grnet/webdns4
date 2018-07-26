@@ -6,6 +6,7 @@
 		<th>Username</th>
 		<th>Groups</th>
 		<th>Controls</th>
+		<th>Admin</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -14,6 +15,14 @@
             <td><%= u.email %></td>
             <td><%= f.collection_select "orphan-#{u.id}", Group.all, :id, :name, hide_label: true, prompt: 'Group' %></td>
             <td><%= link_to 'Delete', admin_user_path(u), method: :delete, data: { confirm: "Are sure you want to delete #{u.email}?"} %></td>
+            <% if u.admin %>
+              <% content = "Are you sure you want to remove admin priviledges from #{u.email}?" %>
+              <% prefix = "Remove" %>
+            <% else %>
+              <% content = "Are you sure you want to make #{u.email} an admin?" %>
+              <% prefix = "Make" %>
+            <% end %>
+            <td><%= link_to "#{prefix} admin", edit_admin_user_path(u), data: { confirm: content} %></td>
         <% end %>
           </tr>
 	  <tbody>
