@@ -233,6 +233,7 @@ class Domain < ActiveRecord::Base
     # We delete records matching the same name & type
     api_upserts.each { |ups|
       query = ups.slice(:name, :type)
+      query[:name] = Record::to_fqdn(query[:name], name)
       existing = records.where(query).to_a
 
       # Skip upsert if we are trying to save the same record
