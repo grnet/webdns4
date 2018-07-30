@@ -319,6 +319,7 @@ class Record < ActiveRecord::Base
 
     rnames.each { |rname|
       CNAME.find_or_create_by!(
+        type: 'CNAME',
         domain: domain,
         name: rname,
         content: name
