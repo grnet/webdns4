@@ -328,6 +328,14 @@ class Domain < ActiveRecord::Base
     return if octets.any? { |_| false }
 
     mask = 8 * octets.size
+
+    # some domain names may include `-`
+    # to denote the subnet mask
+    # e.g. 192-26.0.0.1.in-addr.arpa
+    if octets[-1].include? "-"
+      octets[-1], mask = octets[-1].split("-")
+    end
+
     octets += [0, 0, 0, 0]
 
     ip = IPAddr.new octets[0, 4].join('.')
