@@ -62,7 +62,15 @@ module DNSWorker::BaseWorker
 
   def run
     self.working = true
-    jobs = client.query('select * from jobs where status in (0, 2) order by id asc').to_a
+
+    begin
+      jobs = client.query('select * from jobs where status in (0, 2) order by id asc').to_a
+    rescue Mysql2::Error
+      self.working = false
+      $stderr.puts "Can't query MySQL, exiting working state"
+      return
+    end
+
     jobs.group_by { |j| j[:domain_id] }.each { |domain_id, jobs|
       process_jobs(domain_id, jobs)
     }
