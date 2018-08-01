@@ -1,16 +1,19 @@
 class window.Bulky
         constructor: (valid_record_url, submit_url) ->
                 @enabled = false
-                @deletes   = {}
-                @changes   = {}
-                @additions = {}
-                @add_counter = 0
+                this.initValues()
 
                 @valid_record_url = valid_record_url
                 @submit_url = submit_url
 
                 @hooked = false
                 @hook()
+
+        initValues: () ->
+                @deletes   = {}
+                @changes   = {}
+                @additions = {}
+                @add_counter = 0
 
         panel_update: () ->
                 added = (a for own a of @additions).length
@@ -90,8 +93,13 @@ class window.Bulky
         enable: ->
                 return if @enabled
 
+                # hide bulk mode button
+                $('#js-bulky-activate').hide()
+                # show bulk panel
                 $('#bulk-panel').removeClass('hidden')
+                # Change Add button
                 $('#new_record .btn').attr('value', 'Bulk Add')
+                # Hide disabled buttons for bulk mode
                 $('#records .js-bulk-hide').hide()
 
                 @enabled = true
@@ -99,9 +107,21 @@ class window.Bulky
         disable: ->
                 return if !@enabled
 
+                # hide the bulk panel
                 $('#bulk-panel').addClass('hidden')
+                # Revert add button to original value
                 $('#inline-record-form .btn').attr('value', 'Add')
+                # show the buttons that bulk mode hides
                 $('#records .js-bulk-hide').show()
+                # hide new records table
+                $('#new_records').hide()
+                # show bulk mode button
+                $('#js-bulky-activate').show()
+
+                # revert variables to initial values
+                this.initValues()
+                # update the panel to reflect the new values
+                this.panel_update()
                 @enabled = false
 
         commit: ->
@@ -138,7 +158,6 @@ class window.Bulky
                 # Hook bulky buttons
                 $('#js-bulky-activate').click ->
                         _me.enable()
-                        $(this).parents('li').remove()
                 $('#js-bulky-cancel').click ->
                         _me.disable()
                 $('#js-bulky-commit').click ->
