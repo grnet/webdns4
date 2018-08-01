@@ -10,15 +10,12 @@
 <% content_for :more_breadcrumbs do %>
   <% if !@domain.slave? %>
     <li>
-    <%= link_to_edit edit_domain_path(@domain) %>
+      <%= link_to_edit edit_domain_path(@domain) %>
+    </li>
+    <li>
+      <%= link_to 'Bulk mode', '#bulk', id: 'js-bulky-activate' %>
     </li>
   <% end %>
-  <% if !@domain.slave? %>
-  <li>
-    <%= link_to 'Bulk mode', '#bulk', id: 'js-bulky-activate' %>
-  </li>
-  <% end %>
-
 <% end %>
 
 <%= render 'bulk_panel' %>
