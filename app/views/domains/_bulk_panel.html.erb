@@ -11,7 +11,7 @@
         <span class="deleted">0</span> records deleted<abbr title="Highlight records that failed to delete" class="failed failed-deleted"></abbr>.
     </p>
     <div>
-      <%= link_to 'Cancel (Refresh)', @domain, class: "btn btn-default" %>
+      <button type="button" class="btn btn-danger" id="js-bulky-cancel">Cancel</button>
       <button type="button" class="btn btn-success" id="js-bulky-commit">Commit</button>
     </div>
   </div>
