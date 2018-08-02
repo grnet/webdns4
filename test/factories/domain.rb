@@ -1,5 +1,8 @@
 FactoryGirl.define do
   sequence(:domain) { |n| "example#{n}.com" }
+  sequence(:v4_gen_arpa_domain) { |n| "2.0.#{n}.in-addr.arpa" }
+  sequence(:v6_gen_arpa_domain) { |n| "#{(n % 16).to_s(16)}.b.d.0.1.0.0.2.ip6.arpa" }
+
   factory :domain do
     group
     name { generate(:domain) }
@@ -20,11 +23,11 @@ FactoryGirl.define do
   end
 
   factory :v4_arpa_domain, parent: :domain do
-    name '2.0.192.in-addr.arpa'
+    name { generate(:v4_gen_arpa_domain) }
   end
 
   factory :v6_arpa_domain, parent: :domain do
-    name '8.b.d.0.1.0.0.2.ip6.arpa'
+    name { generate(:v6_gen_arpa_domain) }
   end
 
   factory :domain_with_subscriptions, parent: :domain do

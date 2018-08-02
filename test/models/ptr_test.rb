@@ -13,10 +13,10 @@ class PTRTest < ActiveSupport::TestCase
     end
 
     test 'guess record' do
-      @record.name = '192.0.2.1'
+      @record.name = @record.domain.name.split(".")[0..-3].reverse.join(".") + ".1"
       assert @record.save
 
-      assert_equal '1.2.0.192.in-addr.arpa', @record.name
+      assert_equal @record.name, "1." + @record.domain.name
     end
 
     test 'chop terminating dot' do
@@ -39,10 +39,10 @@ class PTRTest < ActiveSupport::TestCase
     end
 
     test 'guess record' do
-      @record.name = '2001:db8::2'
+      @record.name = '2001:db' + @record.domain.name.split(".")[0] + '::2'
       assert @record.save
 
-      assert_equal '2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa',
+      assert_equal '2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.' + @record.domain.name,
                    @record.name
     end
   end
