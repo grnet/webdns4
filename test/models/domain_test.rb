@@ -88,7 +88,7 @@ class DomainTest < ActiveSupport::TestCase
   class StatesDomainTest < ActiveSupport::TestCase
     def setup
       @domain = build(:domain)
-      @policy = create(:dnssec_policy)
+      @policy = DnssecPolicy.all[0]
     end
 
     test 'domain lifetime' do
