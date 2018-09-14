@@ -66,7 +66,7 @@ Rails.application.routes.draw do
     end
     resources :users, only: [:destroy] do
       get :orphans, to: 'users#orphans', on: :collection
-      put :update_groups, to: 'users#update_groups', on: :collection
+      put :update_groups, to: 'users#update', on: :collection
     end
   end
 
