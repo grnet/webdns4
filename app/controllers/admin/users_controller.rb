@@ -20,7 +20,7 @@ module Admin
       redirect_to orphans_admin_users_path, notice: "#{@user.email} was deleted."
     end
 
-    def update_groups
+    def update
       additions = 0
 
       params.each_pair { |k, group_id|
