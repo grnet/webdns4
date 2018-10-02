@@ -16,4 +16,5 @@ class RecordTest < ActiveSupport::TestCase
       assert_empty rec.errors[:ttl], "ttl #{ttl} should be valid!"
     end
   }
+
 end
