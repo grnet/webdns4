@@ -12,6 +12,7 @@ class RecordsController < ApplicationController
 
   # GET /records/1/edit
   def edit
+    session[:edit_record_redirect_to] = request.referrer
   end
 
   # POST /records
@@ -31,7 +32,10 @@ class RecordsController < ApplicationController
   def update
     if @record.update(edit_record_params)
       notify_record(@record, :update)
-      redirect_to domain, notice: 'Record was successfully updated.'
+
+      ret = session[:edit_record_redirect_to] ? session.delete(:edit_record_redirect_to) : domain
+
+      redirect_to ret, notice: 'Record was successfully updated.'
     else
       render :edit
     end
@@ -86,14 +90,15 @@ class RecordsController < ApplicationController
 
   # DELETE /records/1
   def destroy
+    ret = request.referrer
     if @record.type == 'SOA'
-      redirect_to domain, alert: 'SOA records cannot be deleted!'
+      redirect_to ret, alert: 'SOA records cannot be deleted!'
       return
     end
 
     @record.destroy
     notify_record(@record, :destroy)
-    redirect_to domain, notice: 'Record was successfully destroyed.'
+    redirect_to ret, notice: 'Record was successfully destroyed.'
   end
 
   # GET /search
