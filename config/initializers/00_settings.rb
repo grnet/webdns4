@@ -45,6 +45,8 @@ WebDNS.settings[:saml_login_text] = 'Login with SAML'
 
 WebDNS.settings[:api] = true
 
+WebDNS.settings[:completed_jobs_count] = 1000
+
 # Allow local overrides
 local_settings = File.expand_path('../../local_settings.rb', __FILE__)
 require_relative local_settings if File.exist?(local_settings)

@@ -1,7 +1,9 @@
 namespace :cleanup do
   desc "Cleanup completed jobs"
   task :jobs => :environment do
-    Job.completed.destroy_all
+    count = Job.completed.count - WebDNS.settings[:completed_jobs_count]
+    count = count < 0 ? 0 : count
+    Job.completed.order(created_at: :desc).limit(count).destroy_all
   end
 
   # add new jobs here too
