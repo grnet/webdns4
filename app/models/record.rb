@@ -319,4 +319,10 @@ class Record < ActiveRecord::Base
       )
     }
   end
+
+  def self.to_fqdn(name, domain)
+    return name if name.end_with?(domain)
+
+    "#{name}.#{domain}"
+  end
 end
