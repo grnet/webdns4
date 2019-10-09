@@ -1,5 +1,5 @@
 set :application, 'webdns'
-set :repo_url, 'https://repo.grnet.gr/diffusion/WEBDNS/webdns.git'
+set :repo_url, 'https://github.com/grnet/webdns4'
 
 set :deploy_to, '/srv/webdns'
 
