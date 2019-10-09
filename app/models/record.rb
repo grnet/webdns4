@@ -309,17 +309,19 @@ class Record < ActiveRecord::Base
     rnames = classless_delegation
     return unless rnames
 
+    # This is the FQDN of the delegation e.g. "1.0-26.24.251.195.in-addr.arpa"
+    octet = rname.to_s.split('.').first
+    delegate_content = "#{octet}.#{name}"
+
     # Make sure no record exists for a delegated domain
     if domain.records.where(name: rnames)
-        .where.not(content: name).exists?
+        .where.not(content: delegate_content).exists?
 
       errors.add(:name, 'Records already exist for the delegated octets!')
       return false
     end
 
     rnames.each { |rname|
-      octet = rname.to_s.split('.').first
-      delegate_content = "#{octet}.#{name}"
       CNAME.find_or_create_by!(
         type: 'CNAME',
         domain: domain,
