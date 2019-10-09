@@ -318,11 +318,13 @@ class Record < ActiveRecord::Base
     end
 
     rnames.each { |rname|
+      octet = rname.to_s.split('.').first
+      delegate_content = "#{octet}.#{name}"
       CNAME.find_or_create_by!(
         type: 'CNAME',
         domain: domain,
         name: rname,
-        content: name
+        content: delegate_content,
       )
     }
   end
