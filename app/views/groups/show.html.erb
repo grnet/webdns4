@@ -71,7 +71,7 @@
       </thead>
 
       <tbody>
-        <% @group.memberships.includes(:user).each do |membership| %>
+        <% @group.memberships.includes(:user).reject{|i| i.user.nil?}.each do |membership| %>
           <tr>
             <td><%= membership.user.email %><%= " (you)" if current_user == membership.user %></td>
             <td>
