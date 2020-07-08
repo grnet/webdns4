@@ -51,7 +51,7 @@ gem 'faraday', '0.9.0'
 gem 'faraday_middleware', '0.9.1'
 
 # Devise & dependencies
-gem 'devise', '3.5.2' # pkg:ruby-devise
+gem 'devise', '4.7.1' # pkg:ruby-devise
 gem 'warden', '1.2.3'
 gem 'bcrypt', '3.1.7'
 gem 'orm_adapter', '0.5.0'
