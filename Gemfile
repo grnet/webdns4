@@ -44,7 +44,7 @@ gem 'mysql2', '0.3.16' # pkg:ruby-mysql2
 gem 'jquery-rails', '3.1.2' # pkg:ruby-jquery-rails
 gem 'state_machine', '1.2.0' # pkg: ruby-state-machine
 
-gem 'nokogiri', '1.6.3'
+gem 'nokogiri', '1.13.4'
 
 # Worker
 gem 'faraday', '0.9.0'
