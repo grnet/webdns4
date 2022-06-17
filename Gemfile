@@ -26,7 +26,7 @@ end
 #
 
 gem 'rails', '4.1.8' # pkg:rails
-gem 'i18n', '0.6.9'
+gem 'i18n', '0.8.0'
 gem 'json', '1.8.1'
 gem 'mail', '2.6.1'
 gem 'mime-types', '1.25'
