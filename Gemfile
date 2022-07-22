@@ -37,7 +37,7 @@ gem 'rake', '10.3.2'
 gem 'sprockets', '2.12.3'
 gem 'sprockets-rails', '2.1.3'
 gem 'thread_safe', '0.3.3'
-gem 'tzinfo', '1.1.0'
+gem 'tzinfo', '1.2.10'
 gem 'will_paginate', '3.0.5'
 
 gem 'mysql2', '0.3.16' # pkg:ruby-mysql2
